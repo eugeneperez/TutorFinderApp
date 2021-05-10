@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TutorFinderApp">
-        <activity android:name=".register_role"></activity>
+        <activity android:name=".Homepage"></activity>
+        <activity android:name=".Register_role" />
         <activity android:name=".Register" />
         <activity android:name=".Login" />
         <activity android:name=".MainActivity">

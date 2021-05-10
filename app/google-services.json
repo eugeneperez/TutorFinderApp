@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "74995322118",
+    "project_id": "tutorfinder-b8152",
+    "storage_bucket": "tutorfinder-b8152.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:74995322118:android:18a0199b07cd7c036ae287",
+        "android_client_info": {
+          "package_name": "com.mobdeve.tutorfinderapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "74995322118-fkhhl1gae8jpccadvsp0uk4fid7ku1i7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdIwtuBc3pZ2dQAPQm6493oETg6seaGT4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "74995322118-fkhhl1gae8jpccadvsp0uk4fid7ku1i7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
