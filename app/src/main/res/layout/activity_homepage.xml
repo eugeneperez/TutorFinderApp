@@ -8,28 +8,74 @@
     android:background="#FC7BBCC5"
     tools:context=".HomePage">
 
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="67dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.911"
+        app:srcCompat="@drawable/tutor_icon" />
+
     <EditText
         android:id="@+id/searchBarTv"
         android:layout_width="214dp"
         android:layout_height="46dp"
+        android:layout_marginTop="124dp"
         android:ems="10"
         android:inputType="textPersonName"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="35dp" />
+        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+        app:layout_constraintEnd_toStartOf="@+id/spinner"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/spinner"
         android:layout_width="118dp"
         android:layout_height="45dp"
-        tools:layout_editor_absoluteX="230dp"
-        tools:layout_editor_absoluteY="35dp" />
+        android:layout_marginTop="124dp"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="214dp" />
 
-    <ImageButton
-        android:id="@+id/searchBtn"
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="411dp"
+        android:layout_height="541dp"
+        android:layout_marginBottom="28dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="47dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="128dp"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/spinner"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/searchIcon" />
+
+    <TextView
+        android:id="@+id/welcomeTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@android:drawable/ic_menu_search"
-        tools:layout_editor_absoluteX="354dp"
-        tools:layout_editor_absoluteY="35dp" />
+        android:text="Welcome! (lastname)"
+        android:textSize="16dp"
+        tools:layout_editor_absoluteX="260dp"
+        tools:layout_editor_absoluteY="58dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
