@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical" />
+<<<<<<< HEAD
     tools:context=".Homepage">
 
     <EditText
@@ -32,3 +33,7 @@
         tools:layout_editor_absoluteY="30dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+=======
+    android:orientation="vertical"
+    tools:context=".Homepage"/>
+>>>>>>> 061e6360819fa2d79822b4a305800d0156a2d95c

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".AdminPage">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="WELCOME TO ADMIN PAGE"
+        android:textSize="36sp" />
+
+    <Button
+        android:id="@+id/resetdbBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="RESET THE DATABASE" />
+</LinearLayout>
