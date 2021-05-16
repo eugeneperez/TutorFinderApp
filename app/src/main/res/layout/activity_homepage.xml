@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" />
-<<<<<<< HEAD
-    tools:context=".Homepage">
+    android:background="#FC7BBCC5"
+    tools:context=".HomePage">
 
     <EditText
         android:id="@+id/searchBarTv"
@@ -15,14 +15,14 @@
         android:ems="10"
         android:inputType="textPersonName"
         tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="32dp" />
+        tools:layout_editor_absoluteY="35dp" />
 
     <Spinner
         android:id="@+id/spinner"
         android:layout_width="118dp"
         android:layout_height="45dp"
         tools:layout_editor_absoluteX="230dp"
-        tools:layout_editor_absoluteY="32dp" />
+        tools:layout_editor_absoluteY="35dp" />
 
     <ImageButton
         android:id="@+id/searchBtn"
@@ -30,10 +30,6 @@
         android:layout_height="wrap_content"
         app:srcCompat="@android:drawable/ic_menu_search"
         tools:layout_editor_absoluteX="354dp"
-        tools:layout_editor_absoluteY="30dp" />
+        tools:layout_editor_absoluteY="35dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-=======
-    android:orientation="vertical"
-    tools:context=".Homepage"/>
->>>>>>> 061e6360819fa2d79822b4a305800d0156a2d95c
