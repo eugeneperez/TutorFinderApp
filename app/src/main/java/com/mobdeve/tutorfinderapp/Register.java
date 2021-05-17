@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -38,6 +40,7 @@ public class Register extends AppCompatActivity {
     private EditText text_firstname;
     private EditText text_lastname;
     private EditText text_contact;
+    private Button registerbtn;
 
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -55,21 +58,28 @@ public class Register extends AppCompatActivity {
         text_lastname = findViewById(R.id.regLastNameEt);
         text_firstname = findViewById(R.id.regFirstNameEt);
         text_contact = findViewById(R.id.regContactNumEt);
-
+        registerbtn = findViewById(R.id.regPageBtn);
 
 
         Intent i = getIntent();
         String type = i.getStringExtra("Type");
 
-        createAccount(text_username.getText().toString(),
-                text_password.getText().toString(),
-                type, text_firstname.getText().toString(),
-                text_lastname.getText().toString(), text_contact.getText().toString());
+
+
+        registerbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createAccount(text_username.getText().toString(),
+                        text_password.getText().toString(),
+                        type, text_firstname.getText().toString(),
+                        text_lastname.getText().toString(), text_contact.getText().toString());
+            }
+        });
     }
 
     public void createAccount( String username, String password, String type,
                                String firstname, String lastname, String contact){
-
+        Log.d("TAG", "createAccount: username"+username+" password"+password);
         mAuth.createUserWithEmailAndPassword(username, password)
 
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -82,13 +92,12 @@ public class Register extends AppCompatActivity {
                             user.put("Email", username);
                             user.put("First name", firstname);
                             user.put("Last name", lastname);
-
-                            if(type.equals("Tutor")){
+                            Log.d("TAG", "onComplete: type"+type+" contact"+contact);
+                            if(type.equals("tutor")){
                                 db.collection("Tutors").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
                                         Intent pasokgago = new Intent(Register.this, Homepage.class);
-                                        
                                         startActivity(pasokgago);
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
@@ -97,7 +106,7 @@ public class Register extends AppCompatActivity {
                                         Log.w("TAG", "Error adding document", e);
                                     }
                                 });
-                            }else if (type.equals("Tutee")){
+                        }else if (type.equals("tutee")){
                                 db.collection("Tutees").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
