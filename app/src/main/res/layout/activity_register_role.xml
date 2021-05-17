@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#FBDD90">
 
@@ -27,17 +27,30 @@
         android:layout_marginTop="20dp"
         android:text="Tutee" />
 
+    android:layout_gravity="center"
+    android:background="#F4BF38"
+    android:orientation="vertical"
+    android:padding="25dp">
+
     <TextView
         android:id="@+id/textView3"
         android:layout_width="337dp"
         android:layout_height="wrap_content"
+
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="43dp"
+
+        android:layout_gravity="center"
+        android:layout_margin="25dp"
+
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
         android:text="Register As:"
         android:textColor="#515050"
         android:textSize="21dp" />
+
 </RelativeLayout>
+
+
