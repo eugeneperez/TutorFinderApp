@@ -1,42 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#FCD7F9FD">
-
-    <Button
-        android:id="@+id/tutorBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView3"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="19dp"
-        android:layout_marginEnd="74dp"
-        android:text="Tutor" />
-
-    <Button
-        android:id="@+id/tuteeBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView3"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="66dp"
-        android:layout_marginTop="20dp"
-        android:text="Tutee" />
+    android:background="#FCD7F9FD"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="337dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="43dp"
+        android:layout_marginStart="148dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="148dp"
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
         android:text="Register As:"
         android:textSize="21dp" />
-</RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="0">
+
+        <Button
+            android:id="@+id/tutorBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="52dp"
+            android:layout_marginTop="21dp"
+            android:layout_marginEnd="73dp"
+            android:text="Tutor" />
+
+        <Button
+            android:id="@+id/tuteeBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="54dp"
+            android:layout_marginTop="21dp"
+            android:text="Tutee" />
+
+    </LinearLayout>
+
+</LinearLayout>
