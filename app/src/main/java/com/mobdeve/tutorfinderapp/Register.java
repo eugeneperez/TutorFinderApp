@@ -92,7 +92,6 @@ public class Register extends AppCompatActivity {
                             user.put("Email", username);
                             user.put("First name", firstname);
                             user.put("Last name", lastname);
-                            Log.d("TAG", "onComplete: type"+type+" contact"+contact);
                             if(type.equals("tutor")){
                                 db.collection("Tutors").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
