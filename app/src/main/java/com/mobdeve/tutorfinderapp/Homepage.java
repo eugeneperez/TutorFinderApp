@@ -1,5 +1,6 @@
 package com.mobdeve.tutorfinderapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,12 +19,19 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /*
 *  TODO
@@ -39,6 +47,10 @@ public class Homepage extends AppCompatActivity {
     private EditText search;
     private Button searchbtn;
     private Button signoutbtn;
+    private TextView username;
+    private FirebaseAuth mAuth;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private Map<String, Object> results = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +60,7 @@ public class Homepage extends AppCompatActivity {
         search = findViewById(R.id.searchbar_homepage);
         searchbtn = findViewById(R.id.searchbtn_homepage);
         signoutbtn = findViewById(R.id.signoutbtn);
+        mAuth = FirebaseAuth.getInstance();
 
         ArrayList<String> arrayList = new ArrayList<>();
 
@@ -76,11 +89,52 @@ public class Homepage extends AppCompatActivity {
             public void onClick(View v) {
                 String spin = spinnerAdapter.getSelectedItem().toString();
                 String searchterms = search.getText().toString();
+                //ArrayList<Map> results = new ArrayList<>();
+                Map<String, Object> results = new HashMap<>();
+
                 //search in database
                 Log.d("TAG", "onClick: searchterms"+searchterms);
+
+                if(spinnerAdapter.getSelectedItem().toString().equals("People")){
+                    db.collection("Tutors")
+                            .whereGreaterThanOrEqualTo("First name", searchterms)
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            Log.d("TAG", document.getId() + " => " + document.getData());
+                                            results.putAll(document.getData());
+                                        }
+                                    } else {
+                                        Log.d("TAG", "Error getting documents: ", task.getException());
+                                    }
+                                }
+                            });
+                    db.collection("Tutors")
+                            .whereGreaterThanOrEqualTo("Last name", searchterms)
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            Log.d("TAG", document.getId() + " => " + document.getData());
+                                            results.putAll(document.getData());
+                                        }
+                                    } else {
+                                        Log.d("TAG", "Error getting documents: ", task.getException());
+                                    }
+                                }
+                            });
+
+                    Log.d("RESULTS", "onClick: results"+results);
+                }
+
                 //start next activity
-                Intent i = new Intent(Homepage.this, SearchPage.class);
-                startActivity(i);
+//                Intent i = new Intent(Homepage.this, SearchPage.class);
+//                startActivity(i);
             }
         });
 
