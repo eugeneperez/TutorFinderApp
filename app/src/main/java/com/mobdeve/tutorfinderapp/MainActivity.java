@@ -25,16 +25,17 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null){
-            Intent intent = new Intent(MainActivity.this, Login.class);
-            startActivity(intent);
-            finish();
-        }else{
-            //Toast.makeText(this, "Already logged in", Toast.LENGTH_LONG).show();
+        if(currentUser != null) {
             Intent i = new Intent(MainActivity.this, Homepage.class);
             startActivity(i);
             finish();
         }
+//        }else{
+//            //Toast.makeText(this, "Already logged in", Toast.LENGTH_LONG).show();
+//            Intent i = new Intent(MainActivity.this, Homepage.class);
+//            startActivity(i);
+//            finish();
+//        }
 
         registerBtn = findViewById(R.id.registerBtn);
         loginBtn = findViewById(R.id.loginBtn);

@@ -28,9 +28,6 @@ import java.util.Map;
 
 /*
 * TODO:
-*  line 91
-*  line 101
-*  amazing
 * */
 
 public class Register extends AppCompatActivity {
