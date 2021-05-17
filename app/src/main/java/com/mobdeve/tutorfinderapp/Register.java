@@ -97,8 +97,21 @@ public class Register extends AppCompatActivity {
                                         Log.w("TAG", "Error adding document", e);
                                     }
                                 });
-                            }//add Tutee
-
+                            }else if (type.equals("Tutee")){
+                                db.collection("Tutees").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    @Override
+                                    public void onSuccess(DocumentReference documentReference) {
+                                        Intent pasokgago = new Intent(Register.this, Homepage.class);
+                                        //add Tutor to collection
+                                        startActivity(pasokgago);
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w("TAG","Error adding document", e);
+                                    }
+                                });
+                            }
 
                         } else {
                             // If sign in fails, display a message to the user.
