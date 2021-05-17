@@ -88,7 +88,7 @@ public class Register extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
                                         Intent pasokgago = new Intent(Register.this, Homepage.class);
-                                        //add Tutor to collection
+                                        
                                         startActivity(pasokgago);
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
