@@ -71,6 +71,7 @@ public class Register extends AppCompatActivity {
         registerbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
         if(text_username.getText().toString().isEmpty() || text_password.getText().toString().isEmpty() || text_confirmpass.getText().toString().isEmpty() || text_firstname.getText().toString().isEmpty() || text_lastname.getText().toString().isEmpty() || text_contact.getText().toString().isEmpty()){
             Toast.makeText(Register.this, "Please fill all paramaters", Toast.LENGTH_SHORT).show();
         }else if (text_password.getText().toString().compareTo(text_confirmpass.getText().toString())!=0){
@@ -79,14 +80,15 @@ public class Register extends AppCompatActivity {
             createAccount(text_username.getText().toString(),
                     text_password.getText().toString(),
                     type, text_firstname.getText().toString(),
-                    text_lastname.getText().toString(), text_contact.getText().toString());
+                    text_lastname.getText().toString(), Integer.parseInt(text_contact.getText().toString()));
         }
+
             }
         });
     }
 
     public void createAccount( String username, String password, String type,
-                               String firstname, String lastname, String contact){
+                               String firstname, String lastname, int contact){
         Log.d("TAG", "createAccount: username"+username+" password"+password);
         mAuth.createUserWithEmailAndPassword(username, password)
 
