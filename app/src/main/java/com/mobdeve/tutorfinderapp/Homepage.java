@@ -127,6 +127,7 @@ public class Homepage extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         for (QueryDocumentSnapshot document : task.getResult()) {
                                             Log.d("TAG", document.getId() + " => " + document.getData());
+                                            Map<String, Object> result = new HashMap<>();
                                             result.putAll(document.getData());
                                             results.add(result);
                                         }
