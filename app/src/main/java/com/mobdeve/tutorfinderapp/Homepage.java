@@ -89,15 +89,15 @@ public class Homepage extends AppCompatActivity {
             public void onClick(View v) {
                 String spin = spinnerAdapter.getSelectedItem().toString();
                 String searchterms = search.getText().toString();
-                //ArrayList<Map> results = new ArrayList<>();
-                Map<String, Object> results = new HashMap<>();
+                ArrayList<> results = new ArrayList<>();
 
                 //search in database
                 Log.d("TAG", "onClick: searchterms"+searchterms);
 
                 if(spinnerAdapter.getSelectedItem().toString().equals("People")){
+
                     db.collection("Tutors")
-                            .whereGreaterThanOrEqualTo("First name", searchterms)
+                            .whereEqualTo("First name", searchterms)
                             .get()
                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
@@ -105,7 +105,13 @@ public class Homepage extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         for (QueryDocumentSnapshot document : task.getResult()) {
                                             Log.d("TAG", document.getId() + " => " + document.getData());
-                                            results.putAll(document.getData());
+                                            Map<String, Object> result = new HashMap<>();
+                                            result = document.getData();
+                                            String email = result.get("Email").toString();
+                                            String first = result.get("First name").toString();
+                                            String last = result.get("Last name").toString();
+                                            String contact = result.get("Contact details").toString();
+
                                         }
                                     } else {
                                         Log.d("TAG", "Error getting documents: ", task.getException());
@@ -113,7 +119,7 @@ public class Homepage extends AppCompatActivity {
                                 }
                             });
                     db.collection("Tutors")
-                            .whereGreaterThanOrEqualTo("Last name", searchterms)
+                            .whereEqualTo("Last name", searchterms)
                             .get()
                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
@@ -121,7 +127,8 @@ public class Homepage extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         for (QueryDocumentSnapshot document : task.getResult()) {
                                             Log.d("TAG", document.getId() + " => " + document.getData());
-                                            results.putAll(document.getData());
+                                            result.putAll(document.getData());
+                                            results.add(result);
                                         }
                                     } else {
                                         Log.d("TAG", "Error getting documents: ", task.getException());
@@ -129,7 +136,8 @@ public class Homepage extends AppCompatActivity {
                                 }
                             });
 
-                    Log.d("RESULTS", "onClick: results"+results);
+                    Log.d("RESULTS", "onClick: result"+result);
+                    results.clear();
                 }
 
                 //start next activity
