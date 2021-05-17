@@ -37,6 +37,7 @@ public class Register extends AppCompatActivity {
 
     private EditText text_username;
     private EditText text_password;
+    private EditText text_confirmpass;
     private EditText text_firstname;
     private EditText text_lastname;
     private EditText text_contact;
@@ -55,6 +56,7 @@ public class Register extends AppCompatActivity {
 
         text_username = findViewById(R.id.regEmailEt);
         text_password = findViewById(R.id.regPasswordEt);
+        text_confirmpass= findViewById(R.id.regConfirmPasswordEt);
         text_lastname = findViewById(R.id.regLastNameEt);
         text_firstname = findViewById(R.id.regFirstNameEt);
         text_contact = findViewById(R.id.regContactNumEt);
@@ -65,14 +67,20 @@ public class Register extends AppCompatActivity {
         String type = i.getStringExtra("Type");
 
 
-
+    
         registerbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createAccount(text_username.getText().toString(),
-                        text_password.getText().toString(),
-                        type, text_firstname.getText().toString(),
-                        text_lastname.getText().toString(), text_contact.getText().toString());
+        if(text_username.getText().toString().isEmpty() || text_password.getText().toString().isEmpty() || text_confirmpass.getText().toString().isEmpty() || text_firstname.getText().toString().isEmpty() || text_lastname.getText().toString().isEmpty() || text_contact.getText().toString().isEmpty()){
+            Toast.makeText(Register.this, "Please fill all paramaters", Toast.LENGTH_SHORT).show();
+        }else if (text_password.getText().toString().compareTo(text_confirmpass.getText().toString())!=0){
+            Toast.makeText(Register.this, "Both password must match", Toast.LENGTH_SHORT).show();
+        }else {
+            createAccount(text_username.getText().toString(),
+                    text_password.getText().toString(),
+                    type, text_firstname.getText().toString(),
+                    text_lastname.getText().toString(), text_contact.getText().toString());
+        }
             }
         });
     }
@@ -96,8 +104,8 @@ public class Register extends AppCompatActivity {
                                 db.collection("Tutors").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
-                                        Intent pasokgago = new Intent(Register.this, Homepage.class);
-                                        startActivity(pasokgago);
+                                        Intent intent = new Intent(Register.this, Homepage.class);
+                                        startActivity(intent);
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
@@ -109,9 +117,9 @@ public class Register extends AppCompatActivity {
                                 db.collection("Tutees").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
-                                        Intent pasokgago = new Intent(Register.this, Homepage.class);
+                                        Intent intent = new Intent(Register.this, Homepage.class);
                                         //add Tutor to collection
-                                        startActivity(pasokgago);
+                                        startActivity(intent);
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
@@ -124,7 +132,7 @@ public class Register extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("TAG", "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(Register.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Register.this, "Email already exist", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
