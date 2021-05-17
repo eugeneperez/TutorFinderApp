@@ -59,6 +59,8 @@ public class Login extends AppCompatActivity {
                 if(authLogin(username, password) != 0){
                     Toast toast = Toast.makeText(getApplicationContext(), "successfully logged in", Toast.LENGTH_SHORT);
                     toast.show();
+                    Intent intent= new Intent(Login.this, Homepage.class);
+                    startActivity(intent);
                 }else{
                     Toast toast = Toast.makeText(getApplicationContext(), "wrong login creds bro", Toast.LENGTH_SHORT);
                     toast.show();
@@ -70,11 +72,15 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            //do something
-        }
+    // Check if user is signed in (non-null) and update UI accordingly.
+    FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser == null){
+        Intent intent = new Intent(Login.this, Login.class);
+        startActivity(intent);
+        finish();
+    }else{
+        Toast.makeText(this, "Already logged in", Toast.LENGTH_LONG).show();
     }
+}
 
 }
