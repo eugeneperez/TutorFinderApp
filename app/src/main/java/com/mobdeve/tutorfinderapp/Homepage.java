@@ -89,7 +89,7 @@ public class Homepage extends AppCompatActivity {
             public void onClick(View v) {
                 String spin = spinnerAdapter.getSelectedItem().toString();
                 String searchterms = search.getText().toString();
-                ArrayList<> results = new ArrayList<>();
+                ArrayList<Map> results = new ArrayList<>();
 
                 //search in database
                 Log.d("TAG", "onClick: searchterms"+searchterms);
@@ -137,7 +137,7 @@ public class Homepage extends AppCompatActivity {
                                 }
                             });
 
-                    Log.d("RESULTS", "onClick: result"+result);
+                    Log.d("RESULTS", "onClick: result"+results);
                     results.clear();
                 }
 
