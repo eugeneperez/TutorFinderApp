@@ -77,11 +77,12 @@ public class Register extends AppCompatActivity {
             Toast.makeText(Register.this, "password must be at least 8 characters", Toast.LENGTH_SHORT).show();
         }else {
             createAccount(text_username.getText().toString(),
-                    text_password.getText().toString(),
-                    type, text_firstname.getText().toString(),
-                    text_lastname.getText().toString(), Integer.parseInt(text_contact.getText().toString()));
+                            text_password.getText().toString(),
+                            type,
+                            text_firstname.getText().toString().substring(0,1).toUpperCase()+text_firstname.getText().toString().substring(1),
+                            text_lastname.getText().toString().substring(0,1).toUpperCase()+text_lastname.getText().toString().substring(1),
+                            Integer.parseInt(text_contact.getText().toString()));
         }
-
             }
         });
     }
