@@ -53,11 +53,18 @@
                 app:srcCompat="@drawable/search_icon" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName"
+                android:id="@+id/searchbar_homepage"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPersonName" />
+
+            <Spinner
+                android:id="@+id/spinner_homepage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
         </LinearLayout>
 
     </LinearLayout>
