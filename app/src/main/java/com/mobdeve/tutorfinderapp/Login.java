@@ -43,11 +43,11 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        mAuth = FirebaseAuth.getInstance();
+
         text_username = findViewById(R.id.loginEmailEt);
         text_password = findViewById(R.id.loginPasswordEt);
         loginbtn = findViewById(R.id.loginPageBtn);
-
-        mAuth = FirebaseAuth.getInstance();
 
         loginbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +61,7 @@ public class Login extends AppCompatActivity {
                     toast.show();
                     Intent intent= new Intent(Login.this, Homepage.class);
                     startActivity(intent);
+                    finish();
                 }else{
                     Toast toast = Toast.makeText(getApplicationContext(), "wrong login creds bro", Toast.LENGTH_SHORT);
                     toast.show();
@@ -73,14 +74,17 @@ public class Login extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
     // Check if user is signed in (non-null) and update UI accordingly.
-    FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null){
-        Intent intent = new Intent(Login.this, Login.class);
-        startActivity(intent);
-        finish();
-    }else{
-        Toast.makeText(this, "Already logged in", Toast.LENGTH_LONG).show();
-    }
+
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        if(currentUser == null){
+//            Intent intent = new Intent(Login.this, Login.class);
+//            startActivity(intent);
+//            finish();
+//        }else{
+//            Toast.makeText(this, "Already logged in", Toast.LENGTH_LONG).show();
+//            Intent i = new Intent(Login.this, Homepage.class);
+//            startActivity(i);
+//        }
 }
 
 }
