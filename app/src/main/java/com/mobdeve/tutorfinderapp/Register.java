@@ -72,13 +72,13 @@ public class Register extends AppCompatActivity {
                 createAccount(text_username.getText().toString(),
                         text_password.getText().toString(),
                         type, text_firstname.getText().toString(),
-                        text_lastname.getText().toString(), text_contact.getText().toString());
+                        text_lastname.getText().toString(), Integer.parseInt(text_contact.getText().toString()));
             }
         });
     }
 
     public void createAccount( String username, String password, String type,
-                               String firstname, String lastname, String contact){
+                               String firstname, String lastname, int contact){
         Log.d("TAG", "createAccount: username"+username+" password"+password);
         mAuth.createUserWithEmailAndPassword(username, password)
 
