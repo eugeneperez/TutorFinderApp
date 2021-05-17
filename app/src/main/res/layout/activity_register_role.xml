@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#FCD7F9FD"
+    android:background="#F4BF38"
     android:orientation="vertical">
 
     <TextView
@@ -17,6 +17,7 @@
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
         android:text="Register As:"
+        android:textColor="#EDF2F4"
         android:textSize="21dp" />
 
     <LinearLayout
