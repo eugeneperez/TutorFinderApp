@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
                 // which view you pass in doesn't matter, it is only used for the window tolken
                 popupWindow.showAtLocation( v, Gravity.CENTER, 0, 0);
 
-                    
                 Button tuteeBtn= (Button)popupView.findViewById(R.id.tuteeBtn);
                 Button tutorBtn= (Button)popupView.findViewById(R.id.tutorBtn);
                 tutorBtn.setOnClickListener(new View.OnClickListener() {

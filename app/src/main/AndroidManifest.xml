@@ -13,7 +13,6 @@
         <activity android:name=".ViewProfile" />
         <activity android:name=".AdminPage" />
         <activity android:name=".Homepage" />
-        <activity android:name=".Register_role" />
         <activity android:name=".Register" />
         <activity android:name=".Login" />
         <activity android:name=".MainActivity">
