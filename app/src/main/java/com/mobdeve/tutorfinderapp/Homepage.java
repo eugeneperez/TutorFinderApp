@@ -26,11 +26,13 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 /*
@@ -50,7 +52,60 @@ public class Homepage extends AppCompatActivity {
     private TextView username;
     private FirebaseAuth mAuth;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private Map<String, Object> results = new HashMap<>();
+    private ArrayList<String> results = new ArrayList<>();
+
+    public ArrayList<String> searchFirstName(String searchterms){
+        ArrayList<String> resulting = new ArrayList<>();
+        db.collection("Tutors")
+                .whereEqualTo("First name", searchterms)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("TAG", document.getId() + " => " + document.getData());
+                                Map<String, Object> result = new HashMap<>();
+                                result = document.getData();
+
+                                if(!(resulting.contains(result.get("Email").toString())))
+                                    resulting.add(result.get("Email").toString());
+
+                                Log.d("Result1", "onComplete: results1"+resulting);
+                            }
+                        } else {
+                            Log.d("TAG", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+        return resulting;
+    }
+
+    public ArrayList<String> searchLastName(ArrayList<String> existingList, String searchterms){
+        db.collection("Tutors")
+                .whereEqualTo("Last name", searchterms)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("TAG", document.getId() + " => " + document.getData());
+                                Map<String, Object> result = new HashMap<>();
+                                result = document.getData();
+
+                                if(!(existingList.contains(result.get("Email").toString())))
+                                    existingList.add(result.get("Email").toString());
+
+                                Log.d("Result2", "onComplete: results2"+existingList.toString());
+                            }
+                        } else {
+                            Log.d("TAG", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+        return existingList;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,61 +144,18 @@ public class Homepage extends AppCompatActivity {
             public void onClick(View v) {
                 String spin = spinnerAdapter.getSelectedItem().toString();
                 String searchterms = search.getText().toString();
-                ArrayList<Map> results = new ArrayList<>();
-
+                //ArrayList<User> results = new ArrayList<>();
                 //search in database
                 Log.d("TAG", "onClick: searchterms"+searchterms);
 
                 if(spinnerAdapter.getSelectedItem().toString().equals("People")){
-
-                    db.collection("Tutors")
-                            .whereEqualTo("First name", searchterms)
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (QueryDocumentSnapshot document : task.getResult()) {
-                                            Log.d("TAG", document.getId() + " => " + document.getData());
-                                            Map<String, Object> result = new HashMap<>();
-                                            result = document.getData();
-                                            String email = result.get("Email").toString();
-                                            String first = result.get("First name").toString();
-                                            String last = result.get("Last name").toString();
-                                            String contact = result.get("Contact details").toString();
-
-                                        }
-                                    } else {
-                                        Log.d("TAG", "Error getting documents: ", task.getException());
-                                    }
-                                }
-                            });
-                    db.collection("Tutors")
-                            .whereEqualTo("Last name", searchterms)
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (QueryDocumentSnapshot document : task.getResult()) {
-                                            Log.d("TAG", document.getId() + " => " + document.getData());
-                                            Map<String, Object> result = new HashMap<>();
-                                            result.putAll(document.getData());
-                                            results.add(result);
-                                        }
-                                    } else {
-                                        Log.d("TAG", "Error getting documents: ", task.getException());
-                                    }
-                                }
-                            });
-
-                    Log.d("RESULTS", "onClick: result"+results);
-                    results.clear();
+                    results = searchFirstName(searchterms);
+                    results.addAll(searchLastName(results, searchterms));
+                    Log.d("Results", "onClick: results"+results);
+                    Intent i = new Intent(Homepage.this, SearchPage.class);
+                    startActivity(i);
                 }
-
                 //start next activity
-//                Intent i = new Intent(Homepage.this, SearchPage.class);
-//                startActivity(i);
             }
         });
 
