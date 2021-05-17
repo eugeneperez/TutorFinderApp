@@ -76,6 +76,8 @@ public class Register extends AppCompatActivity {
             Toast.makeText(Register.this, "Please fill all paramaters", Toast.LENGTH_SHORT).show();
         }else if (text_password.getText().toString().compareTo(text_confirmpass.getText().toString())!=0){
             Toast.makeText(Register.this, "Both password must match", Toast.LENGTH_SHORT).show();
+        }else if(text_password.getText().toString().length()<8 || text_confirmpass.getText().toString().length()<8 ){
+            Toast.makeText(Register.this, "password must be at least 8 characters", Toast.LENGTH_SHORT).show();
         }else {
             createAccount(text_username.getText().toString(),
                     text_password.getText().toString(),
