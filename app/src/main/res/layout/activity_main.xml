@@ -12,9 +12,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
-        android:background="#C1BEB9"
+        android:backgroundTint="#C1BEB9"
         android:text="Login"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         app:cornerRadius="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -27,9 +27,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
-        android:background="#C3C5C5"
+        android:backgroundTint="#C1BEB9"
         android:text="Register"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         app:cornerRadius="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,7 +49,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="338dp" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
     <TextView
         android:id="@+id/textView2"
@@ -68,11 +68,10 @@
         android:id="@+id/imageView4"
         android:layout_width="198dp"
         android:layout_height="158dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
+        android:layout_marginTop="80dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.911"
         app:srcCompat="@drawable/tutor_icon" />
 </androidx.constraintlayout.widget.ConstraintLayout>
