@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FC7BBCC5"
+    android:background="#8ECAE6"
     android:orientation="vertical"
     tools:context=".Homepage">
 
@@ -63,14 +63,6 @@
             android:textColor="#191919"
             android:textSize="30sp" />
 
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="190dp"
-            android:layout_height="47dp"
-            android:gravity="center"
-            android:text="Connecting between you and knowledge."
-            android:textSize="17sp" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -79,12 +71,13 @@
 
             <EditText
                 android:id="@+id/searchbar_homepage"
-                android:layout_width="wrap_content"
+                android:layout_width="222dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:imeOptions="actionDone"/>
+                android:hint="What are you looking for..."
+                android:imeOptions="actionDone"
+                android:inputType="textPersonName" />
 
             <Spinner
                 android:id="@+id/spinner_homepage"
