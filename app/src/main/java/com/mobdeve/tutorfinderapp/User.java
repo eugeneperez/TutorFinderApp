@@ -8,9 +8,9 @@ public class User {
     private String lastname;
     private String contact;
     private ArrayList<String> categories;
-    private double fee;
+    private float fee;
 
-    public User(String email, String firstname, String lastname, String contact, ArrayList<String> categories, double fee) {
+    public User(String email, String firstname, String lastname, String contact, ArrayList<String> categories, float fee) {
         this.email = email;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -32,7 +32,7 @@ public class User {
         return fee;
     }
 
-    public void setFee(double fee) {
+    public void setFee(float fee) {
         this.fee = fee;
     }
 

@@ -73,14 +73,14 @@ public class Homepage extends AppCompatActivity {
                                 Log.d("TAG1", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = new HashMap<>();
                                 result = document.getData();
-
+                                Log.d("hello2", result.toString());
                                 if(!(users.contains(result.get("Email").toString()))){
                                     User user = new User(result.get("Email").toString(),
                                             result.get("First name").toString(),
                                             result.get("Last name").toString(),
                                             result.get("Contact details").toString(),
                                             (ArrayList<String>) result.get("Categories"),
-                                            (double) result.get("Fee"));
+                                            Float.parseFloat(result.get("Fee").toString()));
 
                                     users.add(user);
                                 }
@@ -106,14 +106,14 @@ public class Homepage extends AppCompatActivity {
                                 Log.d("TAG1", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = new HashMap<>();
                                 result = document.getData();
-
+                                Log.d("hello2", result.toString());
                                 if(!(users.contains(result.get("Email").toString()))){
                                     User user = new User(result.get("Email").toString(),
                                             result.get("First name").toString(),
                                             result.get("Last name").toString(),
                                             result.get("Contact details").toString(),
                                             (ArrayList<String>) result.get("Categories"),
-                                            (double) result.get("Fee"));
+                                             Float.parseFloat(result.get("Fee").toString()));
                                     users.add(user);
                                 }
 
@@ -127,7 +127,7 @@ public class Homepage extends AppCompatActivity {
     }
     public void searchCategory(String searchterms){
         db.collection("Tutors")
-                .whereEqualTo("Categories", searchterms)
+                .whereArrayContains("Categories", searchterms)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -137,14 +137,14 @@ public class Homepage extends AppCompatActivity {
                                 Log.d("TAG1", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = new HashMap<>();
                                 result = document.getData();
-
+                                Log.d("hello2", result.toString());
                                 if(!(users.contains(result.get("Email").toString()))){
                                     User user = new User(result.get("Email").toString(),
                                             result.get("First name").toString(),
                                             result.get("Last name").toString(),
                                             result.get("Contact details").toString(),
                                             (ArrayList<String>) result.get("Categories"),
-                                            (double) result.get("Fee"));
+                                             Float.parseFloat(result.get("Fee").toString()));
                                     users.add(user);
                                 }
 
@@ -244,9 +244,10 @@ public class Homepage extends AppCompatActivity {
                         for (User user: users){
                             userString.add(gson.toJson(user));
                         }
-
+                        Log.d("hello",userString.toString());
                         intent.putStringArrayListExtra("Results",userString);
                         startActivity(intent);
+                        users.clear();
                     }
                 };
 
