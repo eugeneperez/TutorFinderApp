@@ -36,6 +36,9 @@ import java.util.Map;
 
 /*
 * TODO:
+*  fix image uri retrieval
+* update db
+* update registration(dapat may 2nd page)
 * */
 
 public class Register extends AppCompatActivity {

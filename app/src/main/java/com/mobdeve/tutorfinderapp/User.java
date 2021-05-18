@@ -1,5 +1,7 @@
 package com.mobdeve.tutorfinderapp;
 
+import android.net.Uri;
+
 import java.util.ArrayList;
 
 public class User {
@@ -9,6 +11,7 @@ public class User {
     private String contact;
     private ArrayList<String> categories;
     private float fee;
+    private Uri profpic;
 
     public User(String email, String firstname, String lastname, String contact, ArrayList<String> categories, float fee) {
         this.email = email;
@@ -19,6 +22,13 @@ public class User {
         this.fee=fee;
     }
 
+    public Uri getProfpic() {
+        return profpic;
+    }
+
+    public void setProfpic(Uri profpic) {
+        this.profpic = profpic;
+    }
 
     public ArrayList<String> getCategories() {
         return categories;

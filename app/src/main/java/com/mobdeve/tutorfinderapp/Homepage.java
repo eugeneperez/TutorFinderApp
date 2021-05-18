@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -81,7 +82,9 @@ public class Homepage extends AppCompatActivity {
                                             result.get("Contact details").toString(),
                                             (ArrayList<String>) result.get("Categories"),
                                             Float.parseFloat(result.get("Fee").toString()));
-
+                                    if(!result.get("Profile Picture").equals(null)){
+                                            user.setProfpic((Uri) result.get("Profile Picture"));
+                                    }
                                     users.add(user);
                                 }
 

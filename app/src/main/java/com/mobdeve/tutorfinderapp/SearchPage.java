@@ -171,7 +171,8 @@ public class SearchPage extends AppCompatActivity {
             holder.text_fee.setText(Float.toString(user.getFee()));
             holder.text_categories.setText(categories);
             //holder.text_rating.setText(rating);
-            holder.image_profile.setImageResource(R.drawable.profile);
+
+            holder.image_profile.setImageURI(user.getProfpic());
             holder.image_arrow.setImageResource(R.drawable.arrow_icon);
         }
 
