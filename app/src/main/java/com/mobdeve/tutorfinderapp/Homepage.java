@@ -153,6 +153,7 @@ public class Homepage extends AppCompatActivity {
                     results.addAll(searchLastName(results, searchterms));
                     Log.d("Results", "onClick: results"+results);
                     Intent i = new Intent(Homepage.this, SearchPage.class);
+                    i.putStringArrayListExtra("results",results);
                     startActivity(i);
                 }
                 //start next activity
