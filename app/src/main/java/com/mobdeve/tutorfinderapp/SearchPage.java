@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +17,63 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SearchPage extends AppCompatActivity {
 
     private Spinner spinnerAdapter;
     private EditText search;
     private ArrayList<Offering> offerings;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    private ArrayList<Offering> findOfferings(ArrayList<String> emails){
+        ArrayList<Offering> offerings = new ArrayList<>();
+
+        for(String email: emails){
+            db.collection("Offerings")
+                    .whereEqualTo("Email", email)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d("TAG2", document.getId() + " => " + document.getData());
+                                    Map<String, Object> result = new HashMap<>();
+                                    result = document.getData();
+                                    String category;
+                                    ArrayList<String> specializations = new ArrayList<>();
+                                    float fee;
+                                    Offering offer;
+
+                                    if(!(offerings.contains(result.get("Email").toString()))){
+                                        category = result.get("Category").toString();
+                                        fee = Float.parseFloat(result.get("Fee").toString());
+                                        specializations = (ArrayList<String>) document.get("Specialization");
+                                        offer = new Offering(email, category, fee, specializations);
+                                        offerings.add(offer);
+                                    }
+
+                                    Log.d("offerings", "onComplete: offerings"+offerings);
+                                }
+                            } else {
+                                Log.d("TAG2", "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
+        }
+
+
+        return offerings;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +94,11 @@ public class SearchPage extends AppCompatActivity {
         spinnerAdapter.setAdapter(arrayAdapter);
 
         Intent i= getIntent();
-        ArrayList<String> emails= i.getStringArrayListExtra("results");
+        ArrayList<String> emails= i.getStringArrayListExtra("Results");
+        Log.d("TAG2", "onCreate: emails"+emails);
         // get offerings data
-
+        offerings = findOfferings(emails);
+        Log.d("TAG2", "onCreate: offerings"+offerings);
     }
 
     public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHolder> {

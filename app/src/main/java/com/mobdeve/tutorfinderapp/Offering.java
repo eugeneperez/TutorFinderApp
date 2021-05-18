@@ -4,16 +4,12 @@ import java.util.ArrayList;
 
 public class Offering {
     private String email;
-    private String firstname;
-    private String lastname;
     private String category;
-    private String fee;
+    private float fee;
     private ArrayList<String> specializations;
 
-    public Offering(String email, String firstname, String lastname, String category, String fee, ArrayList<String> specializations){
+    public Offering(String email, String category, float fee, ArrayList<String> specializations){
         this.email=email;
-        this.firstname=firstname;
-        this.lastname=lastname;
         this.category=category;
         this.fee=fee;
         this.specializations=specializations;
@@ -35,22 +31,6 @@ public class Offering {
         this.email = email;
     }
 
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
     public String getCategory() {
         return category;
     }
@@ -59,11 +39,11 @@ public class Offering {
         this.category = category;
     }
 
-    public String getFee() {
+    public float getFee() {
         return fee;
     }
 
-    public void setFee(String fee) {
+    public void setFee(float fee) {
         this.fee = fee;
     }
 }
