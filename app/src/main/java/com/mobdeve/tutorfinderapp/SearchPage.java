@@ -31,11 +31,9 @@ public class SearchPage extends AppCompatActivity {
 
     private Spinner spinnerAdapter;
     private EditText search;
-    private ArrayList<Offering> offerings;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    private ArrayList<Offering> findOfferings(ArrayList<String> emails){
-        ArrayList<Offering> offerings = new ArrayList<>();
+    private void findOfferings(ArrayList<String> emails){
 
         for(String email: emails){
             db.collection("Offerings")
@@ -52,17 +50,7 @@ public class SearchPage extends AppCompatActivity {
                                     String category;
                                     ArrayList<String> specializations = new ArrayList<>();
                                     float fee;
-                                    Offering offer;
 
-                                    if(!(offerings.contains(result.get("Email").toString()))){
-                                        category = result.get("Category").toString();
-                                        fee = Float.parseFloat(result.get("Fee").toString());
-                                        specializations = (ArrayList<String>) document.get("Specialization");
-                                        offer = new Offering(email, category, fee, specializations);
-                                        offerings.add(offer);
-                                    }
-
-                                    Log.d("offerings", "onComplete: offerings"+offerings);
                                 }
                             } else {
                                 Log.d("TAG2", "Error getting documents: ", task.getException());
@@ -72,7 +60,7 @@ public class SearchPage extends AppCompatActivity {
         }
 
 
-        return offerings;
+
     }
 
     @Override
@@ -86,7 +74,6 @@ public class SearchPage extends AppCompatActivity {
 
         arrayList.add("People");
         arrayList.add("Category");
-        arrayList.add("Specialization");
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayList);
 
@@ -97,14 +84,12 @@ public class SearchPage extends AppCompatActivity {
         ArrayList<String> emails= i.getStringArrayListExtra("Results");
         Log.d("TAG2", "onCreate: emails"+emails);
         // get offerings data
-        offerings = findOfferings(emails);
-        Log.d("TAG2", "onCreate: offerings"+offerings);
     }
 
     public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHolder> {
-        private ArrayList<Offering> resultList= new ArrayList<>();
+        private ArrayList<String> resultList= new ArrayList<>();
 
-        public ResultsAdapter(ArrayList<Offering> resultList){ this.resultList=resultList;}
+        public ResultsAdapter(ArrayList<String> resultList){ this.resultList=resultList;}
 
         @NonNull
         @Override

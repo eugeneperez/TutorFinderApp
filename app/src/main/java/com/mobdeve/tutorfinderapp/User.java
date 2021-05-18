@@ -1,17 +1,39 @@
 package com.mobdeve.tutorfinderapp;
 
+import java.util.ArrayList;
+
 public class User {
     private String email;
     private String firstname;
     private String lastname;
     private String contact;
+    private ArrayList<String> categories;
+    private double fee;
 
-
-    public User(String email, String firstname, String lastname, String contact) {
+    public User(String email, String firstname, String lastname, String contact, ArrayList<String> categories, double fee) {
         this.email = email;
         this.firstname = firstname;
         this.lastname = lastname;
         this.contact = contact;
+        this.categories= categories;
+        this.fee=fee;
+    }
+
+
+    public ArrayList<String> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(ArrayList<String> categories) {
+        this.categories = categories;
+    }
+
+    public double getFee() {
+        return fee;
+    }
+
+    public void setFee(double fee) {
+        this.fee = fee;
     }
 
     public String getEmail() {

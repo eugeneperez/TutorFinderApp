@@ -76,9 +76,12 @@ public class Homepage extends AppCompatActivity {
 
                                 if(!(users.contains(result.get("Email").toString()))){
                                     User user = new User(result.get("Email").toString(),
-                                    result.get("First name").toString(),
-                                    result.get("Last name").toString(),
-                                    result.get("Contact details").toString());
+                                            result.get("First name").toString(),
+                                            result.get("Last name").toString(),
+                                            result.get("Contact details").toString(),
+                                            (ArrayList<String>) result.get("Categories"),
+                                            (double) result.get("Fee"));
+
                                     users.add(user);
                                 }
 
@@ -108,7 +111,40 @@ public class Homepage extends AppCompatActivity {
                                     User user = new User(result.get("Email").toString(),
                                             result.get("First name").toString(),
                                             result.get("Last name").toString(),
-                                            result.get("Contact details").toString());
+                                            result.get("Contact details").toString(),
+                                            (ArrayList<String>) result.get("Categories"),
+                                            (double) result.get("Fee"));
+                                    users.add(user);
+                                }
+
+                                Log.d("Result2", "onComplete: results2"+users);
+                            }
+                        } else {
+                            Log.d("TAG1", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
+    public void searchCategory(String searchterms){
+        db.collection("Tutors")
+                .whereEqualTo("Categories", searchterms)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("TAG1", document.getId() + " => " + document.getData());
+                                Map<String, Object> result = new HashMap<>();
+                                result = document.getData();
+
+                                if(!(users.contains(result.get("Email").toString()))){
+                                    User user = new User(result.get("Email").toString(),
+                                            result.get("First name").toString(),
+                                            result.get("Last name").toString(),
+                                            result.get("Contact details").toString(),
+                                            (ArrayList<String>) result.get("Categories"),
+                                            (double) result.get("Fee"));
                                     users.add(user);
                                 }
 
@@ -166,7 +202,6 @@ public class Homepage extends AppCompatActivity {
 
         arrayList.add("People");
         arrayList.add("Category");
-        arrayList.add("Specialization");
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayList);
 
@@ -220,12 +255,11 @@ public class Homepage extends AppCompatActivity {
                     searchLastName(searchterms);
                     count.start();
                 }
-//                if(spinnerAdapter.getSelectedItem().toString().equals("Category")){
-//                    searchCategory(searchterms);
-//                }
-//                if(spinnerAdapter.getSelectedItem().toString().equals("Specialization")){
-//                    searchSpecialization(searchterms);
-//                }
+                else if(spinnerAdapter.getSelectedItem().toString().equals("Category")){
+                    searchCategory(searchterms);
+                    count.start();
+                }
+
 
 
             }
