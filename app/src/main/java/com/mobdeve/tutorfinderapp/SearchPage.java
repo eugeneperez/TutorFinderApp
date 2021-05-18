@@ -2,6 +2,7 @@ package com.mobdeve.tutorfinderapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -22,6 +24,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +37,8 @@ public class SearchPage extends AppCompatActivity {
     private Spinner spinnerAdapter;
     private EditText search;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private ArrayList<User> users = new ArrayList<>();
+    private RecyclerView results_rv;
 
     private void findOfferings(ArrayList<String> emails){
 
@@ -67,6 +74,7 @@ public class SearchPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_page);
+        Gson gson = new Gson();
 
         spinnerAdapter = findViewById(R.id.spinner_searchpage);
 
@@ -81,15 +89,44 @@ public class SearchPage extends AppCompatActivity {
         spinnerAdapter.setAdapter(arrayAdapter);
 
         Intent i= getIntent();
-        ArrayList<String> emails= i.getStringArrayListExtra("Results");
-        Log.d("TAG2", "onCreate: emails"+emails);
+        ArrayList<String> results = i.getStringArrayListExtra("Results");
+        Log.d("TAG2", "onCreate: emails"+results);
+
+        for(String user: results){
+            users.add(gson.fromJson(user, User.class));
+        }
+
+        results_rv = findViewById(R.id.search_page_rv);
+        ResultsAdapter adapter = new ResultsAdapter(users);
+
+        results_rv.setAdapter(adapter);
+        results_rv.setLayoutManager(new LinearLayoutManager(this));
         // get offerings data
     }
 
     public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHolder> {
-        private ArrayList<String> resultList= new ArrayList<>();
+        private ArrayList<User> resultList= new ArrayList<>();
 
-        public ResultsAdapter(ArrayList<String> resultList){ this.resultList=resultList;}
+        public class ViewHolder extends RecyclerView.ViewHolder{
+            private TextView text_name;
+            private TextView text_fee;
+            private TextView text_categories;
+            private TextView text_rating;
+            private ImageView image_arrow;
+            private ImageView image_profile;
+
+            public ViewHolder(View view){
+                super(view);
+                text_name = view.findViewById(R.id.result_name);
+                text_categories = view.findViewById(R.id.result_categories);
+                text_fee = view.findViewById(R.id.result_fee);
+                text_rating = view.findViewById(R.id.result_rating);
+                image_arrow = view.findViewById(R.id.result_arrow);
+                image_profile = view.findViewById(R.id.result_profilepic);
+            }
+        }
+
+        public ResultsAdapter(ArrayList<User> resultList){ this.resultList=resultList;}
 
         @NonNull
         @Override
@@ -122,29 +159,25 @@ public class SearchPage extends AppCompatActivity {
 //                    }
 //                });
 //            }
+            User user = resultList.get(position);
+            String name = user.getFirstname() + " " + user.getLastname();
+            String categories = new String();
+
+            for(String category:user.getCategories()){
+                categories += category+" ";
+            }
+
+            holder.text_name.setText(name);
+            holder.text_fee.setText(Float.toString(user.getFee()));
+            holder.text_categories.setText(categories);
+            //holder.text_rating.setText(rating);
+            holder.image_profile.setImageResource(R.drawable.profile);
+            holder.image_arrow.setImageResource(R.drawable.arrow_icon);
         }
 
         @Override
         public int getItemCount() {
             return resultList.size();
-        }
-        public class ViewHolder extends RecyclerView.ViewHolder {
-//            public TextView ifDraftTv;
-//            public TextView toEmailTv;
-//            public TextView subjectEmailTv;
-//            public TextView bodyTv;
-//            public LinearLayout rowll;
-
-            public ViewHolder(@NonNull View itemView) {
-                super(itemView);
-//                this.ifDraftTv = (TextView) itemView.findViewById(R.id.ifDraftTv);
-//                this.toEmailTv = (TextView) itemView.findViewById(R.id.toEmailTv);
-//                this.subjectEmailTv = (TextView) itemView.findViewById(R.id.subjectEmailTv);
-//                this.bodyTv = (TextView) itemView.findViewById(R.id.bodyTv);
-//                this.rowll = (LinearLayout) itemView.findViewById(R.id.rowll);
-//                this.ifDraftTv= (TextView) itemView.findViewById(R.id.ifDraftTv);
-            }
-
         }
     }
 

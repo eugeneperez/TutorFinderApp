@@ -28,7 +28,7 @@ public class User {
         this.categories = categories;
     }
 
-    public double getFee() {
+    public float getFee() {
         return fee;
     }
 
