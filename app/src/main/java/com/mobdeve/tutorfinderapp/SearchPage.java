@@ -26,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -172,7 +173,8 @@ public class SearchPage extends AppCompatActivity {
             holder.text_fee.setText(Float.toString(user.getFee()));
             holder.text_categories.setText(categories);
             //holder.text_rating.setText(rating)
-            holder.image_profile.setImageURI(Uri.parse(user.getProfpic().toString()));
+            String imgUri=user.getProfpic();
+            Picasso.get().load(imgUri).into(holder.image_profile);
             holder.image_arrow.setImageResource(R.drawable.arrow_icon);
         }
 

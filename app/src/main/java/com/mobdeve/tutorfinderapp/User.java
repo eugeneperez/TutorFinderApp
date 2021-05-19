@@ -11,7 +11,7 @@ public class User {
     private String contact;
     private ArrayList<String> categories;
     private float fee;
-    private Uri profpic;
+    private String profpic;
 
     public User(String email, String firstname, String lastname, String contact, ArrayList<String> categories, float fee) {
         this.email = email;
@@ -22,11 +22,11 @@ public class User {
         this.fee=fee;
     }
 
-    public Uri getProfpic() {
+    public String getProfpic() {
         return profpic;
     }
 
-    public void setProfpic(Uri profpic) {
+    public void setProfpic(String profpic) {
         this.profpic = profpic;
     }
 

@@ -83,7 +83,7 @@ public class Homepage extends AppCompatActivity {
                                             (ArrayList<String>) result.get("Categories"),
                                             Float.parseFloat(result.get("Fee").toString()));
                                     if(!result.get("Profile Picture").equals(null)){
-                                            user.setProfpic((Uri) result.get("Profile Picture"));
+                                            user.setProfpic(result.get("Profile Picture").toString());
                                     }
                                     users.add(user);
                                 }
@@ -117,6 +117,7 @@ public class Homepage extends AppCompatActivity {
                                             result.get("Contact details").toString(),
                                             (ArrayList<String>) result.get("Categories"),
                                              Float.parseFloat(result.get("Fee").toString()));
+                                    user.setProfpic(result.get("Profile Picture").toString());
                                     users.add(user);
                                 }
 
