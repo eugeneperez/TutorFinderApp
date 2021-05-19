@@ -158,7 +158,7 @@ public class Register extends AppCompatActivity {
         if(requestCode==1000){
             if(resultCode== Activity.RESULT_OK){
                 Uri imageUri= data.getData();
-               Picasso.get().load(imageUri).fit().centerCrop().into(uploadDpIv);
+               Picasso.get().load(imageUri).fit().centerInside().into(uploadDpIv);
                ImageFile= imageUri;
             }
         }

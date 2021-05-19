@@ -18,8 +18,8 @@
 
         <ImageView
             android:id="@+id/result_profilepic"
-            android:layout_width="116dp"
-            android:layout_height="wrap_content"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:layout_marginRight="10dp"
             android:paddingStart="10dp"
             android:paddingTop="15dp"
