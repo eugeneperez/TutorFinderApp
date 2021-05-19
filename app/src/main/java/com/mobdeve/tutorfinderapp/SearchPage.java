@@ -287,7 +287,7 @@ public class SearchPage extends AppCompatActivity {
             holder.text_categories.setText(categories);
             //holder.text_rating.setText(rating)
             String imgUri=user.getProfpic();
-            Picasso.get().load(imgUri).into(holder.image_profile);
+            Picasso.get().load(imgUri).fit().centerCrop().into(holder.image_profile);
             holder.image_arrow.setImageResource(R.drawable.arrow_icon);
         }
 
