@@ -1,5 +1,6 @@
 package com.mobdeve.tutorfinderapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -13,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.mobdeve.tutorfinderapp.ui.main.SectionsPagerAdapter;
 
 public class TutorHomePage extends AppCompatActivity {
@@ -31,8 +33,10 @@ public class TutorHomePage extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                FirebaseAuth.getInstance().signOut();
+                Intent intent= new Intent(TutorHomePage.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
