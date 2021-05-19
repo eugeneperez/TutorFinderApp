@@ -217,6 +217,7 @@ public class SearchPage extends AppCompatActivity {
                         Log.d("hello",userString.toString());
                         intent.putStringArrayListExtra("Results",userString);
                         startActivity(intent);
+                        finish();
                         users.clear();
                     }
                 };
