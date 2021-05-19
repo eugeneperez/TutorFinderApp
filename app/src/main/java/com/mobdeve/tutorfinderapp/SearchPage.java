@@ -275,6 +275,7 @@ public class SearchPage extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position){
             User user = resultList.get(position);
+            Gson gson = new Gson();
             String name = user.getFirstname().substring(0).toUpperCase() + " " + user.getLastname().substring(0).toUpperCase();
             String categories = new String();
 
@@ -293,6 +294,15 @@ public class SearchPage extends AppCompatActivity {
             String imgUri=user.getProfpic();
             Picasso.get().load(imgUri).into(holder.image_profile);
             holder.image_arrow.setImageResource(R.drawable.arrow_icon);
+            holder.image_arrow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(SearchPage.this, DetailedInfo.class);
+                    String json = gson.toJson(user);
+                    i.putExtra("User", json);
+                    startActivity(i);
+                }
+            });
         }
 
         @Override
