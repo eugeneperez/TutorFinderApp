@@ -26,9 +26,8 @@ public class Login extends AppCompatActivity {
     private Button loginbtn;
     private FirebaseAuth mAuth;
 
-
     private void authLogin(String username, String password){
-        if(username.equals("admin") && password.equals("password")){
+        if(username.equals("admin") && password.equals("password")) {
             Intent adminIntent = new Intent(Login.this, AdminPage.class);
             startActivity(adminIntent);
             finish();
