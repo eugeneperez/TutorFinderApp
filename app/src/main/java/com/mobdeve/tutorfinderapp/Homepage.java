@@ -61,10 +61,11 @@ public class Homepage extends AppCompatActivity {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ArrayList<User> users = new ArrayList<>();
 
-    public void searchFirstName(String searchterms){
+    public void searchFirstName2(String searchterms){
         ArrayList<String> resulting = new ArrayList<>();
         db.collection("Tutors")
-                .whereEqualTo("First name", searchterms)
+                .orderBy("First name")
+                .startAt(searchterms)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -74,20 +75,26 @@ public class Homepage extends AppCompatActivity {
                                 Log.d("TAG1", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = new HashMap<>();
                                 result = document.getData();
+                                boolean duplicate = false;
                                 Log.d("hello2", result.toString());
-                                if(!(users.contains(result.get("Email").toString()))){
-                                    User user = new User(result.get("Email").toString(),
-                                            result.get("First name").toString(),
-                                            result.get("Last name").toString(),
-                                            result.get("Contact details").toString(),
-                                            (ArrayList<String>) result.get("Categories"),
-                                            result.get("Fee").toString());
-                                    if(!result.get("Profile Picture").equals(null)){
-                                            user.setProfpic(result.get("Profile Picture").toString());
+                                User user = new User(result.get("Email").toString(),
+                                        result.get("First name").toString(),
+                                        result.get("Last name").toString(),
+                                        result.get("Contact details").toString(),
+                                        (ArrayList<String>) result.get("Categories"),
+                                        result.get("Fee").toString());
+                                user.setProfpic(result.get("Profile Picture").toString());
+
+                                for(User userTemp: users){
+                                    if(userTemp.getEmail().equals(user.getEmail())){
+                                        duplicate = true;
                                     }
-                                    users.add(user);
                                 }
 
+                                if(!duplicate){
+                                    users.add(user);
+                                    Log.d("Result1", "onComplete: USER"+user.getEmail());
+                                }
                                 Log.d("Result1", "onComplete: results1"+users);
                             }
                         } else {
@@ -97,9 +104,11 @@ public class Homepage extends AppCompatActivity {
                 });
     }
 
-    public void searchLastName(String searchterms){
+    public void searchLastName2(String searchterms){
         db.collection("Tutors")
-                .whereEqualTo("Last name", searchterms)
+                .orderBy("Last name")
+                .startAt(searchterms)
+                .endAt(searchterms+"\\f8ff")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -109,18 +118,27 @@ public class Homepage extends AppCompatActivity {
                                 Log.d("TAG1", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = new HashMap<>();
                                 result = document.getData();
+                                boolean duplicate = false;
                                 Log.d("hello2", result.toString());
-                                if(!(users.contains(result.get("Email").toString()))){
-                                    User user = new User(result.get("Email").toString(),
-                                            result.get("First name").toString(),
-                                            result.get("Last name").toString(),
-                                            result.get("Contact details").toString(),
-                                            (ArrayList<String>) result.get("Categories"),
-                                             result.get("Fee").toString());
-                                    user.setProfpic(result.get("Profile Picture").toString());
-                                    users.add(user);
+                                User user = new User(result.get("Email").toString(),
+                                        result.get("First name").toString(),
+                                        result.get("Last name").toString(),
+                                        result.get("Contact details").toString(),
+                                        (ArrayList<String>) result.get("Categories"),
+                                        result.get("Fee").toString());
+                                user.setProfpic(result.get("Profile Picture").toString());
+
+                                for(User userTemp: users){
+                                    if(userTemp.getEmail().equals(user.getEmail())){
+                                        duplicate = true;
+                                    }
                                 }
 
+                                if(!duplicate){
+                                    users.add(user);
+                                    Log.d("Result2", "onComplete: USER"+user.getEmail());
+                                    Log.d("Result2", "onComplete: ENTERED");
+                                }
                                 Log.d("Result2", "onComplete: results2"+users);
                             }
                         } else {
@@ -129,6 +147,7 @@ public class Homepage extends AppCompatActivity {
                     }
                 });
     }
+
     public void searchCategory(String searchterms){
         db.collection("Tutors")
                 .whereArrayContains("Categories", searchterms)
@@ -151,7 +170,6 @@ public class Homepage extends AppCompatActivity {
                                              result.get("Fee").toString());
                                     users.add(user);
                                 }
-
                                 Log.d("Result2", "onComplete: results2"+users);
                             }
                         } else {
@@ -217,16 +235,16 @@ public class Homepage extends AppCompatActivity {
                         for (User user: users){
                             userString.add(gson.toJson(user));
                         }
+                        users.clear();
                         Log.d("hello",userString.toString());
                         intent.putStringArrayListExtra("Results",userString);
                         startActivity(intent);
-                        users.clear();
                     }
                 };
 
                 if(spinnerAdapter.getSelectedItem().toString().equals("People")){
-                    searchFirstName(searchterms);
-                    searchLastName(searchterms);
+                    searchFirstName2(searchterms);
+                    searchLastName2(searchterms);
                     count.start();
                 }
                 else if(spinnerAdapter.getSelectedItem().toString().equals("Category")){
