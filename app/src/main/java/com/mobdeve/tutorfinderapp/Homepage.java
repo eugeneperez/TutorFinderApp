@@ -81,7 +81,7 @@ public class Homepage extends AppCompatActivity {
                                             result.get("Last name").toString(),
                                             result.get("Contact details").toString(),
                                             (ArrayList<String>) result.get("Categories"),
-                                            Float.parseFloat(result.get("Fee").toString()));
+                                            result.get("Fee").toString());
                                     if(!result.get("Profile Picture").equals(null)){
                                             user.setProfpic(result.get("Profile Picture").toString());
                                     }
@@ -116,7 +116,7 @@ public class Homepage extends AppCompatActivity {
                                             result.get("Last name").toString(),
                                             result.get("Contact details").toString(),
                                             (ArrayList<String>) result.get("Categories"),
-                                             Float.parseFloat(result.get("Fee").toString()));
+                                             result.get("Fee").toString());
                                     user.setProfpic(result.get("Profile Picture").toString());
                                     users.add(user);
                                 }
@@ -148,7 +148,7 @@ public class Homepage extends AppCompatActivity {
                                             result.get("Last name").toString(),
                                             result.get("Contact details").toString(),
                                             (ArrayList<String>) result.get("Categories"),
-                                             Float.parseFloat(result.get("Fee").toString()));
+                                             result.get("Fee").toString());
                                     users.add(user);
                                 }
 

@@ -132,10 +132,11 @@ public class Register extends AppCompatActivity {
             if(type.equals("tutor")){
                 String[] strings = text_categories.getText().toString().split(",");
                 fee = Float.parseFloat(text_fee.getText().toString());
-
-
+                
                 for(String s:strings){
-                    categories.add(s.toLowerCase());
+                    String a = s.trim();
+                    Log.d("trimming", "onClick: string a"+a);
+                    categories.add(a.toLowerCase());
                 }
             }
 

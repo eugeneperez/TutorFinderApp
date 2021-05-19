@@ -89,7 +89,7 @@
                 android:layout_marginTop="24dp"
                 android:ems="10"
                 android:hint="Fee"
-                android:inputType="textPersonName" />
+                android:inputType="number" />
 
             <EditText
                 android:id="@+id/regPasswordEt"

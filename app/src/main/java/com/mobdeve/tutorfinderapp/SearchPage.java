@@ -68,7 +68,7 @@ public class SearchPage extends AppCompatActivity {
                                             result.get("Last name").toString(),
                                             result.get("Contact details").toString(),
                                             (ArrayList<String>) result.get("Categories"),
-                                            Float.parseFloat(result.get("Fee").toString()));
+                                            result.get("Fee").toString());
                                     if(!result.get("Profile Picture").equals(null)){
                                         user.setProfpic(result.get("Profile Picture").toString());
                                     }
@@ -102,7 +102,7 @@ public class SearchPage extends AppCompatActivity {
                                             result.get("Last name").toString(),
                                             result.get("Contact details").toString(),
                                             (ArrayList<String>) result.get("Categories"),
-                                            Float.parseFloat(result.get("Fee").toString()));
+                                            result.get("Fee").toString());
                                     user.setProfpic(result.get("Profile Picture").toString());
                                     users.add(user);
                                 }
@@ -134,7 +134,7 @@ public class SearchPage extends AppCompatActivity {
                                             result.get("Last name").toString(),
                                             result.get("Contact details").toString(),
                                             (ArrayList<String>) result.get("Categories"),
-                                            Float.parseFloat(result.get("Fee").toString()));
+                                            result.get("Fee").toString());
                                     users.add(user);
                                 }
 
@@ -279,11 +279,15 @@ public class SearchPage extends AppCompatActivity {
             String categories = new String();
 
             for(String category:user.getCategories()){
-                categories += category.substring(0).toUpperCase()+" ";
+                if(!category.equals(user.getCategories().get(user.getCategories().size()-1)))
+                categories += category.substring(0, 1).toUpperCase()+category.substring(1)+", ";
+                else
+                categories += category.substring(0, 1).toUpperCase()+category.substring(1);
             }
 
             holder.text_name.setText(name);
-            holder.text_fee.setText(Float.toString(user.getFee()));
+
+            holder.text_fee.setText("₱"+user.getFee()+".00/hour");
             holder.text_categories.setText(categories);
             //holder.text_rating.setText(rating)
             String imgUri=user.getProfpic();

@@ -10,10 +10,10 @@ public class User {
     private String lastname;
     private String contact;
     private ArrayList<String> categories;
-    private float fee;
+    private String fee;
     private String profpic;
 
-    public User(String email, String firstname, String lastname, String contact, ArrayList<String> categories, float fee) {
+    public User(String email, String firstname, String lastname, String contact, ArrayList<String> categories, String fee) {
         this.email = email;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -38,11 +38,11 @@ public class User {
         this.categories = categories;
     }
 
-    public float getFee() {
+    public String getFee() {
         return fee;
     }
 
-    public void setFee(float fee) {
+    public void setFee(String fee) {
         this.fee = fee;
     }
 
