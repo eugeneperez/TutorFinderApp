@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -160,44 +161,54 @@ public class Register extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
 //                             Sign in success, update UI with the signed-in user's information
+                            CountDownTimer count = new CountDownTimer(2000, 1000) {
+                                @Override
+                                public void onTick(long millisUntilFinished) {
+                                    Log.d("Tick", "onTick: ticktick");
+                                }
 
-                            user.put("Contact details", contact);
-                            user.put("Email", username);
-                            user.put("First name", firstname);
-                            user.put("Last name", lastname);
+                                @Override
+                                public void onFinish() {
+                                    user.put("Contact details", contact);
+                                    user.put("Email", username);
+                                    user.put("First name", firstname);
+                                    user.put("Last name", lastname);
+
+                                    Log.d("eug", user.toString());
+
+                                    if(type.equals("tutor")){
+                                        db.collection("Tutors").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                            @Override
+                                            public void onSuccess(DocumentReference documentReference) {
+                                                Intent intent = new Intent(Register.this, Homepage.class);
+                                                startActivity(intent);
+                                                Log.d("eug3", "entered");
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w("TAG", "Error adding document", e);
+                                            }
+                                        });
+                                    }else if (type.equals("tutee")){
+                                        db.collection("Tutees").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                            @Override
+                                            public void onSuccess(DocumentReference documentReference) {
+                                                Intent intent = new Intent(Register.this, Homepage.class);
+                                                //add Tutor to collection
+                                                startActivity(intent);
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w("TAG","Error adding document", e);
+                                            }
+                                        });
+                                    }
+                                }
+                            };
                             uploadImagetoFB(ImageFile);
-                            Log.d("eug", user.toString());
-
-                            if(type.equals("tutor")){
-                                db.collection("Tutors").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                    @Override
-                                    public void onSuccess(DocumentReference documentReference) {
-                                        Intent intent = new Intent(Register.this, Homepage.class);
-                                        startActivity(intent);
-                                        Log.d("eug3", "entered");
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w("TAG", "Error adding document", e);
-                                    }
-                                });
-                        }else if (type.equals("tutee")){
-                                db.collection("Tutees").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                    @Override
-                                    public void onSuccess(DocumentReference documentReference) {
-                                        Intent intent = new Intent(Register.this, Homepage.class);
-                                        //add Tutor to collection
-                                        startActivity(intent);
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w("TAG","Error adding document", e);
-                                    }
-                                });
-                            }
-
+                            count.start();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("TAG", "createUserWithEmail:failure", task.getException());
