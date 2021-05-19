@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,6 +42,7 @@ public class SearchPage extends AppCompatActivity {
 
     private Spinner spinnerAdapter;
     private EditText search;
+    private Button searchbtn;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ArrayList<User> users = new ArrayList<>();
     private RecyclerView results_rv;
@@ -152,6 +154,7 @@ public class SearchPage extends AppCompatActivity {
         Gson gson = new Gson();
 
         search = findViewById(R.id.searchbar_searchpage);
+        searchbtn = findViewById(R.id.searchbtn_searchpage);
         spinnerAdapter = findViewById(R.id.spinner_searchpage);
 
         ArrayList<String> arrayList = new ArrayList<>();
@@ -174,7 +177,6 @@ public class SearchPage extends AppCompatActivity {
 
         results_rv = findViewById(R.id.search_page_rv);
         ResultsAdapter adapter = new ResultsAdapter(users);
-
         results_rv.setAdapter(adapter);
         results_rv.setLayoutManager(new LinearLayoutManager(this));
         // get offerings data
@@ -182,46 +184,54 @@ public class SearchPage extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionID, KeyEvent event){
                 if(actionID == EditorInfo.IME_ACTION_DONE){
-                    String spin = spinnerAdapter.getSelectedItem().toString();
-                    String searchterms = search.getText().toString();
-                    //ArrayList<User> results = new ArrayList<>();
-                    //search in database
-                    Log.d("TAG1", "onClick: searchterms"+searchterms);
-
-                    CountDownTimer count = new CountDownTimer(2000, 1000) {
-                        @Override
-                        public void onTick(long millisUntilFinished) {
-                            Log.d("TICK", "onTick: users"+users);
-                        }
-
-                        @Override
-                        public void onFinish() {
-                            Intent intent = new Intent(SearchPage.this, SearchPage.class);
-                            ArrayList<String> userString = new ArrayList<>();
-
-                            Gson gson = new Gson();
-
-                            for (User user: users){
-                                userString.add(gson.toJson(user));
-                            }
-                            Log.d("hello",userString.toString());
-                            intent.putStringArrayListExtra("Results",userString);
-                            startActivity(intent);
-                            users.clear();
-                        }
-                    };
-
-                    if(spinnerAdapter.getSelectedItem().toString().equals("People")){
-                        searchFirstName(searchterms);
-                        searchLastName(searchterms);
-                        count.start();
-                    }
-                    else if(spinnerAdapter.getSelectedItem().toString().equals("Category")){
-                        searchCategory(searchterms);
-                        count.start();
-                    }
+                    searchbtn.performClick();
                 }
                 return false;
+            }
+        });
+        searchbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String spin = spinnerAdapter.getSelectedItem().toString();
+                String searchterms = search.getText().toString();
+                //ArrayList<User> results = new ArrayList<>();
+                //search in database
+                Log.d("TAG1", "onClick: searchterms"+searchterms);
+
+                CountDownTimer count = new CountDownTimer(2000, 1000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        Log.d("TICK", "onTick: users"+users);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        Intent intent = new Intent(SearchPage.this, SearchPage.class);
+                        ArrayList<String> userString = new ArrayList<>();
+
+                        Gson gson = new Gson();
+
+                        for (User user: users){
+                            userString.add(gson.toJson(user));
+                        }
+                        Log.d("hello",userString.toString());
+                        intent.putStringArrayListExtra("Results",userString);
+                        startActivity(intent);
+                        users.clear();
+                    }
+                };
+
+                if(spinnerAdapter.getSelectedItem().toString().equals("People")){
+                    users.clear();
+                    searchFirstName(searchterms);
+                    searchLastName(searchterms);
+                    count.start();
+                }
+                else if(spinnerAdapter.getSelectedItem().toString().equals("Category")){
+                    users.clear();
+                    searchCategory(searchterms);
+                    count.start();
+                }
             }
         });
     }
@@ -263,24 +273,6 @@ public class SearchPage extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position){
-//            final User user= resultList.get(position);
-//            holder.toEmailTv.setText("To: " + email.getEmailTo());
-//            holder.subjectEmailTv.setText("Subject: "+ email.getEmailSubject());
-//            holder.bodyTv.setText(prepareTextForDisplay(email.getEmailBody()));
-//            if(email.getIsDraft()==1) {
-//                holder.ifDraftTv.setVisibility(View.VISIBLE);
-//                holder.rowll.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Intent intent= new Intent(MainActivity.this, CreateEmailActivity.class);
-//                        intent.putExtra("EmailTo", email.getEmailTo());
-//                        intent.putExtra("EmailSubject", email.getEmailSubject());
-//                        intent.putExtra("EmailBody", email.getEmailBody());
-//                        intent.putExtra("EmailDraft", email.getIsDraft());
-//                        startActivity(intent);
-//                    }
-//                });
-//            }
             User user = resultList.get(position);
             String name = user.getFirstname() + " " + user.getLastname();
             String categories = new String();

@@ -184,7 +184,7 @@ public class Register extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
 //                             Sign in success, update UI with the signed-in user's information
-                            CountDownTimer count = new CountDownTimer(2000, 1000) {
+                            CountDownTimer count = new CountDownTimer(1000, 500) {
                                 @Override
                                 public void onTick(long millisUntilFinished) {
                                     Log.d("Tick", "onTick: ticktick");
