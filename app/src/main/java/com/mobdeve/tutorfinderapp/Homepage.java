@@ -202,12 +202,12 @@ public class Homepage extends AppCompatActivity {
         signoutbtn = findViewById(R.id.signoutbtn);
         mAuth = FirebaseAuth.getInstance();
 
-        ArrayList<String> arrayList = new ArrayList<>();
+        ArrayList<String> spinnerList = new ArrayList<>();
 
-        arrayList.add("People");
-        arrayList.add("Category");
+        spinnerList.add("People");
+        spinnerList.add("Category");
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayList);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerList);
 
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerAdapter.setAdapter(arrayAdapter);

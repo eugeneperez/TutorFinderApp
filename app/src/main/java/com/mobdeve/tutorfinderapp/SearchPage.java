@@ -9,10 +9,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -42,34 +45,104 @@ public class SearchPage extends AppCompatActivity {
     private ArrayList<User> users = new ArrayList<>();
     private RecyclerView results_rv;
 
-    private void findOfferings(ArrayList<String> emails){
 
-        for(String email: emails){
-            db.collection("Offerings")
-                    .whereEqualTo("Email", email)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Log.d("TAG2", document.getId() + " => " + document.getData());
-                                    Map<String, Object> result = new HashMap<>();
-                                    result = document.getData();
-                                    String category;
-                                    ArrayList<String> specializations = new ArrayList<>();
-                                    float fee;
-
+    public void searchFirstName(String searchterms){
+        ArrayList<String> resulting = new ArrayList<>();
+        db.collection("Tutors")
+                .whereEqualTo("First name", searchterms)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("TAG1", document.getId() + " => " + document.getData());
+                                Map<String, Object> result = new HashMap<>();
+                                result = document.getData();
+                                Log.d("hello2", result.toString());
+                                if(!(users.contains(result.get("Email").toString()))){
+                                    User user = new User(result.get("Email").toString(),
+                                            result.get("First name").toString(),
+                                            result.get("Last name").toString(),
+                                            result.get("Contact details").toString(),
+                                            (ArrayList<String>) result.get("Categories"),
+                                            Float.parseFloat(result.get("Fee").toString()));
+                                    if(!result.get("Profile Picture").equals(null)){
+                                        user.setProfpic(result.get("Profile Picture").toString());
+                                    }
+                                    users.add(user);
                                 }
-                            } else {
-                                Log.d("TAG2", "Error getting documents: ", task.getException());
+
+                                Log.d("Result1", "onComplete: results1"+users);
                             }
+                        } else {
+                            Log.d("TAG1", "Error getting documents: ", task.getException());
                         }
-                    });
-        }
+                    }
+                });
+    }
+    public void searchLastName(String searchterms){
+        db.collection("Tutors")
+                .whereEqualTo("Last name", searchterms)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("TAG1", document.getId() + " => " + document.getData());
+                                Map<String, Object> result = new HashMap<>();
+                                result = document.getData();
+                                Log.d("hello2", result.toString());
+                                if(!(users.contains(result.get("Email").toString()))){
+                                    User user = new User(result.get("Email").toString(),
+                                            result.get("First name").toString(),
+                                            result.get("Last name").toString(),
+                                            result.get("Contact details").toString(),
+                                            (ArrayList<String>) result.get("Categories"),
+                                            Float.parseFloat(result.get("Fee").toString()));
+                                    user.setProfpic(result.get("Profile Picture").toString());
+                                    users.add(user);
+                                }
 
+                                Log.d("Result2", "onComplete: results2"+users);
+                            }
+                        } else {
+                            Log.d("TAG1", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
+    public void searchCategory(String searchterms){
+        db.collection("Tutors")
+                .whereArrayContains("Categories", searchterms)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("TAG1", document.getId() + " => " + document.getData());
+                                Map<String, Object> result = new HashMap<>();
+                                result = document.getData();
+                                Log.d("hello2", result.toString());
+                                if(!(users.contains(result.get("Email").toString()))){
+                                    User user = new User(result.get("Email").toString(),
+                                            result.get("First name").toString(),
+                                            result.get("Last name").toString(),
+                                            result.get("Contact details").toString(),
+                                            (ArrayList<String>) result.get("Categories"),
+                                            Float.parseFloat(result.get("Fee").toString()));
+                                    users.add(user);
+                                }
 
-
+                                Log.d("Result2", "onComplete: results2"+users);
+                            }
+                        } else {
+                            Log.d("TAG1", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 
     @Override
@@ -78,6 +151,7 @@ public class SearchPage extends AppCompatActivity {
         setContentView(R.layout.activity_search_page);
         Gson gson = new Gson();
 
+        search = findViewById(R.id.searchbar_searchpage);
         spinnerAdapter = findViewById(R.id.spinner_searchpage);
 
         ArrayList<String> arrayList = new ArrayList<>();
@@ -104,6 +178,52 @@ public class SearchPage extends AppCompatActivity {
         results_rv.setAdapter(adapter);
         results_rv.setLayoutManager(new LinearLayoutManager(this));
         // get offerings data
+        search.setOnEditorActionListener(new TextView.OnEditorActionListener(){
+            @Override
+            public boolean onEditorAction(TextView v, int actionID, KeyEvent event){
+                if(actionID == EditorInfo.IME_ACTION_DONE){
+                    String spin = spinnerAdapter.getSelectedItem().toString();
+                    String searchterms = search.getText().toString();
+                    //ArrayList<User> results = new ArrayList<>();
+                    //search in database
+                    Log.d("TAG1", "onClick: searchterms"+searchterms);
+
+                    CountDownTimer count = new CountDownTimer(2000, 1000) {
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+                            Log.d("TICK", "onTick: users"+users);
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            Intent intent = new Intent(SearchPage.this, SearchPage.class);
+                            ArrayList<String> userString = new ArrayList<>();
+
+                            Gson gson = new Gson();
+
+                            for (User user: users){
+                                userString.add(gson.toJson(user));
+                            }
+                            Log.d("hello",userString.toString());
+                            intent.putStringArrayListExtra("Results",userString);
+                            startActivity(intent);
+                            users.clear();
+                        }
+                    };
+
+                    if(spinnerAdapter.getSelectedItem().toString().equals("People")){
+                        searchFirstName(searchterms);
+                        searchLastName(searchterms);
+                        count.start();
+                    }
+                    else if(spinnerAdapter.getSelectedItem().toString().equals("Category")){
+                        searchCategory(searchterms);
+                        count.start();
+                    }
+                }
+                return false;
+            }
+        });
     }
 
     public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHolder> {
