@@ -161,37 +161,6 @@ public class Homepage extends AppCompatActivity {
                 });
     }
 
-//    public void searchFirstName(String searchterms, FirebaseCallback myFirebaseCallback){
-//        db.collection("Tutors")
-//                .whereEqualTo("First name", searchterms)
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                Log.d("TAG1", document.getId() + " => " + document.getData());
-//                                Map<String, Object> result = new HashMap<>();
-//                                result = document.getData();
-//
-//                                if(!(users.contains(result.get("Email").toString()))){
-//                                    Log.d("TAG11", "onComplete to callback: ENTERED");
-//                                    myFirebaseCallback.onCallBack(result);
-//                                }
-//                                Log.d("Result1", "onComplete: results1"+users);
-//                            }
-//                        } else {
-//                            Log.d("TAG1", "Error getting documents: ", task.getException());
-//                        }
-//                    }
-//                });
-//
-//    }
-
-//    public interface FirebaseCallback{
-//        void onCallBack(Map result);
-//    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

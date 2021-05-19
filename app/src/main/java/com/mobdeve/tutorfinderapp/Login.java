@@ -32,10 +32,12 @@ public class Login extends AppCompatActivity {
     private EditText text_password;
     private Button loginbtn;
     private FirebaseAuth mAuth;
+
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+
     private void authLogin(String username, String password){
-        if(username.equals("admin") && password.equals("password")){
+        if(username.equals("admin") && password.equals("password")) {
             Intent adminIntent = new Intent(Login.this, AdminPage.class);
             startActivity(adminIntent);
             finish();
