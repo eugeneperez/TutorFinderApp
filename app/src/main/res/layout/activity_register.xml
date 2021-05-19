@@ -66,7 +66,7 @@
                 android:inputType="number" />
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/reg_categories_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"

@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -46,6 +47,7 @@ import java.util.Map;
 
 public class Register extends AppCompatActivity {
 
+    private TextView text_categories_tv;
     private EditText text_username;
     private EditText text_password;
     private EditText text_confirmpass;
@@ -72,7 +74,7 @@ public class Register extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         storageReference= FirebaseStorage.getInstance().getReference();
 
-
+        text_categories_tv = findViewById(R.id.reg_categories_tv);
         text_username = findViewById(R.id.regEmailEt);
         text_password = findViewById(R.id.regPasswordEt);
         text_confirmpass= findViewById(R.id.regConfirmPasswordEt);
@@ -83,9 +85,18 @@ public class Register extends AppCompatActivity {
         text_fee = findViewById(R.id.regFeeEt);
         registerbtn = findViewById(R.id.regPageBtn);
         uploadDpIv= findViewById(R.id.uploadDpIv);
+        text_categories_tv.setVisibility(View.GONE);
+        text_categories.setVisibility(View.GONE);
+        text_fee.setVisibility(View.GONE);
 
         Intent i = getIntent();
         String type = i.getStringExtra("Type");
+
+        if (type.equals("tutor")){
+            text_categories_tv.setVisibility(View.VISIBLE);
+            text_categories.setVisibility(View.VISIBLE);
+            text_fee.setVisibility(View.VISIBLE);
+        }
 
         uploadDpIv.setOnClickListener(new View.OnClickListener() {
             @Override
