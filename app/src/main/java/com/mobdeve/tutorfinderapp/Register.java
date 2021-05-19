@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -112,7 +111,15 @@ public class Register extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-        if(text_username.getText().toString().isEmpty() || text_password.getText().toString().isEmpty() || text_confirmpass.getText().toString().isEmpty() || text_firstname.getText().toString().isEmpty() || text_lastname.getText().toString().isEmpty() || text_contact.getText().toString().isEmpty()){
+        if(text_username.getText().toString().isEmpty() || text_password.getText().toString().isEmpty() || text_confirmpass.getText().toString().isEmpty()
+                || text_firstname.getText().toString().isEmpty()
+                || text_lastname.getText().toString().isEmpty()
+                || text_contact.getText().toString().isEmpty()){
+            if(type.equals("tutor")){
+                if(text_categories.getText().toString().isEmpty() || text_fee.getText().toString().isEmpty()){
+                    Toast.makeText(Register.this, "Please fill all paramaters", Toast.LENGTH_SHORT).show();
+                }
+            }
             Toast.makeText(Register.this, "Please fill all paramaters", Toast.LENGTH_SHORT).show();
         }else if (text_password.getText().toString().compareTo(text_confirmpass.getText().toString())!=0){
             Toast.makeText(Register.this, "Both password must match", Toast.LENGTH_SHORT).show();
@@ -156,7 +163,9 @@ public class Register extends AppCompatActivity {
         }
     }
 
-    private void uploadImagetoFB(Uri imageUri) {
+    private void addUser(Uri imageUri, String username, String firstname, String lastname,
+                                 String contact, ArrayList<String> categories, float fee) {
+
         StorageReference fileRef= storageReference.child(text_username.getText().toString()+"profilepic.jpg");
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -164,10 +173,52 @@ public class Register extends AppCompatActivity {
                 Task<Uri> downloadUrl=taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                     @Override
                     public void onComplete(@NonNull Task<Uri> task) {
-                         finalUri = task.getResult().toString();
-                         Log.d("boo2",  finalUri);
-                         user.put("Profile Picture", finalUri);
-                            Log.d("eug2", user.toString());
+                        finalUri = task.getResult().toString();
+                        Log.d("boo2",  finalUri);
+                        user.put("Profile Picture", finalUri);
+                        Log.d("eug2", user.toString());
+                        user.put("Contact details", contact);
+                        user.put("Email", username);
+                        user.put("First name", firstname);
+                        user.put("Last name", lastname);
+                        if(type.equals("tutor")){
+                            user.put("Categories", categories);
+                            user.put("Fee", fee);
+                        }
+
+                        Log.d("eug", user.toString());
+
+                        if(type.equals("tutor")){
+                            db.collection("Tutors").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    Intent intent = new Intent(Register.this, TutorHomePage.class);
+                                    startActivity(intent);
+                                    finish();
+                                    Log.d("eug3", "entered");
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w("TAG", "Error adding document", e);
+                                }
+                            });
+                        }else if (type.equals("tutee")){
+                            db.collection("Tutees").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    Intent intent = new Intent(Register.this, Homepage.class);
+                                    startActivity(intent);
+                                    finish();
+                                    Log.d("eug3tutee", "entered");
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w("TAG","Error adding document", e);
+                                }
+                            });
+                        }
                     }
                     });
             }
@@ -177,51 +228,6 @@ public class Register extends AppCompatActivity {
                 Toast.makeText(Register.this, "Image Failed to Upload", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    public void putData(String contact, String username, String firstname, String lastname,
-                        ArrayList<String> categories, float fee){
-        user.put("Contact details", contact);
-        user.put("Email", username);
-        user.put("First name", firstname);
-        user.put("Last name", lastname);
-        if(type.equals("tutor")){
-            user.put("Categories", categories);
-            user.put("Fee", fee);
-        }
-
-        Log.d("eug", user.toString());
-
-        if(type.equals("tutor")){
-            db.collection("Tutors").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                    Intent intent = new Intent(Register.this, TutorHomePage.class);
-                    startActivity(intent);
-                    Log.d("eug3", "entered");
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.w("TAG", "Error adding document", e);
-                }
-            });
-        }else if (type.equals("tutee")){
-            db.collection("Tutees").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                    Intent intent = new Intent(Register.this, Homepage.class);
-                    //add Tutor to collection
-                    startActivity(intent);
-                    Log.d("eug3tutee", "entered");
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.w("TAG","Error adding document", e);
-                }
-            });
-        }
     }
 
     public void createAccount(String username, String password, String type,
@@ -236,59 +242,10 @@ public class Register extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
 //                             Sign in success, update UI with the signed-in user's information
-                            CountDownTimer count = new CountDownTimer(5000, 500) {
-                                @Override
-                                public void onTick(long millisUntilFinished) {
-                                    Log.d("Tick", "onTick: ticktick");
-                                }
-
-                                @Override
-                                public void onFinish() {
-//                                    user.put("Contact details", contact);
-//                                    user.put("Email", username);
-//                                    user.put("First name", firstname);
-//                                    user.put("Last name", lastname);
-//                                    if(type.equals("tutor")){
-//                                        user.put("Categories", categories);
-//                                        user.put("Fee", fee);
-//                                    }
-//
-//                                    Log.d("eug", user.toString());
-//
-//                                    if(type.equals("tutor")){
-//                                        db.collection("Tutors").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                                            @Override
-//                                            public void onSuccess(DocumentReference documentReference) {
-//                                                Intent intent = new Intent(Register.this, TutorHomePage.class);
-//                                                startActivity(intent);
-//                                                Log.d("eug3", "entered");
-//                                            }
-//                                        }).addOnFailureListener(new OnFailureListener() {
-//                                            @Override
-//                                            public void onFailure(@NonNull Exception e) {
-//                                                Log.w("TAG", "Error adding document", e);
-//                                            }
-//                                        });
-//                                    }else if (type.equals("tutee")){
-//                                        db.collection("Tutees").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                                            @Override
-//                                            public void onSuccess(DocumentReference documentReference) {
-//                                                Intent intent = new Intent(Register.this, Homepage.class);
-//                                                //add Tutor to collection
-//                                                startActivity(intent);
-//                                                Log.d("eug3tutee", "entered");
-//                                            }
-//                                        }).addOnFailureListener(new OnFailureListener() {
-//                                            @Override
-//                                            public void onFailure(@NonNull Exception e) {
-//                                                Log.w("TAG","Error adding document", e);
-//                                            }
-//                                        });
-//                                    }
-                                }
-                            };
-                            uploadImagetoFB(ImageFile);
-                            count.start();
+                            registerbtn.setEnabled(false);
+                            Toast toast = Toast.makeText(getApplicationContext(), "Creating profile... Bitch hold on", Toast.LENGTH_SHORT);
+                            toast.show();
+                            addUser(ImageFile, username, firstname, lastname, contact, categories, fee);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("TAG", "createUserWithEmail:failure", task.getException());
@@ -296,24 +253,5 @@ public class Register extends AppCompatActivity {
                         }
                     }
                 });
-    }
-
-    public String md5(String s) {
-        try {
-            // Create MD5 Hash
-            MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
-            digest.update(s.getBytes());
-            byte messageDigest[] = digest.digest();
-
-            // Create Hex String
-            StringBuffer hexString = new StringBuffer();
-            for (int i=0; i<messageDigest.length; i++)
-                hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
-            return hexString.toString();
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return "";
     }
 }
