@@ -41,13 +41,15 @@ public class Login extends AppCompatActivity {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d("TAG", "signInWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
+                                //add query checking if user is in tutor or tutee.
+
                                 Intent intent= new Intent(Login.this, Homepage.class);
                                 startActivity(intent);
                                 finish();
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Log.w("TAG", "signInWithEmail:failure", task.getException());
-                                Toast.makeText(Login.this, "Incorrect credentials. Tangina mo",
+                                Toast.makeText(Login.this, "Incorrect credentials.",
                                         Toast.LENGTH_SHORT).show();
                             }
                         }

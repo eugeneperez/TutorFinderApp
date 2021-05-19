@@ -123,14 +123,14 @@ public class Register extends AppCompatActivity {
             String[] strings = text_categories.getText().toString().split(",");
 
             for(String s:strings){
-                categories.add(s);
+                categories.add(s.toLowerCase());
             }
 
             createAccount(text_username.getText().toString(),
                             text_password.getText().toString(),
                             type,
-                            text_firstname.getText().toString().substring(0,1).toUpperCase()+text_firstname.getText().toString().substring(1),
-                            text_lastname.getText().toString().substring(0,1).toUpperCase()+text_lastname.getText().toString().substring(1),
+                            text_firstname.getText().toString().toLowerCase(),
+                            text_lastname.getText().toString().toLowerCase(),
                              text_contact.getText().toString(), categories, Float.parseFloat(text_fee.getText().toString()));
 
         }
@@ -151,7 +151,7 @@ public class Register extends AppCompatActivity {
     }
 
     private void uploadImagetoFB(Uri imageUri) {
-        StorageReference fileRef= storageReference.child("profile2.jpg");
+        StorageReference fileRef= storageReference.child(text_username.getText().toString()+"profilepic.jpg");
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -205,7 +205,7 @@ public class Register extends AppCompatActivity {
                                         db.collection("Tutors").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                             @Override
                                             public void onSuccess(DocumentReference documentReference) {
-                                                Intent intent = new Intent(Register.this, Homepage.class);
+                                                Intent intent = new Intent(Register.this, TutorHomePage.class);
                                                 startActivity(intent);
                                                 Log.d("eug3", "entered");
                                             }

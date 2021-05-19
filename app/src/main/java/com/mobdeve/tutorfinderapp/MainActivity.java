@@ -1,9 +1,11 @@
 package com.mobdeve.tutorfinderapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -13,14 +15,24 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     private Button registerBtn;
     private Button loginBtn;
     private FirebaseAuth mAuth;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +43,35 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null) {
+//            db.collection("Tutors")
+//                    .whereArrayContains("Categories", user.get)
+//                    .get()
+//                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                            if (task.isSuccessful()) {
+//                                for (QueryDocumentSnapshot document : task.getResult()) {
+//                                    Log.d("TAG1", document.getId() + " => " + document.getData());
+//                                    Map<String, Object> result = new HashMap<>();
+//                                    result = document.getData();
+//                                    Log.d("hello2", result.toString());
+//                                    if(!(users.contains(result.get("Email").toString()))){
+//                                        User user = new User(result.get("Email").toString(),
+//                                                result.get("First name").toString(),
+//                                                result.get("Last name").toString(),
+//                                                result.get("Contact details").toString(),
+//                                                (ArrayList<String>) result.get("Categories"),
+//                                                Float.parseFloat(result.get("Fee").toString()));
+//                                        users.add(user);
+//                                    }
+//
+//                                    Log.d("Result2", "onComplete: results2"+users);
+//                                }
+//                            } else {
+//                                Log.d("TAG1", "Error getting documents: ", task.getException());
+//                            }
+//                        }
+//                    });
             Intent i = new Intent(MainActivity.this, Homepage.class);
             startActivity(i);
             finish();
