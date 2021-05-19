@@ -28,6 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -52,14 +53,11 @@ public class Register extends AppCompatActivity {
     private Button registerbtn;
     private ImageView uploadDpIv;
     private Uri ImageFile;
-    private final int PICK_IMAGE_REQUEST = 71;
-
+     String finalUri;
+    Map<String, Object> user = new HashMap<>();;
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private StorageReference storageReference;
-
-    public Register() {
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,13 +100,15 @@ public class Register extends AppCompatActivity {
             Toast.makeText(Register.this, "Both password must match", Toast.LENGTH_SHORT).show();
         }else if(text_password.getText().toString().length()<8 || text_confirmpass.getText().toString().length()<8 ){
             Toast.makeText(Register.this, "password must be at least 8 characters", Toast.LENGTH_SHORT).show();
+        }else if(ImageFile ==null){
+                Toast.makeText(Register.this, "no file selected", Toast.LENGTH_SHORT).show();
         }else {
             createAccount(text_username.getText().toString(),
                             text_password.getText().toString(),
                             type,
                             text_firstname.getText().toString().substring(0,1).toUpperCase()+text_firstname.getText().toString().substring(1),
                             text_lastname.getText().toString().substring(0,1).toUpperCase()+text_lastname.getText().toString().substring(1),
-                             text_contact.getText().toString(), ImageFile);
+                             text_contact.getText().toString());
 
         }
             }
@@ -121,18 +121,26 @@ public class Register extends AppCompatActivity {
         if(requestCode==1000){
             if(resultCode== Activity.RESULT_OK){
                 Uri imageUri= data.getData();
-                uploadDpIv.setImageURI(imageUri);
-                ImageFile = imageUri;
+               uploadDpIv.setImageURI(imageUri);
+               ImageFile= imageUri;
             }
         }
     }
 
     private void uploadImagetoFB(Uri imageUri) {
-        StorageReference fileRef= storageReference.child("profile.jpg");
+        StorageReference fileRef= storageReference.child("profile2.jpg");
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(Register.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
+                Task<Uri> downloadUrl=taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                         finalUri = task.getResult().toString();
+                         Log.d("boo2",  finalUri);
+                         user.put("Profile Picture", finalUri);
+                            Log.d("eug2", user.toString());
+                    }
+                    });
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -143,7 +151,7 @@ public class Register extends AppCompatActivity {
     }
 
     public void createAccount(String username, String password, String type,
-                              String firstname, String lastname, String contact, Uri imageFile){
+                              String firstname, String lastname, String contact){
         Log.d("TAG", "createAccount: username"+username+" password"+password);
         mAuth.createUserWithEmailAndPassword(username, password)
 
@@ -151,22 +159,22 @@ public class Register extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Map<String, Object> user = new HashMap<>();
+//                             Sign in success, update UI with the signed-in user's information
+
                             user.put("Contact details", contact);
                             user.put("Email", username);
                             user.put("First name", firstname);
                             user.put("Last name", lastname);
-                            user.put("Profile Picture", imageFile.toString());
+                            uploadImagetoFB(ImageFile);
+                            Log.d("eug", user.toString());
 
                             if(type.equals("tutor")){
                                 db.collection("Tutors").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
-                                        uploadImagetoFB(imageFile);
-                                        Log.d("PANGET SI EUG", "SUCCESS" );
                                         Intent intent = new Intent(Register.this, Homepage.class);
                                         startActivity(intent);
+                                        Log.d("eug3", "entered");
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override

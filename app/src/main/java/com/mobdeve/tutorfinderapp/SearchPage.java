@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -170,9 +171,8 @@ public class SearchPage extends AppCompatActivity {
             holder.text_name.setText(name);
             holder.text_fee.setText(Float.toString(user.getFee()));
             holder.text_categories.setText(categories);
-            //holder.text_rating.setText(rating);
-
-            holder.image_profile.setImageURI(user.getProfpic());
+            //holder.text_rating.setText(rating)
+            holder.image_profile.setImageURI(Uri.parse(user.getProfpic().toString()));
             holder.image_arrow.setImageResource(R.drawable.arrow_icon);
         }
 
