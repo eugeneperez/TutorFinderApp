@@ -42,70 +42,78 @@ public class Login extends AppCompatActivity {
             startActivity(adminIntent);
             finish();
         }else {
-            mAuth.signInWithEmailAndPassword(username, password)
-                    .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
+            if(username.equals("") || password.equals("")){
+                Toast.makeText(Login.this, "Input username and password",
+                        Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(Login.this, "Logging in...",
+                        Toast.LENGTH_SHORT).show();
+                mAuth.signInWithEmailAndPassword(username, password)
+                        .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
 
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                db.collection("Tutors")
-                                        .whereEqualTo("Email", user.getEmail())
-                                        .get()
-                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    db.collection("Tutors")
+                                            .whereEqualTo("Email", user.getEmail())
+                                            .get()
+                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
 
-                                            @Override
-                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                if (task.isSuccessful()) {
-                                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                                        Log.d("TAG1", document.getId() + " => " + document.getData());
-                                                        Map<String, Object> result = new HashMap<>();
-                                                        result = document.getData();
-                                                        if (user.getEmail().equals(result.get("Email"))) {
-                                                            Intent i = new Intent(Login.this, TutorHomePage.class);
-                                                            //current tutee and request tutee put in intent extra
-                                                            startActivity(i);
-                                                            finish();
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    if (task.isSuccessful()) {
+                                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                                            Log.d("TAG1", document.getId() + " => " + document.getData());
+                                                            Map<String, Object> result = new HashMap<>();
+                                                            result = document.getData();
+                                                            if (user.getEmail().equals(result.get("Email"))) {
+                                                                Intent i = new Intent(Login.this, TutorHomePage.class);
+                                                                //current tutee and request tutee put in intent extra
+                                                                startActivity(i);
+                                                                finish();
+                                                            }
                                                         }
+                                                    } else {
+                                                        Log.d("TAG1", "Error getting documents: ", task.getException());
                                                     }
-                                                } else {
-                                                    Log.d("TAG1", "Error getting documents: ", task.getException());
                                                 }
-                                            }
-                                        });
-                                db.collection("Tutees")
-                                        .whereEqualTo("Email", user.getEmail())
-                                        .get()
-                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                if (task.isSuccessful()) {
-                                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                                        Log.d("TAG1", document.getId() + " => " + document.getData());
-                                                        Map<String, Object> result = new HashMap<>();
-                                                        result = document.getData();
-                                                        if (user.getEmail().equals(result.get("Email"))) {
-                                                            Intent i = new Intent(Login.this, Homepage.class);
-                                                            //current tutee and request tutee put in intent extra
-                                                            startActivity(i);
-                                                            finish();
+                                            });
+                                    db.collection("Tutees")
+                                            .whereEqualTo("Email", user.getEmail())
+                                            .get()
+                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    if (task.isSuccessful()) {
+                                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                                            Log.d("TAG1", document.getId() + " => " + document.getData());
+                                                            Map<String, Object> result = new HashMap<>();
+                                                            result = document.getData();
+                                                            if (user.getEmail().equals(result.get("Email"))) {
+                                                                Intent i = new Intent(Login.this, Homepage.class);
+                                                                //current tutee and request tutee put in intent extra
+                                                                startActivity(i);
+                                                                finish();
+                                                            }
                                                         }
+                                                    } else {
+                                                        Log.d("TAG1", "Error getting documents: ", task.getException());
                                                     }
-                                                } else {
-                                                    Log.d("TAG1", "Error getting documents: ", task.getException());
                                                 }
-                                            }
-                                        });
+                                            });
 
-                            } else {
-                                // If sign in fails, display a message to the user.
-                                Log.w("TAG", "signInWithEmail:failure", task.getException());
-                                Toast.makeText(Login.this, "Incorrect credentials.",
-                                        Toast.LENGTH_SHORT).show();
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Log.w("TAG", "signInWithEmail:failure", task.getException());
+                                    Toast.makeText(Login.this, "Incorrect credentials. Try Again.",
+                                            Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
-                    });
+                        });
+            }
+
         }
 
     }

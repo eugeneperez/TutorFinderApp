@@ -158,7 +158,7 @@ public class Register extends AppCompatActivity {
         if(requestCode==1000){
             if(resultCode== Activity.RESULT_OK){
                 Uri imageUri= data.getData();
-               uploadDpIv.setImageURI(imageUri);
+               Picasso.get().load(imageUri).fit().centerCrop().into(uploadDpIv);
                ImageFile= imageUri;
             }
         }
@@ -250,7 +250,7 @@ public class Register extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("TAG", "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(Register.this, "Email already exist", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Register.this, "Invalid Email. Please Try Again.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
