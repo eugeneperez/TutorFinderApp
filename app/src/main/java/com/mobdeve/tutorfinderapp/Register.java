@@ -33,6 +33,7 @@ import com.squareup.picasso.Picasso;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,6 +52,8 @@ public class Register extends AppCompatActivity {
     private EditText text_firstname;
     private EditText text_lastname;
     private EditText text_contact;
+    private EditText text_categories;
+    private EditText text_fee;
     private Button registerbtn;
     private ImageView uploadDpIv;
     private Uri ImageFile;
@@ -59,6 +62,7 @@ public class Register extends AppCompatActivity {
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private StorageReference storageReference;
+    private ArrayList<String> categories = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,13 +79,13 @@ public class Register extends AppCompatActivity {
         text_lastname = findViewById(R.id.regLastNameEt);
         text_firstname = findViewById(R.id.regFirstNameEt);
         text_contact = findViewById(R.id.regContactNumEt);
+        text_categories = findViewById(R.id.regCategoriesEt);
+        text_fee = findViewById(R.id.regFeeEt);
         registerbtn = findViewById(R.id.regPageBtn);
         uploadDpIv= findViewById(R.id.uploadDpIv);
 
-
         Intent i = getIntent();
         String type = i.getStringExtra("Type");
-
 
         uploadDpIv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,12 +108,19 @@ public class Register extends AppCompatActivity {
         }else if(ImageFile ==null){
                 Toast.makeText(Register.this, "no file selected", Toast.LENGTH_SHORT).show();
         }else {
+
+            String[] strings = text_categories.getText().toString().split(",");
+
+            for(String s:strings){
+                categories.add(s);
+            }
+
             createAccount(text_username.getText().toString(),
                             text_password.getText().toString(),
                             type,
                             text_firstname.getText().toString().substring(0,1).toUpperCase()+text_firstname.getText().toString().substring(1),
                             text_lastname.getText().toString().substring(0,1).toUpperCase()+text_lastname.getText().toString().substring(1),
-                             text_contact.getText().toString());
+                             text_contact.getText().toString(), categories, Float.parseFloat(text_fee.getText().toString()));
 
         }
             }
@@ -152,7 +163,8 @@ public class Register extends AppCompatActivity {
     }
 
     public void createAccount(String username, String password, String type,
-                              String firstname, String lastname, String contact){
+                              String firstname, String lastname, String contact, ArrayList<String> categories,
+                              float fee){
         Log.d("TAG", "createAccount: username"+username+" password"+password);
         mAuth.createUserWithEmailAndPassword(username, password)
 
@@ -173,6 +185,8 @@ public class Register extends AppCompatActivity {
                                     user.put("Email", username);
                                     user.put("First name", firstname);
                                     user.put("Last name", lastname);
+                                    user.put("Categories", categories);
+                                    user.put("Fee", fee);
 
                                     Log.d("eug", user.toString());
 
