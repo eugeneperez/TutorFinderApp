@@ -275,11 +275,11 @@ public class SearchPage extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position){
             User user = resultList.get(position);
-            String name = user.getFirstname() + " " + user.getLastname();
+            String name = user.getFirstname().substring(0).toUpperCase() + " " + user.getLastname().substring(0).toUpperCase();
             String categories = new String();
 
             for(String category:user.getCategories()){
-                categories += category+" ";
+                categories += category.substring(0).toUpperCase()+" ";
             }
 
             holder.text_name.setText(name);

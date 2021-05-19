@@ -65,6 +65,8 @@ public class Register extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private StorageReference storageReference;
     private ArrayList<String> categories = new ArrayList<>();
+    private String type;
+    private float fee = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +92,7 @@ public class Register extends AppCompatActivity {
         text_fee.setVisibility(View.GONE);
 
         Intent i = getIntent();
-        String type = i.getStringExtra("Type");
+        type = i.getStringExtra("Type");
 
         if (type.equals("tutor")){
             text_categories_tv.setVisibility(View.VISIBLE);
@@ -120,10 +122,14 @@ public class Register extends AppCompatActivity {
                 Toast.makeText(Register.this, "no file selected", Toast.LENGTH_SHORT).show();
         }else {
 
-            String[] strings = text_categories.getText().toString().split(",");
+            if(type.equals("tutor")){
+                String[] strings = text_categories.getText().toString().split(",");
+                fee = Float.parseFloat(text_fee.getText().toString());
 
-            for(String s:strings){
-                categories.add(s.toLowerCase());
+
+                for(String s:strings){
+                    categories.add(s.toLowerCase());
+                }
             }
 
             createAccount(text_username.getText().toString(),
@@ -131,7 +137,7 @@ public class Register extends AppCompatActivity {
                             type,
                             text_firstname.getText().toString().toLowerCase(),
                             text_lastname.getText().toString().toLowerCase(),
-                             text_contact.getText().toString(), categories, Float.parseFloat(text_fee.getText().toString()));
+                             text_contact.getText().toString(), categories, fee);
 
         }
             }
@@ -176,6 +182,7 @@ public class Register extends AppCompatActivity {
     public void createAccount(String username, String password, String type,
                               String firstname, String lastname, String contact, ArrayList<String> categories,
                               float fee){
+
         Log.d("TAG", "createAccount: username"+username+" password"+password);
         mAuth.createUserWithEmailAndPassword(username, password)
 
@@ -184,7 +191,7 @@ public class Register extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
 //                             Sign in success, update UI with the signed-in user's information
-                            CountDownTimer count = new CountDownTimer(1000, 500) {
+                            CountDownTimer count = new CountDownTimer(500, 100) {
                                 @Override
                                 public void onTick(long millisUntilFinished) {
                                     Log.d("Tick", "onTick: ticktick");
@@ -196,8 +203,10 @@ public class Register extends AppCompatActivity {
                                     user.put("Email", username);
                                     user.put("First name", firstname);
                                     user.put("Last name", lastname);
-                                    user.put("Categories", categories);
-                                    user.put("Fee", fee);
+                                    if(type.equals("tutor")){
+                                        user.put("Categories", categories);
+                                        user.put("Fee", fee);
+                                    }
 
                                     Log.d("eug", user.toString());
 

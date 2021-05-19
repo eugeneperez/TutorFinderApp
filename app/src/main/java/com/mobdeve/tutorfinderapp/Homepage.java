@@ -264,9 +264,6 @@ public class Homepage extends AppCompatActivity {
                     searchCategory(searchterms);
                     count.start();
                 }
-
-
-
             }
         });
 
