@@ -43,24 +43,53 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null) {
+            FirebaseUser user = mAuth.getCurrentUser();
             db.collection("Tutors")
-                    .whereArrayContains("Email", currentUser.getEmail())
+                    .whereEqualTo("Email", user.getEmail())
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
-                                Intent i = new Intent(MainActivity.this, TutorHomePage.class);
-                                startActivity(i);
-                                finish();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d("TAG1", document.getId() + " => " + document.getData());
+                                    Map<String, Object> result = new HashMap<>();
+                                    result = document.getData();
+                                    if (user.getEmail().equals(result.get("Email"))) {
+                                        Intent i = new Intent(MainActivity.this, TutorHomePage.class);
+                                        //current tutee and request tutee put in intent extra
+                                        startActivity(i);
+                                        finish();
+                                    }
+                                }
                             } else {
-                                Intent i = new Intent(MainActivity.this, Homepage.class);
-                                startActivity(i);
-                                finish();
+                                Log.d("TAG1", "Error getting documents: ", task.getException());
                             }
                         }
                     });
-
+            db.collection("Tutees")
+                    .whereEqualTo("Email", user.getEmail())
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d("TAG1", document.getId() + " => " + document.getData());
+                                    Map<String, Object> result = new HashMap<>();
+                                    result = document.getData();
+                                    if (user.getEmail().equals(result.get("Email"))) {
+                                        Intent i = new Intent(MainActivity.this, Homepage.class);
+                                        //current tutee and request tutee put in intent extra
+                                        startActivity(i);
+                                        finish();
+                                    }
+                                }
+                            } else {
+                                Log.d("TAG1", "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
         }
 //        }else{
 //            //Toast.makeText(this, "Already logged in", Toast.LENGTH_LONG).show();
