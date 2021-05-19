@@ -25,16 +25,36 @@
             android:layout_width="225dp"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:imeOptions="actionDone"
             android:inputType="textPersonName" />
 
         <Spinner
             android:id="@+id/spinner_searchpage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/searchbtn_searchpage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#ffb700"
+            android:gravity="center"
+            android:text="Search"
+            android:textColor="#000000" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_page_rv"
         android:layout_width="match_parent"
-        android:layout_height="656dp" />
+        android:layout_height="656dp" >
+
+    </androidx.recyclerview.widget.RecyclerView>
 </LinearLayout>
