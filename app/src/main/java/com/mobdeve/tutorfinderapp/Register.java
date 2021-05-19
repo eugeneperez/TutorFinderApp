@@ -179,6 +179,51 @@ public class Register extends AppCompatActivity {
         });
     }
 
+    public void putData(String contact, String username, String firstname, String lastname,
+                        ArrayList<String> categories, float fee){
+        user.put("Contact details", contact);
+        user.put("Email", username);
+        user.put("First name", firstname);
+        user.put("Last name", lastname);
+        if(type.equals("tutor")){
+            user.put("Categories", categories);
+            user.put("Fee", fee);
+        }
+
+        Log.d("eug", user.toString());
+
+        if(type.equals("tutor")){
+            db.collection("Tutors").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Intent intent = new Intent(Register.this, TutorHomePage.class);
+                    startActivity(intent);
+                    Log.d("eug3", "entered");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w("TAG", "Error adding document", e);
+                }
+            });
+        }else if (type.equals("tutee")){
+            db.collection("Tutees").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Intent intent = new Intent(Register.this, Homepage.class);
+                    //add Tutor to collection
+                    startActivity(intent);
+                    Log.d("eug3tutee", "entered");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w("TAG","Error adding document", e);
+                }
+            });
+        }
+    }
+
     public void createAccount(String username, String password, String type,
                               String firstname, String lastname, String contact, ArrayList<String> categories,
                               float fee){
@@ -191,7 +236,7 @@ public class Register extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
 //                             Sign in success, update UI with the signed-in user's information
-                            CountDownTimer count = new CountDownTimer(500, 100) {
+                            CountDownTimer count = new CountDownTimer(5000, 500) {
                                 @Override
                                 public void onTick(long millisUntilFinished) {
                                     Log.d("Tick", "onTick: ticktick");
@@ -199,46 +244,47 @@ public class Register extends AppCompatActivity {
 
                                 @Override
                                 public void onFinish() {
-                                    user.put("Contact details", contact);
-                                    user.put("Email", username);
-                                    user.put("First name", firstname);
-                                    user.put("Last name", lastname);
-                                    if(type.equals("tutor")){
-                                        user.put("Categories", categories);
-                                        user.put("Fee", fee);
-                                    }
-
-                                    Log.d("eug", user.toString());
-
-                                    if(type.equals("tutor")){
-                                        db.collection("Tutors").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                            @Override
-                                            public void onSuccess(DocumentReference documentReference) {
-                                                Intent intent = new Intent(Register.this, TutorHomePage.class);
-                                                startActivity(intent);
-                                                Log.d("eug3", "entered");
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.w("TAG", "Error adding document", e);
-                                            }
-                                        });
-                                    }else if (type.equals("tutee")){
-                                        db.collection("Tutees").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                            @Override
-                                            public void onSuccess(DocumentReference documentReference) {
-                                                Intent intent = new Intent(Register.this, Homepage.class);
-                                                //add Tutor to collection
-                                                startActivity(intent);
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.w("TAG","Error adding document", e);
-                                            }
-                                        });
-                                    }
+//                                    user.put("Contact details", contact);
+//                                    user.put("Email", username);
+//                                    user.put("First name", firstname);
+//                                    user.put("Last name", lastname);
+//                                    if(type.equals("tutor")){
+//                                        user.put("Categories", categories);
+//                                        user.put("Fee", fee);
+//                                    }
+//
+//                                    Log.d("eug", user.toString());
+//
+//                                    if(type.equals("tutor")){
+//                                        db.collection("Tutors").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                                            @Override
+//                                            public void onSuccess(DocumentReference documentReference) {
+//                                                Intent intent = new Intent(Register.this, TutorHomePage.class);
+//                                                startActivity(intent);
+//                                                Log.d("eug3", "entered");
+//                                            }
+//                                        }).addOnFailureListener(new OnFailureListener() {
+//                                            @Override
+//                                            public void onFailure(@NonNull Exception e) {
+//                                                Log.w("TAG", "Error adding document", e);
+//                                            }
+//                                        });
+//                                    }else if (type.equals("tutee")){
+//                                        db.collection("Tutees").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                                            @Override
+//                                            public void onSuccess(DocumentReference documentReference) {
+//                                                Intent intent = new Intent(Register.this, Homepage.class);
+//                                                //add Tutor to collection
+//                                                startActivity(intent);
+//                                                Log.d("eug3tutee", "entered");
+//                                            }
+//                                        }).addOnFailureListener(new OnFailureListener() {
+//                                            @Override
+//                                            public void onFailure(@NonNull Exception e) {
+//                                                Log.w("TAG","Error adding document", e);
+//                                            }
+//                                        });
+//                                    }
                                 }
                             };
                             uploadImagetoFB(ImageFile);
