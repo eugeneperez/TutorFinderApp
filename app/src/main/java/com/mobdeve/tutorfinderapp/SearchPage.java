@@ -314,7 +314,8 @@ public class SearchPage extends AppCompatActivity {
         public void onBindViewHolder(@NonNull ViewHolder holder, int position){
             User user = resultList.get(position);
             Gson gson = new Gson();
-            String name = user.getFirstname().substring(0).toUpperCase() + " " + user.getLastname().substring(0).toUpperCase();
+            String name = user.getFirstname().substring(0,1).toUpperCase() + user.getFirstname().substring(1) + " " +
+                    user.getLastname().substring(0,1).toUpperCase() + user.getLastname().substring(1);
             String categories = new String();
 
             for(String category:user.getCategories()){

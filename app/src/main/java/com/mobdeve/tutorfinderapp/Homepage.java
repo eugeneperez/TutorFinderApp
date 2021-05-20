@@ -152,6 +152,7 @@ public class Homepage extends AppCompatActivity {
     }
 
     public void searchCategory(String searchterms){
+        Log.d("searchdb", "searchCategory: searchterms "+searchterms);
         db.collection("Tutors")
                 .whereArrayContains("Categories", searchterms)
                 .get()
@@ -171,6 +172,7 @@ public class Homepage extends AppCompatActivity {
                                             result.get("Contact details").toString(),
                                             (ArrayList<String>) result.get("Categories"),
                                              result.get("Fee").toString());
+                                    user.setProfpic(result.get("Profile Picture").toString());
                                     users.add(user);
                                 }
                                 Log.d("Result2", "onComplete: results2"+users);
@@ -249,7 +251,7 @@ public class Homepage extends AppCompatActivity {
                 //search in database
                 Log.d("TAG1", "onClick: searchterms"+searchterms);
 
-                CountDownTimer count = new CountDownTimer(1000, 500) {
+                CountDownTimer count = new CountDownTimer(2000, 1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
                         Log.d("TICK", "onTick: users"+users);

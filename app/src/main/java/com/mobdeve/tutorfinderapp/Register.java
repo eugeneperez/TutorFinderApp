@@ -136,6 +136,7 @@ public class Register extends AppCompatActivity {
                 for(String s:strings){
                     String a = s.trim();
                     Log.d("trimming", "onClick: string a"+a);
+
                     categories.add(a.toLowerCase());
                 }
             }
