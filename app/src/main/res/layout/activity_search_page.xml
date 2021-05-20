@@ -21,10 +21,29 @@
             app:srcCompat="@drawable/tutor_icon" />
 
         <EditText
+            android:id="@+id/searchfirstname_searchpage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="First name"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/searchlastname_searchpage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Last name"
+            android:inputType="textPersonName" />
+
+        <EditText
             android:id="@+id/searchbar_searchpage"
-            android:layout_width="225dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:hint="What are you looking for?"
             android:imeOptions="actionDone"
             android:inputType="textPersonName" />
 

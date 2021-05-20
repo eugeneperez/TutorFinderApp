@@ -54,6 +54,8 @@ public class Homepage extends AppCompatActivity {
 
     private Spinner spinnerAdapter;
     private EditText search;
+    private EditText searchfirstname;
+    private EditText searchlastname;
     private Button searchbtn;
     private Button signoutbtn;
     private TextView username;
@@ -66,6 +68,7 @@ public class Homepage extends AppCompatActivity {
         db.collection("Tutors")
                 .orderBy("First name")
                 .startAt(searchterms)
+                .endAt(searchterms+"\uf8ff")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -108,7 +111,7 @@ public class Homepage extends AppCompatActivity {
         db.collection("Tutors")
                 .orderBy("Last name")
                 .startAt(searchterms)
-                .endAt(searchterms+"\\f8ff")
+                .endAt(searchterms+"\uf8ff")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -185,9 +188,13 @@ public class Homepage extends AppCompatActivity {
         setContentView(R.layout.activity_homepage);
         spinnerAdapter = findViewById(R.id.spinner_homepage);
         search = findViewById(R.id.searchbar_homepage);
+        searchfirstname = findViewById(R.id.searchfirstname_homepage);
+        searchlastname = findViewById(R.id.searchlastname_homepage);
         searchbtn = findViewById(R.id.searchbtn_homepage);
         signoutbtn = findViewById(R.id.signoutbtn);
         mAuth = FirebaseAuth.getInstance();
+
+        search.setVisibility(View.GONE);
 
         ArrayList<String> spinnerList = new ArrayList<>();
 
@@ -199,6 +206,27 @@ public class Homepage extends AppCompatActivity {
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerAdapter.setAdapter(arrayAdapter);
         Log.d("TAG1", "onCreate: entered");
+
+        spinnerAdapter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(id == 0){
+                    search.setVisibility(View.GONE);
+                    searchfirstname.setVisibility(View.VISIBLE);
+                    searchlastname.setVisibility(View.VISIBLE);
+                }
+                if(id == 1){
+                    search.setVisibility(View.VISIBLE);
+                    searchfirstname.setVisibility(View.GONE);
+                    searchlastname.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         search.setOnEditorActionListener(new TextView.OnEditorActionListener(){
             @Override
@@ -214,12 +242,14 @@ public class Homepage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String spin = spinnerAdapter.getSelectedItem().toString();
-                String searchterms = search.getText().toString();
+                String searchterms = search.getText().toString().toLowerCase();
+                String searchtermf = searchfirstname.getText().toString().toLowerCase();
+                String searchterml = searchlastname.getText().toString().toLowerCase();
                 //ArrayList<User> results = new ArrayList<>();
                 //search in database
                 Log.d("TAG1", "onClick: searchterms"+searchterms);
 
-                CountDownTimer count = new CountDownTimer(2000, 1000) {
+                CountDownTimer count = new CountDownTimer(1000, 500) {
                     @Override
                     public void onTick(long millisUntilFinished) {
                         Log.d("TICK", "onTick: users"+users);
@@ -236,16 +266,22 @@ public class Homepage extends AppCompatActivity {
                             userString.add(gson.toJson(user));
                         }
                         users.clear();
-                        Log.d("hello",userString.toString());
                         intent.putStringArrayListExtra("Results",userString);
                         startActivity(intent);
                     }
                 };
 
                 if(spinnerAdapter.getSelectedItem().toString().equals("People")){
-                    searchFirstName2(searchterms);
-                    searchLastName2(searchterms);
-                    count.start();
+                    if(!searchtermf.isEmpty()){
+                        searchFirstName2(searchtermf);
+                    }
+                    if(!searchterml.isEmpty()){
+                        searchLastName2(searchterml);
+                    }
+                    if(!searchtermf.isEmpty() || !searchterml.isEmpty()){
+                        count.start();
+                    }
+
                 }
                 else if(spinnerAdapter.getSelectedItem().toString().equals("Category")){
                     searchCategory(searchterms);

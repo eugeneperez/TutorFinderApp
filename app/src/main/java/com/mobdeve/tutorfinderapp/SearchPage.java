@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,16 +43,21 @@ public class SearchPage extends AppCompatActivity {
 
     private Spinner spinnerAdapter;
     private EditText search;
+    private EditText searchfirstname;
+    private EditText searchlastname;
     private Button searchbtn;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ArrayList<User> users = new ArrayList<>();
     private RecyclerView results_rv;
 
 
-    public void searchFirstName(String searchterms){
+    public void searchFirstName2(String searchterms){
+        Log.d("searchdb", "searchFirstName2: searchterms "+searchterms);
         ArrayList<String> resulting = new ArrayList<>();
         db.collection("Tutors")
-                .whereEqualTo("First name", searchterms)
+                .orderBy("First name")
+                .startAt(searchterms)
+                .endAt(searchterms+"\uf8ff")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -83,9 +89,12 @@ public class SearchPage extends AppCompatActivity {
                     }
                 });
     }
-    public void searchLastName(String searchterms){
+    public void searchLastName2(String searchterms){
+        Log.d("searchdb", "searchLastName2: searchterms "+searchterms);
         db.collection("Tutors")
-                .whereEqualTo("Last name", searchterms)
+                .orderBy("Last name")
+                .startAt(searchterms)
+                .endAt(searchterms+"\uf8ff")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -154,6 +163,8 @@ public class SearchPage extends AppCompatActivity {
         Gson gson = new Gson();
 
         search = findViewById(R.id.searchbar_searchpage);
+        searchfirstname = findViewById(R.id.searchfirstname_searchpage);
+        searchlastname = findViewById(R.id.searchlastname_searchpage);
         searchbtn = findViewById(R.id.searchbtn_searchpage);
         spinnerAdapter = findViewById(R.id.spinner_searchpage);
 
@@ -166,6 +177,27 @@ public class SearchPage extends AppCompatActivity {
 
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerAdapter.setAdapter(arrayAdapter);
+
+        spinnerAdapter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(id == 0){
+                    search.setVisibility(View.GONE);
+                    searchfirstname.setVisibility(View.VISIBLE);
+                    searchlastname.setVisibility(View.VISIBLE);
+                }
+                if(id == 1){
+                    search.setVisibility(View.VISIBLE);
+                    searchfirstname.setVisibility(View.GONE);
+                    searchlastname.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         Intent i= getIntent();
         ArrayList<String> results = i.getStringArrayListExtra("Results");
@@ -194,11 +226,13 @@ public class SearchPage extends AppCompatActivity {
             public void onClick(View v) {
                 String spin = spinnerAdapter.getSelectedItem().toString();
                 String searchterms = search.getText().toString();
+                String searchtermf = searchfirstname.getText().toString().toLowerCase();
+                String searchterml = searchlastname.getText().toString().toLowerCase();
                 //ArrayList<User> results = new ArrayList<>();
                 //search in database
                 Log.d("TAG1", "onClick: searchterms"+searchterms);
 
-                CountDownTimer count = new CountDownTimer(2000, 1000) {
+                CountDownTimer count = new CountDownTimer(1000, 500) {
                     @Override
                     public void onTick(long millisUntilFinished) {
                         Log.d("TICK", "onTick: users"+users);
@@ -214,19 +248,23 @@ public class SearchPage extends AppCompatActivity {
                         for (User user: users){
                             userString.add(gson.toJson(user));
                         }
-                        Log.d("hello",userString.toString());
                         intent.putStringArrayListExtra("Results",userString);
                         startActivity(intent);
                         finish();
-                        users.clear();
                     }
                 };
 
                 if(spinnerAdapter.getSelectedItem().toString().equals("People")){
                     users.clear();
-                    searchFirstName(searchterms);
-                    searchLastName(searchterms);
-                    count.start();
+                    if(!searchtermf.isEmpty()){
+                        searchFirstName2(searchtermf);
+                    }
+                    if(!searchterml.isEmpty()){
+                        searchLastName2(searchterml);
+                    }
+                    if(!searchtermf.isEmpty() || !searchterml.isEmpty()){
+                        count.start();
+                    }
                 }
                 else if(spinnerAdapter.getSelectedItem().toString().equals("Category")){
                     users.clear();
