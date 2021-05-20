@@ -9,10 +9,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TutorFinderApp">
-        <activity
-            android:name=".TutorHomePage"
-            android:label="@string/title_activity_tutor_home_page"
-            android:theme="@style/Theme.TutorFinderApp.NoActionBar"></activity>
         <activity android:name=".DetailedInfo" />
         <activity android:name=".SearchPage" />
         <activity android:name=".ViewProfile" />
@@ -20,6 +16,7 @@
         <activity android:name=".Homepage" />
         <activity android:name=".Register" />
         <activity android:name=".Login" />
+        <activity android:name=".TutorHomePage" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
