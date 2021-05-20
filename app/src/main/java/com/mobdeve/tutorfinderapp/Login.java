@@ -93,7 +93,7 @@ public class Login extends AppCompatActivity {
                                                             result = document.getData();
                                                             if (user.getEmail().equals(result.get("Email"))) {
                                                                 Intent i = new Intent(Login.this, Homepage.class);
-                                                                //current tutee and request tutee put in intent extra
+
                                                                 startActivity(i);
                                                                 finish();
                                                             }

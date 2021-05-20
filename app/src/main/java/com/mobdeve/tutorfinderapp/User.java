@@ -5,6 +5,7 @@ import android.net.Uri;
 import java.util.ArrayList;
 
 public class User {
+    private String uid;
     private String email;
     private String firstname;
     private String lastname;
@@ -13,13 +14,12 @@ public class User {
     private String fee;
     private String profpic;
 
-    public User(String email, String firstname, String lastname, String contact, ArrayList<String> categories, String fee) {
+    public User(String email, String firstname, String lastname, String contact) {
+        //this.uid = uid;
         this.email = email;
         this.firstname = firstname;
         this.lastname = lastname;
         this.contact = contact;
-        this.categories= categories;
-        this.fee=fee;
     }
 
     public String getProfpic() {

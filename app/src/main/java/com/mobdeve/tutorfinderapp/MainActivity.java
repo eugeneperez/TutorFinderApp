@@ -91,12 +91,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
         }
-//        }else{
-//            //Toast.makeText(this, "Already logged in", Toast.LENGTH_LONG).show();
-//            Intent i = new Intent(MainActivity.this, Homepage.class);
-//            startActivity(i);
-//            finish();
-//        }
 
         registerBtn = findViewById(R.id.registerBtn);
         loginBtn = findViewById(R.id.loginBtn);

@@ -65,7 +65,7 @@ public class Register extends AppCompatActivity {
     private StorageReference storageReference;
     private ArrayList<String> categories = new ArrayList<>();
     private String type;
-    private float fee = -1;
+    private String fee;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +131,7 @@ public class Register extends AppCompatActivity {
 
             if(type.equals("tutor")){
                 String[] strings = text_categories.getText().toString().split(",");
-                fee = Float.parseFloat(text_fee.getText().toString());
+                fee = text_fee.getText().toString();
 
                 for(String s:strings){
                     String a = s.trim();
@@ -166,7 +166,7 @@ public class Register extends AppCompatActivity {
     }
 
     private void addUser(Uri imageUri, String username, String firstname, String lastname,
-                                 String contact, ArrayList<String> categories, float fee) {
+                                 String contact, ArrayList<String> categories, String fee) {
 
         StorageReference fileRef= storageReference.child(text_username.getText().toString()+"profilepic.jpg");
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -234,7 +234,7 @@ public class Register extends AppCompatActivity {
 
     public void createAccount(String username, String password, String type,
                               String firstname, String lastname, String contact, ArrayList<String> categories,
-                              float fee){
+                              String fee){
 
         Log.d("TAG", "createAccount: username"+username+" password"+password);
         mAuth.createUserWithEmailAndPassword(username, password)
