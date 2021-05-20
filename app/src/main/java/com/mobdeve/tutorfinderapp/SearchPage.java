@@ -52,8 +52,6 @@ public class SearchPage extends AppCompatActivity {
 
 
     public void searchFirstName2(String searchterms){
-        Log.d("searchdb", "searchFirstName2: searchterms "+searchterms);
-        ArrayList<String> resulting = new ArrayList<>();
         db.collection("Tutors")
                 .orderBy("First name")
                 .startAt(searchterms)
@@ -67,15 +65,26 @@ public class SearchPage extends AppCompatActivity {
                                 Log.d("TAG1", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = new HashMap<>();
                                 result = document.getData();
+                                boolean isFound = true;
                                 Log.d("hello2", result.toString());
-                                if(!(users.contains(result.get("Email").toString()))){
-                                    User user = new User(result.get("Email").toString(),
-                                            result.get("First name").toString(),
-                                            result.get("Last name").toString(),
-                                            result.get("Contact details").toString());
-                                    user.setCategories((ArrayList<String>) result.get("Categories"));
-                                    user.setFee(result.get("Fee").toString());
-                                    user.setProfpic(result.get("Profile Picture").toString());
+
+                                User user = new User(result.get("Email").toString(),
+                                        result.get("First name").toString(),
+                                        result.get("Last name").toString(),
+                                        result.get("Contact details").toString());
+                                user.setCategories((ArrayList<String>) result.get("Categories"));
+                                user.setFee(result.get("Fee").toString());
+                                user.setProfpic(result.get("Profile Picture").toString());
+
+                                for(User u: users){
+                                    if(u.getEmail().equals(user.getEmail())){
+                                        isFound = false;
+                                    }
+                                }
+
+                                if(isFound){
+                                    Log.d("ENTERED IF", "onComplete: entered users"+users);
+                                    Log.d("Entered email", "onComplete: result email "+ result.get("Email").toString());
                                     users.add(user);
                                 }
 
@@ -87,8 +96,8 @@ public class SearchPage extends AppCompatActivity {
                     }
                 });
     }
+
     public void searchLastName2(String searchterms){
-        Log.d("searchdb", "searchLastName2: searchterms "+searchterms);
         db.collection("Tutors")
                 .orderBy("Last name")
                 .startAt(searchterms)
@@ -102,15 +111,26 @@ public class SearchPage extends AppCompatActivity {
                                 Log.d("TAG1", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = new HashMap<>();
                                 result = document.getData();
+                                boolean isFound = true;
                                 Log.d("hello2", result.toString());
-                                if(!(users.contains(result.get("Email").toString()))){
-                                    User user = new User(result.get("Email").toString(),
-                                            result.get("First name").toString(),
-                                            result.get("Last name").toString(),
-                                            result.get("Contact details").toString());
-                                    user.setCategories((ArrayList<String>) result.get("Categories"));
-                                    user.setFee(result.get("Fee").toString());
-                                    user.setProfpic(result.get("Profile Picture").toString());
+
+                                User user = new User(result.get("Email").toString(),
+                                        result.get("First name").toString(),
+                                        result.get("Last name").toString(),
+                                        result.get("Contact details").toString());
+                                user.setCategories((ArrayList<String>) result.get("Categories"));
+                                user.setFee(result.get("Fee").toString());
+                                user.setProfpic(result.get("Profile Picture").toString());
+
+                                for(User u: users){
+                                    if(u.getEmail().equals(user.getEmail())){
+                                        isFound = false;
+                                    }
+                                }
+
+                                if(isFound){
+                                    Log.d("ENTERED IF", "onComplete: entered users"+users);
+                                    Log.d("Entered email", "onComplete: result email "+ result.get("Email").toString());
                                     users.add(user);
                                 }
 
@@ -134,6 +154,7 @@ public class SearchPage extends AppCompatActivity {
                                 Log.d("TAG1", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = new HashMap<>();
                                 result = document.getData();
+
                                 Log.d("hello2", result.toString());
                                 if(!(users.contains(result.get("Email").toString()))){
                                     User user = new User(result.get("Email").toString(),
@@ -248,13 +269,15 @@ public class SearchPage extends AppCompatActivity {
                             userString.add(gson.toJson(user));
                         }
                         intent.putStringArrayListExtra("Results",userString);
+                        Log.d("USERS", "onFinish: RESULTS" + intent.getStringArrayListExtra("Results"));
                         startActivity(intent);
                         finish();
                     }
                 };
 
+                Log.d("USERSLIST", "onClick: USERS "+users);
+                users.clear();
                 if(spinnerAdapter.getSelectedItem().toString().equals("People")){
-                    users.clear();
                     if(!searchtermf.isEmpty()){
                         searchFirstName2(searchtermf);
                     }

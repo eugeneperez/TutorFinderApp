@@ -11,13 +11,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -32,6 +36,10 @@ public class DetailedInfo extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private Map<String, Object> tutor = new HashMap<>();
+    private Map<String, Object> tutee = new HashMap<>();
+    private String tutorUid;
+    private String tuteeUid;
     private User user;
 
     private TextView text_name;
@@ -40,39 +48,7 @@ public class DetailedInfo extends AppCompatActivity {
     private TextView text_contact;
     private TextView text_fee;
     private ImageView image_profile;
-
-//    public void searchReviews(String email){
-//        db.collection("Reviews")
-//                .whereEqualTo("Tutor", email)
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                Log.d("TAG1", document.getId() + " => " + document.getData());
-//                                Map<String, Object> result = new HashMap<>();
-//                                result = document.getData();
-//                                Log.d("hello2", result.toString());
-//                                if(!(users.contains(result.get("Email").toString()))){
-//                                    User user = new User(result.get("Email").toString(),
-//                                            result.get("First name").toString(),
-//                                            result.get("Last name").toString(),
-//                                            result.get("Contact details").toString());
-//                                    user.setCategories((ArrayList<String>) result.get("Categories"));
-//                                    user.setFee(result.get("Fee").toString());
-//                                    user.setProfpic(result.get("Profile Picture").toString());
-//                                    users.add(user);
-//                                }
-//
-//                                Log.d("Result2", "onComplete: results2"+users);
-//                            }
-//                        } else {
-//                            Log.d("TAG1", "Error getting documents: ", task.getException());
-//                        }
-//                    }
-//                });
-//    }
+    private Button request_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +56,7 @@ public class DetailedInfo extends AppCompatActivity {
         setContentView(R.layout.activity_detailed_info);
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        tuteeUid = currentUser.getUid();
 
         text_name = findViewById(R.id.detailed_name);
         text_email = findViewById(R.id.detailed_email);
@@ -87,6 +64,7 @@ public class DetailedInfo extends AppCompatActivity {
         text_contact = findViewById(R.id.detailed_contact);
         text_fee = findViewById(R.id.detailed_fee);
         image_profile = findViewById(R.id.detailed_image);
+        request_btn = findViewById(R.id.detailed_requestbtn);
 
         Gson gson = new Gson();
         Intent i = getIntent();
@@ -107,6 +85,126 @@ public class DetailedInfo extends AppCompatActivity {
         text_contact.setText(user.getContact());
         text_fee.setText(user.getFee());
         Picasso.get().load(imgUri).fit().centerInside().into(image_profile);
+
+        request_btn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                db.collection("Tutors")
+                        .whereEqualTo("Email", user.getEmail())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Log.d("TAG1", document.getId() + " => " + document.getData());
+                                        Map<String, Object> result = new HashMap<>();
+                                        tutor = document.getData();
+                                        Gson gson = new Gson();
+                                        Session session = new Session(tutor.get("Email").toString(), currentUser.getEmail(), "Request");
+                                        ArrayList<Session> sessions = new ArrayList<>();
+
+                                        ArrayList<String> json = new ArrayList<>();
+
+                                        if(tutor.get("Tutee List") != null) {
+                                            json = (ArrayList<String>) tutor.get("Tutee List");
+
+                                            for (String s : json) {
+                                                sessions.add(gson.fromJson(s, Session.class));
+                                            }
+                                        }
+
+                                        sessions.add(session);
+                                        json.clear();
+
+                                        for (Session sesh : sessions) {
+                                            json.add(gson.toJson(sesh));
+                                        }
+
+                                        tutor.put("Tutee List", json);
+                                        tutorUid = document.getId();
+
+                                        db.collection("Tutors")
+                                                .document(tutorUid)
+                                                .set(tutor)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Log.d("SETTING", "DocumentSnapshot successfully written!");
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w("SETTING", "Error writing document", e);
+                                                    }
+                                                });
+                                    }
+                                } else {
+                                    Log.d("TAG1", "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
+
+                db.collection("Tutees")
+                        .whereEqualTo("Email", currentUser.getEmail())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Log.d("TAG1", document.getId() + " => " + document.getData());
+                                        Map<String, Object> result = new HashMap<>();
+                                        tutee = document.getData();
+                                        Gson gson = new Gson();
+                                        Session session = new Session(tutee.get("Email").toString(), tutor.get("Email").toString(), "Request");
+
+                                        ArrayList<Session> sessions = new ArrayList<>();
+
+                                        ArrayList<String> json = new ArrayList<>();
+
+                                        if(tutee.get("Tutor List") != null) {
+                                            json = (ArrayList<String>) tutee.get("Tutor List");
+
+                                            for (String s : json) {
+                                                sessions.add(gson.fromJson(s, Session.class));
+                                            }
+                                        }
+
+                                        sessions.add(session);
+                                        json.clear();
+
+                                        for (Session sesh : sessions) {
+                                            json.add(gson.toJson(sesh));
+                                        }
+
+                                        tutee.put("Tutor List", json);
+
+                                        db.collection("Tutees")
+                                                .document(tuteeUid)
+                                                .set(tutee)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Log.d("SETTING", "DocumentSnapshot successfully written!");
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w("SETTING", "Error writing document", e);
+                                                    }
+                                                });
+                                    }
+                                } else {
+                                    Log.d("TAG1", "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
+            }
+        });
     }
 
     public class ReviewAdapter extends RecyclerView.Adapter<DetailedInfo.ReviewAdapter.ViewHolder> {
