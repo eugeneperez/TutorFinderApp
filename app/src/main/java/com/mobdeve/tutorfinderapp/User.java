@@ -13,13 +13,11 @@ public class User {
     private String fee;
     private String profpic;
 
-    public User(String email, String firstname, String lastname, String contact, ArrayList<String> categories, String fee) {
+    public User(String email, String firstname, String lastname, String contact) {
         this.email = email;
         this.firstname = firstname;
         this.lastname = lastname;
         this.contact = contact;
-        this.categories= categories;
-        this.fee=fee;
     }
 
     public String getProfpic() {

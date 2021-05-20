@@ -72,12 +72,10 @@ public class SearchPage extends AppCompatActivity {
                                     User user = new User(result.get("Email").toString(),
                                             result.get("First name").toString(),
                                             result.get("Last name").toString(),
-                                            result.get("Contact details").toString(),
-                                            (ArrayList<String>) result.get("Categories"),
-                                            result.get("Fee").toString());
-                                    if(!result.get("Profile Picture").equals(null)){
-                                        user.setProfpic(result.get("Profile Picture").toString());
-                                    }
+                                            result.get("Contact details").toString());
+                                    user.setCategories((ArrayList<String>) result.get("Categories"));
+                                    user.setFee(result.get("Fee").toString());
+                                    user.setProfpic(result.get("Profile Picture").toString());
                                     users.add(user);
                                 }
 
@@ -109,9 +107,9 @@ public class SearchPage extends AppCompatActivity {
                                     User user = new User(result.get("Email").toString(),
                                             result.get("First name").toString(),
                                             result.get("Last name").toString(),
-                                            result.get("Contact details").toString(),
-                                            (ArrayList<String>) result.get("Categories"),
-                                            result.get("Fee").toString());
+                                            result.get("Contact details").toString());
+                                    user.setCategories((ArrayList<String>) result.get("Categories"));
+                                    user.setFee(result.get("Fee").toString());
                                     user.setProfpic(result.get("Profile Picture").toString());
                                     users.add(user);
                                 }
@@ -141,9 +139,10 @@ public class SearchPage extends AppCompatActivity {
                                     User user = new User(result.get("Email").toString(),
                                             result.get("First name").toString(),
                                             result.get("Last name").toString(),
-                                            result.get("Contact details").toString(),
-                                            (ArrayList<String>) result.get("Categories"),
-                                            result.get("Fee").toString());
+                                            result.get("Contact details").toString());
+                                    user.setCategories((ArrayList<String>) result.get("Categories"));
+                                    user.setFee(result.get("Fee").toString());
+                                    user.setProfpic(result.get("Profile Picture").toString());
                                     users.add(user);
                                 }
 
@@ -303,7 +302,6 @@ public class SearchPage extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater= LayoutInflater.from(parent.getContext());
-            Context context= parent.getContext();
             View resultView= inflater.inflate(R.layout.result_row,parent, false);
 
             ViewHolder viewHolder= new ViewHolder(resultView);

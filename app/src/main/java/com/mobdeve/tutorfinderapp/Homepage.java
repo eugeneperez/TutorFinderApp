@@ -83,9 +83,9 @@ public class Homepage extends AppCompatActivity {
                                 User user = new User(result.get("Email").toString(),
                                         result.get("First name").toString(),
                                         result.get("Last name").toString(),
-                                        result.get("Contact details").toString(),
-                                        (ArrayList<String>) result.get("Categories"),
-                                        result.get("Fee").toString());
+                                        result.get("Contact details").toString());
+                                user.setCategories((ArrayList<String>) result.get("Categories"));
+                                user.setFee(result.get("Fee").toString());
                                 user.setProfpic(result.get("Profile Picture").toString());
 
                                 for(User userTemp: users){
@@ -126,9 +126,9 @@ public class Homepage extends AppCompatActivity {
                                 User user = new User(result.get("Email").toString(),
                                         result.get("First name").toString(),
                                         result.get("Last name").toString(),
-                                        result.get("Contact details").toString(),
-                                        (ArrayList<String>) result.get("Categories"),
-                                        result.get("Fee").toString());
+                                        result.get("Contact details").toString());
+                                user.setCategories((ArrayList<String>) result.get("Categories"));
+                                user.setFee(result.get("Fee").toString());
                                 user.setProfpic(result.get("Profile Picture").toString());
 
                                 for(User userTemp: users){
@@ -169,9 +169,9 @@ public class Homepage extends AppCompatActivity {
                                     User user = new User(result.get("Email").toString(),
                                             result.get("First name").toString(),
                                             result.get("Last name").toString(),
-                                            result.get("Contact details").toString(),
-                                            (ArrayList<String>) result.get("Categories"),
-                                             result.get("Fee").toString());
+                                            result.get("Contact details").toString());
+                                    user.setCategories((ArrayList<String>) result.get("Categories"));
+                                    user.setFee(result.get("Fee").toString());
                                     user.setProfpic(result.get("Profile Picture").toString());
                                     users.add(user);
                                 }
