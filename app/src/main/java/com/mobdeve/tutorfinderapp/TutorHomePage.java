@@ -174,7 +174,6 @@ public class TutorHomePage extends AppCompatActivity {
                                             }
                                         }
                                     }
-
                                 }
                             }
                         } else {
