@@ -16,14 +16,30 @@
         <include
             layout="@layout/main_toolbar" />
 
-        <TextView
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Home"
-            android:textSize="50sp"
-            android:textStyle="bold"
-            android:gravity="center"/>
+            android:layout_height="wrap_content">
 
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/currTutees"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Current" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/reqTutees"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Request" />
+
+
+        </com.google.android.material.tabs.TabLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></androidx.viewpager.widget.ViewPager>
     </LinearLayout>
 
     <RelativeLayout
