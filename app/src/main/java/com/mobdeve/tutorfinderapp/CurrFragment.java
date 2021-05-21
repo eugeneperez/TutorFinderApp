@@ -4,9 +4,14 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +28,9 @@ public class CurrFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private ArrayList<TuteeList> currentTutees = new ArrayList<>();
+    private ArrayList<TuteeList> reqTutees = new ArrayList<>();
 
     public CurrFragment() {
         // Required empty public constructor
@@ -46,6 +54,13 @@ public class CurrFragment extends Fragment {
         return fragment;
     }
 
+    public void updateFragment(){
+        TutorHomePage activity = (TutorHomePage) getActivity();
+        currentTutees = activity.getCurTuteesList();
+        reqTutees = activity.getReqTuteesList();
+        Log.d("Tuteeslist", "onCreateView: curr "+currentTutees+" req "+reqTutees);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +74,22 @@ public class CurrFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        CountDownTimer count = new CountDownTimer(1500, 500) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                TutorHomePage activity = (TutorHomePage) getActivity();
+                currentTutees = activity.getCurTuteesList();
+                reqTutees = activity.getReqTuteesList();
+                Log.d("Tuteeslist", "onCreateView: curr "+currentTutees+" req "+reqTutees);
+            }
+        };
+
+        count.start();
         return inflater.inflate(R.layout.fragment_curr, container, false);
     }
 }

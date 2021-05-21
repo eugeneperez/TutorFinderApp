@@ -1,6 +1,7 @@
 package com.mobdeve.tutorfinderapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,6 +35,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
+    private TextView loading_message;
     private Button registerBtn;
     private Button loginBtn;
     private FirebaseAuth mAuth;
@@ -48,7 +51,30 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        loading_message = findViewById(R.id.loading_message);
+
         FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false); // if you want user to wait for some process to finish,
+        builder.setView(R.layout.layout_loading_dialog);
+
+        AlertDialog dialog = builder.create();
+        dialog.setMessage("Checking if you are logged in...");
+
+        CountDownTimer count = new CountDownTimer(1500, 500) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                dialog.dismiss();
+            }
+        };
+
+        dialog.show();
         if(currentUser != null) {
             FirebaseUser user = mAuth.getCurrentUser();
             db.collection("Tutors")
@@ -65,132 +91,12 @@ public class MainActivity extends AppCompatActivity {
                                     result = document.getData();
 
                                     if (user.getEmail().equals(result.get("Email"))) {
-                                        Log.d("ABTESTING", "entered if Tutee List exists");
-                                        if(result.get("Tutee List") != null){
-                                            for(String s: (ArrayList<String>) result.get("Tutee List")){
-                                                Session session = gson.fromJson(s, Session.class);
-                                                if(session.getStatus().equals("Request")){
-                                                    db.collection("Tutors")
-                                                            .whereEqualTo("Email", user.getEmail())
-                                                            .get()
-                                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                                @Override
-                                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                                    if (task.isSuccessful()) {
-                                                                        for (QueryDocumentSnapshot document : task.getResult()) {
-                                                                            Log.d("TAG1", document.getId() + " => " + document.getData());
-                                                                            Gson gson = new Gson();
-                                                                            Map<String, Object> result = new HashMap<>();
-                                                                            result = document.getData();
-
-                                                                            if (user.getEmail().equals(result.get("Email"))) {
-                                                                                Log.d("ABTESTING", "entered if");
-                                                                                for(String s: (ArrayList<String>) result.get("Tutee List")){
-                                                                                    Session session = gson.fromJson(s, Session.class);
-                                                                                    if(session.getStatus().equals("Request")){
-                                                                                        db.collection("Tutees")
-                                                                                                .whereEqualTo("Email", session.getPartner())
-                                                                                                .get()
-                                                                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                                                                    @Override
-                                                                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                                                                        if (task.isSuccessful()) {
-                                                                                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                                                                                Log.d("TAG1", document.getId() + " => " + document.getData());
-                                                                                                                Gson gson = new Gson();
-                                                                                                                Map<String, Object> result = new HashMap<>();
-                                                                                                                result = document.getData();
-                                                                                                                String firstname = result.get("First name").toString();
-                                                                                                                String lastname = result.get("Last name").toString();
-                                                                                                                String fullname = firstname.substring(0, 1).toUpperCase()+firstname.substring(1) + " " +
-                                                                                                                        lastname.substring(0, 1).toUpperCase() + lastname.substring(1);
-
-                                                                                                                TuteeList tutee = new TuteeList(result.get("Email").toString(), fullname, result.get("Contact details").toString(),
-                                                                                                                        result.get("Profile Picture").toString(), session.getStatus());
-                                                                                                                reqTutees.add(tutee);
-                                                                                                                Log.d("ABTESTING", "requser added "+reqTutees);
-                                                                                                            }
-                                                                                                        } else {
-                                                                                                            Log.d("TAG1", "Error getting documents: ", task.getException());
-                                                                                                        }
-                                                                                                    }
-                                                                                                });
-                                                                                    }else if(session.getStatus().equals("Current")){
-                                                                                        db.collection("Tutees")
-                                                                                                .whereEqualTo("Email", session.getPartner())
-                                                                                                .get()
-                                                                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                                                                    @Override
-                                                                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                                                                        if (task.isSuccessful()) {
-                                                                                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                                                                                Log.d("TAG1", document.getId() + " => " + document.getData());
-                                                                                                                Gson gson = new Gson();
-                                                                                                                Map<String, Object> result = new HashMap<>();
-                                                                                                                result = document.getData();
-                                                                                                                String firstname = result.get("First name").toString();
-                                                                                                                String lastname = result.get("Last name").toString();
-                                                                                                                String fullname = firstname.substring(0, 1).toUpperCase()+firstname.substring(1) + " " +
-                                                                                                                        lastname.substring(0, 1).toUpperCase() + lastname.substring(1);
-
-                                                                                                                TuteeList tutee = new TuteeList(result.get("Email").toString(), fullname, result.get("Contact details").toString(),
-                                                                                                                        result.get("Profile Picture").toString(), session.getStatus());
-                                                                                                                curTutees.add(tutee);
-                                                                                                                Log.d("ABTESTING", "curuser added "+curTutees);
-                                                                                                            }
-                                                                                                        } else {
-                                                                                                            Log.d("TAG1", "Error getting documents: ", task.getException());
-                                                                                                        }
-                                                                                                    }
-                                                                                                });
-                                                                                    }
-                                                                                }
-
-                                                                            }
-                                                                        }
-                                                                    } else {
-                                                                        Log.d("TAG1", "Error getting documents: ", task.getException());
-                                                                    }
-                                                                }
-                                                            });
-                                                }
-                                            }
-                                        }
-
-                                        ProgressDialog dialog = ProgressDialog.show(MainActivity.this, "",
-                                                "Loading. Please wait...", true);
-
-                                        CountDownTimer count = new CountDownTimer(1500, 500) {
-                                            @Override
-                                            public void onTick(long millisUntilFinished) {
-
-                                            }
-
-                                            @Override
-                                            public void onFinish() {
-                                                dialog.dismiss();
-                                                Intent i = new Intent(MainActivity.this, TutorHomePage.class);
-                                                ArrayList<String> curjson = new ArrayList<>();
-                                                ArrayList<String> reqjson = new ArrayList<>();
-
-                                                for(TuteeList tutee: curTutees){
-                                                    curjson.add(gson.toJson(tutee));
-                                                }
-
-                                                for(TuteeList tutee: reqTutees){
-                                                    reqjson.add(gson.toJson(tutee));
-                                                }
-
-                                                Log.d("ABTESTING", "out of query");
-                                                i.putStringArrayListExtra("Current Tutees", curjson);
-                                                i.putStringArrayListExtra("Req Tutees", reqjson);
-                                                startActivity(i);
-                                                finish();
-                                            }
-                                        };
-                                        count.start();
+                                        Intent i = new Intent(MainActivity.this, TutorHomePage.class);
+                                        startActivity(i);
+                                        finish();
                                     }
                                 }
+                                dialog.dismiss();
                             } else {
                                 Log.d("TAG1", "Error getting documents: ", task.getException());
                             }
@@ -209,17 +115,20 @@ public class MainActivity extends AppCompatActivity {
                                     result = document.getData();
                                     if (user.getEmail().equals(result.get("Email"))) {
                                         Intent i = new Intent(MainActivity.this, Homepage.class);
-                                        //current tutee and request tutee put in intent extra
+                                        //current tutor put in intent extra
                                         startActivity(i);
                                         finish();
                                     }
                                 }
+                                dialog.dismiss();
                             } else {
                                 Log.d("TAG1", "Error getting documents: ", task.getException());
                             }
                         }
                     });
         }
+
+        count.start();
 
         registerBtn = findViewById(R.id.registerBtn);
         loginBtn = findViewById(R.id.loginBtn);
