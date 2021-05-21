@@ -2,10 +2,12 @@ package com.mobdeve.tutorfinderapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class ViewTuteeProfile extends AppCompatActivity {
@@ -24,7 +28,9 @@ public class ViewTuteeProfile extends AppCompatActivity {
     private TextView text_email;
     private TextView text_contact;
     private ImageView image_tutee_profile;
+    private RecyclerView tutor_list_rv;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private ArrayList<TutorList> tutors = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +47,7 @@ public class ViewTuteeProfile extends AppCompatActivity {
         String json = i.getStringExtra("User Profile");
         User userProfile = gson.fromJson(json, User.class);
         String image_uri = userProfile.getProfpic();
+        tutors = userProfile.getTutorList();
 
         String user_fullname = userProfile.getFirstname().substring(0, 1).toUpperCase() + userProfile.getFirstname().substring(1)
                 + " " + userProfile.getLastname().substring(0, 1).toUpperCase() + userProfile.getLastname().substring(1);
@@ -50,30 +57,32 @@ public class ViewTuteeProfile extends AppCompatActivity {
         text_contact.setText(userProfile.getContact());
         Picasso.get().load(image_uri).fit().centerInside().into(image_tutee_profile);
 
-        //db.collection("")
-
-
-
-
+        tutor_list_rv = findViewById(R.id.tutee_profile_rv);
+        TutorListAdapter tutorListAdapter = new TutorListAdapter(tutors);
+        tutor_list_rv.setAdapter(tutorListAdapter);
+        tutor_list_rv.setLayoutManager(new LinearLayoutManager(this));
+        Log.d("TUTORS", "onCreate: user "+userProfile.getEmail());
     }
 
     public class TutorListAdapter extends RecyclerView.Adapter<TutorListAdapter.ViewHolder> {
         private ArrayList<TutorList> tutorList= new ArrayList<>();
 
         public class ViewHolder extends RecyclerView.ViewHolder{
-            private TextView text_name;
-            private TextView text_fee;
-            private TextView text_categories;
-            private TextView text_status;
-            private ImageView image_profile;
+            private TextView text_name_rv;
+            private TextView text_fee_rv;
+            private TextView text_categories_rv;
+            private TextView text_status_rv;
+            private TextView text_contact_rv;
+            private ImageView image_profile_rv;
 
             public ViewHolder(View view){
                 super(view);
-                text_name = view.findViewById(R.id.tutee_profile_tutor_name);
-                text_categories = view.findViewById(R.id.tutee_profile_tutor_category);
-                text_fee = view.findViewById(R.id.tutee_profile_tutor_fee);
-                text_status = view.findViewById(R.id.tutee_profile_tutor_status);
-                image_profile = view.findViewById(R.id.tutee_profile_tutor_image);
+                text_name_rv = view.findViewById(R.id.tutee_profile_tutor_name);
+                text_categories_rv = view.findViewById(R.id.tutee_profile_tutor_category);
+                text_fee_rv = view.findViewById(R.id.tutee_profile_tutor_fee);
+                text_status_rv = view.findViewById(R.id.tutee_profile_tutor_status);
+                text_contact_rv = view.findViewById(R.id.tutee_profile_tutor_contact);
+                image_profile_rv = view.findViewById(R.id.tutee_profile_tutor_image);
             }
         }
 
@@ -93,34 +102,23 @@ public class ViewTuteeProfile extends AppCompatActivity {
         public void onBindViewHolder(@NonNull TutorListAdapter.ViewHolder holder, int position){
             TutorList currentUser = tutorList.get(position);
             Gson gson = new Gson();
-//            String name = user.getFirstname().substring(0,1).toUpperCase() + user.getFirstname().substring(1) + " " +
-//                    user.getLastname().substring(0,1).toUpperCase() + user.getLastname().substring(1);
-//            String categories = new String();
-//
-//            for(String category:user.getCategories()){
-//                if(!category.equals(user.getCategories().get(user.getCategories().size()-1)))
-//                    categories += category.substring(0, 1).toUpperCase()+category.substring(1)+", ";
-//                else
-//                    categories += category.substring(0, 1).toUpperCase()+category.substring(1);
-//            }
+            ArrayList<String> categoriesArray = currentUser.getCategories();
+            String categories = new String();
 
-//            holder.text_name.setText(name);
-//
-//            holder.text_fee.setText("₱"+user.getFee()+".00/hour");
-//            holder.text_categories.setText(categories);
-//            //holder.text_rating.setText(rating)
-//            String imgUri=user.getProfpic();
-//            Picasso.get().load(imgUri).fit().centerInside().into(holder.image_profile);
-//            holder.image_arrow.setImageResource(R.drawable.arrow_icon);
-//            holder.image_arrow.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent i = new Intent(SearchPage.this, DetailedInfo.class);
-//                    String json = gson.toJson(user);
-//                    i.putExtra("User", json);
-//                    startActivity(i);
-//                }
-//            });
+            for(String category: categoriesArray){
+                if(!category.equals(categoriesArray.size()-1))
+                    categories += category.substring(0, 1).toUpperCase()+category.substring(1)+", ";
+                else
+                    categories += category.substring(0, 1).toUpperCase()+category.substring(1);
+            }
+
+            holder.text_name_rv.setText(currentUser.getFullname());
+            holder.text_categories_rv.setText(categories);
+            holder.text_fee_rv.setText(currentUser.getFee());
+            holder.text_status_rv.setText(currentUser.getStatus());
+            holder.text_contact_rv.setText(currentUser.getContact());
+            String imgUri=currentUser.getImage_uri();
+            Picasso.get().load(imgUri).fit().centerInside().into(holder.image_profile_rv);
         }
 
         @Override

@@ -9,11 +9,11 @@ public class Session {
         this.status = status;
     }
 
-    public String getTutee() {
+    public String getPartner() {
         return partner;
     }
 
-    public void setTutee(String tutee) {
+    public void setPartner(String tutee) {
         this.partner = tutee;
     }
 

@@ -9,6 +9,7 @@ import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,6 +19,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -53,6 +56,8 @@ public class Homepage extends AppCompatActivity {
     private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     private User userProfile;
     private ArrayList<User> users = new ArrayList<>();
+    private ArrayList<TutorList> tutorList = new ArrayList<>();
+    private ArrayList<Session> sessions = new ArrayList<>();
 
     public void searchFirstName2(String searchterms){
         ArrayList<String> resulting = new ArrayList<>();
@@ -301,7 +306,7 @@ public class Homepage extends AppCompatActivity {
         viewprofilebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Gson gson = new Gson();
                 Query query = db.collection("Tutees").whereEqualTo("Email", currentUser.getEmail());
 
                 query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -309,10 +314,9 @@ public class Homepage extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         for(QueryDocumentSnapshot document: task.getResult()){
                             Map<String, Object> result = document.getData();
-                            Gson gson = new Gson();
+
 
                             ArrayList<String> json = new ArrayList<>();
-                            ArrayList<Session> sessions = new ArrayList<>();
 
                             userProfile = new User(result.get("Email").toString(), result.get("First name").toString(),
                                     result.get("Last name").toString(), result.get("Contact details").toString());
@@ -327,16 +331,57 @@ public class Homepage extends AppCompatActivity {
                             }
 
                             json.clear();
+                            //now, I have the sessions
+                        }
+                        for(Session s: sessions) {
+                            db.collection("Tutors")
+                                    .whereEqualTo("Email", s.getPartner())
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                                    Log.d("TAG1", document.getId() + " => " + document.getData());
+                                                    Map<String, Object> result = new HashMap<>();
+                                                    result = document.getData();
+                                                    String firstname = result.get("First name").toString();
+                                                    String lastname = result.get("Last name").toString();
 
-                            for (Session sesh : sessions) {
-                                json.add(gson.toJson(sesh));
+                                                    String fullname = firstname.substring(0, 1).toUpperCase() + firstname.substring(1)
+                                                            + " " + lastname.substring(0, 1).toUpperCase() + lastname.substring(1);
+
+                                                    TutorList currentTutor = new TutorList(fullname, (ArrayList<String>) result.get("Categories"),
+                                                            result.get("Fee").toString(), result.get("Contact details").toString(), s.getStatus(),
+                                                            result.get("Profile Picture").toString());
+
+                                                    tutorList.add(currentTutor);
+                                                    Log.d("TUTORLISTIN", "onComplete: TUTOR LIST"+tutorList);
+                                                }
+                                            } else {
+                                                Log.d("TAG1", "Error getting documents: ", task.getException());
+                                            }
+                                        }
+                                    });
+                        }
+                        Log.d("TUTORLISTOUT", "onComplete: TUTOR LIST"+tutorList);
+
+                        CountDownTimer count = new CountDownTimer(1000, 500) {
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+
                             }
 
-
-                            Intent i = new Intent(Homepage.this, ViewTuteeProfile.class);
-                            i.putExtra("User Profile", json);
-                            startActivity(i);
-                        }
+                            @Override
+                            public void onFinish() {
+                                userProfile.setTutorList(tutorList);
+                                Intent i = new Intent(Homepage.this, ViewTuteeProfile.class);
+                                String json = gson.toJson(userProfile);
+                                i.putExtra("User Profile", json);
+                                startActivity(i);
+                            }
+                        };
+                        count.start();
                     }
                 });
             }
