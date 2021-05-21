@@ -9,6 +9,7 @@ public class Session {
         this.status = status;
     }
 
+
     public String getPartner() {
         return partner;
     }
