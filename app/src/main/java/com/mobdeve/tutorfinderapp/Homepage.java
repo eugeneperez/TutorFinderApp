@@ -1,8 +1,12 @@
 package com.mobdeve.tutorfinderapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -48,8 +52,7 @@ public class Homepage extends AppCompatActivity {
     private EditText searchfirstname;
     private EditText searchlastname;
     private Button searchbtn;
-    private Button signoutbtn;
-    private Button viewprofilebtn;
+
     private TextView username;
     private FirebaseAuth mAuth;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -58,6 +61,7 @@ public class Homepage extends AppCompatActivity {
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<TutorList> tutorList = new ArrayList<>();
     private ArrayList<Session> sessions = new ArrayList<>();
+    private DrawerLayout drawerLayout;
 
     public void searchFirstName2(String searchterms){
         ArrayList<String> resulting = new ArrayList<>();
@@ -189,13 +193,13 @@ public class Homepage extends AppCompatActivity {
         searchfirstname = findViewById(R.id.searchfirstname_homepage);
         searchlastname = findViewById(R.id.searchlastname_homepage);
         searchbtn = findViewById(R.id.searchbtn_homepage);
-        signoutbtn = findViewById(R.id.signoutbtn);
+        drawerLayout= findViewById(R.id.drawer_layout);
         mAuth = FirebaseAuth.getInstance();
 
 
 
         //placeholder button
-        viewprofilebtn = findViewById(R.id.viewprofilebtn);
+
 
         search.setVisibility(View.GONE);
 
@@ -293,98 +297,138 @@ public class Homepage extends AppCompatActivity {
             }
         });
 
-        signoutbtn.setOnClickListener(new View.OnClickListener() {
+    }
+
+    public void ClickMenu(View view){
+        openDrawer(drawerLayout);
+    }
+
+    private static void openDrawer(DrawerLayout drawerLayout){
+        drawerLayout.openDrawer(GravityCompat.END);
+    }
+
+    public void ClickLogo(View view){
+        closeDrawer(drawerLayout);
+    }
+
+    private static void closeDrawer(DrawerLayout drawerLayout) {
+        if (drawerLayout.isDrawerOpen(GravityCompat.END)){
+            drawerLayout.closeDrawer(GravityCompat.END);
+        }
+    }
+
+    public void ClickHome(View view){
+        if (drawerLayout.isDrawerOpen(GravityCompat.END)){
+            drawerLayout.closeDrawer(GravityCompat.END);
+        }
+    }
+
+    public void ClickProfile(View view){
+        tutorList.clear();
+        Gson gson = new Gson();
+        Query query = db.collection("Tutees").whereEqualTo("Email", currentUser.getEmail());
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onClick(View v) {
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                for(QueryDocumentSnapshot document: task.getResult()){
+                    Map<String, Object> result = document.getData();
+
+
+                    ArrayList<String> json = new ArrayList<>();
+
+                    userProfile = new User(result.get("Email").toString(), result.get("First name").toString(),
+                            result.get("Last name").toString(), result.get("Contact details").toString());
+                    userProfile.setProfpic(result.get("Profile Picture").toString());
+
+                    if(result.get("Tutor List") != null) {
+                        json = (ArrayList<String>) result.get("Tutor List");
+
+                        for (String s : json) {
+                            sessions.add(gson.fromJson(s, Session.class));
+                        }
+                    }
+
+                    json.clear();
+                    //now, I have the sessions
+                }
+                for(Session s: sessions) {
+                    db.collection("Tutors")
+                            .whereEqualTo("Email", s.getPartner())
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            Log.d("TAG1", document.getId() + " => " + document.getData());
+                                            Map<String, Object> result = new HashMap<>();
+                                            result = document.getData();
+                                            String firstname = result.get("First name").toString();
+                                            String lastname = result.get("Last name").toString();
+
+                                            String fullname = firstname.substring(0, 1).toUpperCase() + firstname.substring(1)
+                                                    + " " + lastname.substring(0, 1).toUpperCase() + lastname.substring(1);
+
+                                            TutorList currentTutor = new TutorList(fullname, (ArrayList<String>) result.get("Categories"),
+                                                    result.get("Fee").toString(), result.get("Contact details").toString(), s.getStatus(),
+                                                    result.get("Profile Picture").toString());
+
+                                            tutorList.add(currentTutor);
+                                            Log.d("TUTORLISTIN", "onComplete: TUTOR LIST"+tutorList);
+                                        }
+                                    } else {
+                                        Log.d("TAG1", "Error getting documents: ", task.getException());
+                                    }
+                                }
+                            });
+                }
+                Log.d("TUTORLISTOUT", "onComplete: TUTOR LIST"+tutorList);
+
+                CountDownTimer count = new CountDownTimer(1000, 500) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        userProfile.setTutorList(tutorList);
+                        Intent i = new Intent(Homepage.this, ViewTuteeProfile.class);
+                        String json = gson.toJson(userProfile);
+                        i.putExtra("User Profile", json);
+                        startActivity(i);
+                    }
+                };
+                count.start();
+            }
+        });
+    }
+    public void ClickLogout(View view){
+        AlertDialog.Builder builder= new AlertDialog.Builder(Homepage.this);
+        builder.setTitle("Logout");
+        builder.setMessage("Are you sure you want to logout?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 FirebaseAuth.getInstance().signOut();
                 Intent i = new Intent(Homepage.this, MainActivity.class);
                 startActivity(i);
                 finish();
             }
         });
-
-        viewprofilebtn.setOnClickListener(new View.OnClickListener() {
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Gson gson = new Gson();
-                Query query = db.collection("Tutees").whereEqualTo("Email", currentUser.getEmail());
-
-                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        for(QueryDocumentSnapshot document: task.getResult()){
-                            Map<String, Object> result = document.getData();
-
-
-                            ArrayList<String> json = new ArrayList<>();
-
-                            userProfile = new User(result.get("Email").toString(), result.get("First name").toString(),
-                                    result.get("Last name").toString(), result.get("Contact details").toString());
-                            userProfile.setProfpic(result.get("Profile Picture").toString());
-
-                            if(result.get("Tutor List") != null) {
-                                json = (ArrayList<String>) result.get("Tutor List");
-
-                                for (String s : json) {
-                                    sessions.add(gson.fromJson(s, Session.class));
-                                }
-                            }
-
-                            json.clear();
-                            //now, I have the sessions
-                        }
-                        for(Session s: sessions) {
-                            db.collection("Tutors")
-                                    .whereEqualTo("Email", s.getPartner())
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                                    Log.d("TAG1", document.getId() + " => " + document.getData());
-                                                    Map<String, Object> result = new HashMap<>();
-                                                    result = document.getData();
-                                                    String firstname = result.get("First name").toString();
-                                                    String lastname = result.get("Last name").toString();
-
-                                                    String fullname = firstname.substring(0, 1).toUpperCase() + firstname.substring(1)
-                                                            + " " + lastname.substring(0, 1).toUpperCase() + lastname.substring(1);
-
-                                                    TutorList currentTutor = new TutorList(fullname, (ArrayList<String>) result.get("Categories"),
-                                                            result.get("Fee").toString(), result.get("Contact details").toString(), s.getStatus(),
-                                                            result.get("Profile Picture").toString());
-
-                                                    tutorList.add(currentTutor);
-                                                    Log.d("TUTORLISTIN", "onComplete: TUTOR LIST"+tutorList);
-                                                }
-                                            } else {
-                                                Log.d("TAG1", "Error getting documents: ", task.getException());
-                                            }
-                                        }
-                                    });
-                        }
-                        Log.d("TUTORLISTOUT", "onComplete: TUTOR LIST"+tutorList);
-
-                        CountDownTimer count = new CountDownTimer(1000, 500) {
-                            @Override
-                            public void onTick(long millisUntilFinished) {
-
-                            }
-
-                            @Override
-                            public void onFinish() {
-                                userProfile.setTutorList(tutorList);
-                                Intent i = new Intent(Homepage.this, ViewTuteeProfile.class);
-                                String json = gson.toJson(userProfile);
-                                i.putExtra("User Profile", json);
-                                startActivity(i);
-                            }
-                        };
-                        count.start();
-                    }
-                });
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
             }
         });
+        builder.show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        closeDrawer(drawerLayout);
     }
 }

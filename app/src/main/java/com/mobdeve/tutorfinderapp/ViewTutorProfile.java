@@ -46,9 +46,9 @@ public class ViewTutorProfile extends AppCompatActivity {
     }
 
     public void ClickProfile(View view){
-        Intent i = new Intent(ViewTutorProfile.this, ViewTutorProfile.class);
-        startActivity(i);
-        finish();
+        if (drawerLayout.isDrawerOpen(GravityCompat.END)){
+            drawerLayout.closeDrawer(GravityCompat.END);
+        }
     }
     public void ClickLogout(View view){
         AlertDialog.Builder builder= new AlertDialog.Builder(ViewTutorProfile.this);
