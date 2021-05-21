@@ -98,7 +98,9 @@ public class TutorHomePage extends AppCompatActivity {
     }
 
     public void ClickHome(View view){
-
+        if (drawerLayout.isDrawerOpen(GravityCompat.END)){
+            drawerLayout.closeDrawer(GravityCompat.END);
+        }
     }
 
     public void ClickProfile(View view){

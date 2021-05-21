@@ -1,10 +1,14 @@
 package com.mobdeve.tutorfinderapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -29,6 +34,7 @@ public class ViewTuteeProfile extends AppCompatActivity {
     private TextView text_contact;
     private ImageView image_tutee_profile;
     private RecyclerView tutor_list_rv;
+    private DrawerLayout drawerLayout;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ArrayList<TutorList> tutors = new ArrayList<>();
 
@@ -42,6 +48,7 @@ public class ViewTuteeProfile extends AppCompatActivity {
         text_email = findViewById(R.id.tutee_profile_email);
         text_contact = findViewById(R.id.tutee_profile_contact);
         image_tutee_profile = findViewById(R.id.tutee_profile_image);
+        drawerLayout= findViewById(R.id.drawer_layout);
 
         Intent i = getIntent();
         String json = i.getStringExtra("User Profile");
@@ -125,5 +132,62 @@ public class ViewTuteeProfile extends AppCompatActivity {
         public int getItemCount() {
             return tutorList.size();
         }
+    }
+
+    public void ClickMenu(View view){
+        openDrawer(drawerLayout);
+    }
+
+    private static void openDrawer(DrawerLayout drawerLayout){
+        drawerLayout.openDrawer(GravityCompat.END);
+    }
+
+    public void ClickLogo(View view){
+        closeDrawer(drawerLayout);
+    }
+
+    private static void closeDrawer(DrawerLayout drawerLayout) {
+        if (drawerLayout.isDrawerOpen(GravityCompat.END)){
+            drawerLayout.closeDrawer(GravityCompat.END);
+        }
+    }
+
+    public void ClickHome(View view){
+        Intent i = new Intent(ViewTuteeProfile.this, Homepage.class);
+        startActivity(i);
+        finish();
+    }
+
+    public void ClickProfile(View view){
+        if (drawerLayout.isDrawerOpen(GravityCompat.END)){
+            drawerLayout.closeDrawer(GravityCompat.END);
+        }
+    }
+    public void ClickLogout(View view){
+        AlertDialog.Builder builder= new AlertDialog.Builder(ViewTuteeProfile.this);
+        builder.setTitle("Logout");
+        builder.setMessage("Are you sure you want to logout?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                FirebaseAuth.getInstance().signOut();
+                Intent i = new Intent(ViewTuteeProfile.this, MainActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        closeDrawer(drawerLayout);
     }
 }
