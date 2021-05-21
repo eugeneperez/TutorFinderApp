@@ -1,13 +1,9 @@
 package com.mobdeve.tutorfinderapp;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -20,27 +16,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 /*
@@ -58,9 +46,12 @@ public class Homepage extends AppCompatActivity {
     private EditText searchlastname;
     private Button searchbtn;
     private Button signoutbtn;
+    private Button viewprofilebtn;
     private TextView username;
     private FirebaseAuth mAuth;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private User userProfile;
     private ArrayList<User> users = new ArrayList<>();
 
     public void searchFirstName2(String searchterms){
@@ -196,6 +187,11 @@ public class Homepage extends AppCompatActivity {
         signoutbtn = findViewById(R.id.signoutbtn);
         mAuth = FirebaseAuth.getInstance();
 
+
+
+        //placeholder button
+        viewprofilebtn = findViewById(R.id.viewprofilebtn);
+
         search.setVisibility(View.GONE);
 
         ArrayList<String> spinnerList = new ArrayList<>();
@@ -299,6 +295,50 @@ public class Homepage extends AppCompatActivity {
                 Intent i = new Intent(Homepage.this, MainActivity.class);
                 startActivity(i);
                 finish();
+            }
+        });
+
+        viewprofilebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Query query = db.collection("Tutees").whereEqualTo("Email", currentUser.getEmail());
+
+                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        for(QueryDocumentSnapshot document: task.getResult()){
+                            Map<String, Object> result = document.getData();
+                            Gson gson = new Gson();
+
+                            ArrayList<String> json = new ArrayList<>();
+                            ArrayList<Session> sessions = new ArrayList<>();
+
+                            userProfile = new User(result.get("Email").toString(), result.get("First name").toString(),
+                                    result.get("Last name").toString(), result.get("Contact details").toString());
+                            userProfile.setProfpic(result.get("Profile Picture").toString());
+
+                            if(result.get("Tutor List") != null) {
+                                json = (ArrayList<String>) result.get("Tutor List");
+
+                                for (String s : json) {
+                                    sessions.add(gson.fromJson(s, Session.class));
+                                }
+                            }
+
+                            json.clear();
+
+                            for (Session sesh : sessions) {
+                                json.add(gson.toJson(sesh));
+                            }
+
+
+                            Intent i = new Intent(Homepage.this, ViewTuteeProfile.class);
+                            i.putExtra("User Profile", json);
+                            startActivity(i);
+                        }
+                    }
+                });
             }
         });
     }

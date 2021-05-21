@@ -11,7 +11,7 @@
         android:theme="@style/Theme.TutorFinderApp">
         <activity android:name=".DetailedInfo" />
         <activity android:name=".SearchPage" />
-        <activity android:name=".ViewProfile" />
+        <activity android:name=".ViewTuteeProfile" />
         <activity android:name=".AdminPage" />
         <activity android:name=".Homepage" />
         <activity android:name=".Register" />
