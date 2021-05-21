@@ -10,19 +10,28 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
 
 public class TutorHomePage extends AppCompatActivity {
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private DrawerLayout drawerLayout;
     private TabLayout tabLayout;
     private TabItem currTutees;
     private TabItem reqTutees;
     private ViewPager viewPager;
+
+    private TuteeList currTuteeList;
+    private TuteeList reqTuteeList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +44,22 @@ public class TutorHomePage extends AppCompatActivity {
         reqTutees= findViewById(R.id.reqTutees);
         viewPager= findViewById(R.id.viewPager);
 
+        Intent i = getIntent();
+        ArrayList<String> currTutees = new ArrayList<>();
+        ArrayList<String> reqTutees = new ArrayList<>();
+
+        if(i.getStringArrayListExtra("Current Tutees") != null){
+            currTutees = i.getStringArrayListExtra("Current Tutees");
+        }
+        if(i.getStringArrayListExtra("Req Tutees") != null){
+            reqTutees = i.getStringArrayListExtra("Req Tutees");
+        }
+
         PagerAdapter pagerAdapter= new PagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, tabLayout.getTabCount());
 
         viewPager.setAdapter(pagerAdapter);
+
+        //db.collection("")
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
