@@ -80,7 +80,7 @@ public class TutorHomePage extends AppCompatActivity {
     }
 
     public void ClickProfile(View view){
-        Intent i = new Intent(TutorHomePage.this, ViewTuteeProfile.class);
+        Intent i = new Intent(TutorHomePage.this, ViewTutorProfile.class);
         startActivity(i);
         finish();
     }
