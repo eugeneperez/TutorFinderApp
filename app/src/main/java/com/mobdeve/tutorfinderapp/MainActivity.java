@@ -120,12 +120,13 @@ public class MainActivity extends AppCompatActivity {
                 // show the popup window
                 // which view you pass in doesn't matter, it is only used for the window tolken
                 popupWindow.showAtLocation( v, Gravity.CENTER, 0, 0);
-                popupWindow.setElevation(20);
+                popupWindow.setElevation(40);
                 Button tuteeBtn= (Button)popupView.findViewById(R.id.tuteeBtn);
                 Button tutorBtn= (Button)popupView.findViewById(R.id.tutorBtn);
                 tutorBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        popupWindow.dismiss();
                         Intent tutorInt = new Intent(MainActivity.this, Register.class);
                         tutorInt.putExtra("Type", "tutor");
                         startActivity(tutorInt);
@@ -134,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
                 tuteeBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        popupWindow.dismiss();
                         Intent tuteeInt = new Intent(MainActivity.this, Register.class);
                         tuteeInt.putExtra("Type", "tutee");
                         startActivity(tuteeInt);

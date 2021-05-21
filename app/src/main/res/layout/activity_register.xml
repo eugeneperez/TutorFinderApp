@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#8ECAE6"
+    android:background="#F8F8FF"
     tools:context=".Register">
 
     <ScrollView
@@ -19,7 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="50dp">
 
 
             <ImageView
@@ -74,6 +75,24 @@
                 android:hint="Contact Number"
                 android:inputType="number" />
 
+            <EditText
+                android:id="@+id/regPasswordEt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:ems="10"
+                android:hint="Password"
+                android:inputType="textPassword" />
+
+            <EditText
+                android:id="@+id/regConfirmPasswordEt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:ems="10"
+                android:hint="Confirm Password"
+                android:inputType="textPassword" />
+
             <TextView
                 android:id="@+id/reg_categories_tv"
                 android:layout_width="wrap_content"
@@ -99,37 +118,25 @@
                 android:layout_marginTop="24dp"
                 android:ems="10"
 
-                android:hint="Fee"
-                android:inputType="number" />
+                android:hint=" Fee (Php)"
+                android:inputType="number" /><![CDATA[
 
-                android:hint=" Fee(Php)"
-                android:inputType="textPersonName" />
+            android:hint=" Fee(Php)"
+            android:inputType="textPersonName" />
 
 
-            <EditText
-                android:id="@+id/regPasswordEt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:ems="10"
-                android:hint="Password"
-                android:inputType="textPassword" />
 
-            <EditText
-                android:id="@+id/regConfirmPasswordEt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:ems="10"
-                android:hint="Confirm Password"
-                android:inputType="textPassword" />
+
+            ]]>
 
             <Button
                 android:id="@+id/regPageBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:text="Register" />
+                android:backgroundTint="#FFB703"
+                android:text="Register"
+                android:textColor="#000000" />
         </LinearLayout>
     </ScrollView>
 
