@@ -23,8 +23,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 public class ViewTuteeProfile extends AppCompatActivity {
@@ -44,10 +42,10 @@ public class ViewTuteeProfile extends AppCompatActivity {
         setContentView(R.layout.activity_view_tutee_profile);
         Gson gson = new Gson();
 
-        text_name = findViewById(R.id.tutee_profile_name);
+        text_name = findViewById(R.id.tutor_profile_name);
         text_email = findViewById(R.id.tutee_profile_email);
         text_contact = findViewById(R.id.tutee_profile_contact);
-        image_tutee_profile = findViewById(R.id.tutee_profile_image);
+        image_tutee_profile = findViewById(R.id.tutor_profile_image);
         drawerLayout= findViewById(R.id.drawer_layout);
 
         Intent i = getIntent();

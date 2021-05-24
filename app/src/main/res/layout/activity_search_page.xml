@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#8ECAE6"
+    android:orientation="vertical"
+    android:id="@+id/drawer_layout"
+    tools:context=".SearchPage">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8F8FF"
     android:orientation="vertical"
     tools:context=".SearchPage">
+
+    <include layout="@layout/main_toolbar" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center|left"
         android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/imageView7"
-            android:layout_width="45dp"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/tutor_icon" />
 
         <EditText
             android:id="@+id/searchfirstname_searchpage"
@@ -42,7 +45,7 @@
             android:id="@+id/searchbar_searchpage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
+            android:ems="12"
             android:hint="What are you looking for?"
             android:imeOptions="actionDone"
             android:inputType="textPersonName" />
@@ -73,7 +76,19 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_page_rv"
         android:layout_width="match_parent"
-        android:layout_height="656dp" >
+        android:layout_height="656dp">
 
     </androidx.recyclerview.widget.RecyclerView>
 </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="@color/white">
+
+        <include
+            layout="@layout/main_nav_drawer_tutee"></include>
+    </RelativeLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>

@@ -90,7 +90,7 @@
                     android:layout_margin="10dp"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:hint="What are you looking for..."
+                    android:hint="What are you looking for?"
                     android:imeOptions="actionDone"
                     android:inputType="textPersonName" />
 

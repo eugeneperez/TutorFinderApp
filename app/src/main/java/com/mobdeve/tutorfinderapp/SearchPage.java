@@ -1,11 +1,15 @@
 package com.mobdeve.tutorfinderapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,7 +31,9 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
@@ -49,7 +55,7 @@ public class SearchPage extends AppCompatActivity {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ArrayList<User> users = new ArrayList<>();
     private RecyclerView results_rv;
-
+    private DrawerLayout drawerLayout;
 
     public void searchFirstName2(String searchterms){
         db.collection("Tutors")
@@ -187,6 +193,7 @@ public class SearchPage extends AppCompatActivity {
         searchlastname = findViewById(R.id.searchlastname_searchpage);
         searchbtn = findViewById(R.id.searchbtn_searchpage);
         spinnerAdapter = findViewById(R.id.spinner_searchpage);
+        drawerLayout= findViewById(R.id.drawer_layout);
 
         ArrayList<String> arrayList = new ArrayList<>();
 
@@ -369,6 +376,60 @@ public class SearchPage extends AppCompatActivity {
         public int getItemCount() {
             return resultList.size();
         }
+    }
+    public void ClickMenu(View view){
+        openDrawer(drawerLayout);
+    }
+
+    private static void openDrawer(DrawerLayout drawerLayout){
+        drawerLayout.openDrawer(GravityCompat.END);
+    }
+
+    public void ClickLogo(View view){
+        closeDrawer(drawerLayout);
+    }
+
+    private static void closeDrawer(DrawerLayout drawerLayout) {
+        if (drawerLayout.isDrawerOpen(GravityCompat.END)){
+            drawerLayout.closeDrawer(GravityCompat.END);
+        }
+    }
+
+    public void ClickHome(View view){
+        Intent i = new Intent(SearchPage.this, Homepage.class);
+        startActivity(i);
+        finish();
+    }
+
+    public void ClickProfile(View view){
+
+    }
+    public void ClickLogout(View view){
+        AlertDialog.Builder builder= new AlertDialog.Builder(SearchPage.this);
+        builder.setTitle("Logout");
+        builder.setMessage("Are you sure you want to logout?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                FirebaseAuth.getInstance().signOut();
+                Intent i = new Intent(SearchPage.this, MainActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        closeDrawer(drawerLayout);
     }
 
 }

@@ -6,28 +6,178 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/drawer_layout"
-    tools:context=".ViewTutorProfile">
+    tools:context=".ViewTutorProfile"
+   >
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ViewTutorProfile">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/colordividerlayout"
+        android:orientation="vertical"
+        tools:context=".ViewTuteeProfile">
 
-    <include
-        layout="@layout/main_toolbar" />
 
-    <TextView
-        android:id="@+id/textView10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="THIS IS THE PROFILE PAGE HEHE"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <include layout="@layout/main_toolbar" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/tutor_profile_image"
+                        android:layout_width="180dp"
+                        android:layout_height="180dp"
+                        android:layout_marginRight="7dp"
+                        android:layout_weight="1"
+                        android:paddingTop="10dp"
+                        android:src="@drawable/logo"
+                        app:civ_border_color="#F8F8FF"
+                        app:civ_border_width="10dp"
+                        app:civ_circle_background_color="#D5D5D5" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tutor_profile_name"
+                            android:layout_width="285dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:gravity="center|right"
+                            android:paddingTop="10dp"
+                            android:text="Name"
+                            android:textSize="18dp" />
+
+                        <ImageView
+                            android:id="@+id/imageView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:paddingStart="30dp"
+                            app:srcCompat="@drawable/ic_baseline_edit_24" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tutor_profile_email"
+                            android:layout_width="285dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:gravity="center|right"
+                            android:paddingTop="10dp"
+                            android:text="Email"
+                            android:textSize="18dp" />
+
+                        <ImageView
+                            android:id="@+id/imageView3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="30dp"
+                            app:srcCompat="@drawable/ic_baseline_edit_24" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tutor_profile_contact"
+                            android:layout_width="285dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center|right"
+                            android:paddingTop="10dp"
+                            android:text="Contact details"
+                            android:textSize="18dp" />
+
+                        <ImageView
+                            android:id="@+id/imageView6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="30dp"
+                            app:srcCompat="@drawable/ic_baseline_edit_24" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tutor_profile_category"
+                            android:layout_width="285dp"
+                            android:layout_height="75dp"
+                            android:gravity="center|right"
+                            android:paddingTop="10dp"
+                            android:text="Categories"
+                            android:textSize="18dp" />
+
+                        <ImageView
+                            android:id="@+id/imageView7"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="30dp"
+                            app:srcCompat="@drawable/ic_baseline_edit_24" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tutor_profile_fee"
+                            android:layout_width="285dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center|right"
+                            android:paddingTop="10dp"
+                            android:text="Fee"
+                            android:textSize="18dp" />
+
+                        <ImageView
+                            android:id="@+id/imageView8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="30dp"
+                            app:srcCompat="@drawable/ic_baseline_edit_24" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="300dp"
