@@ -259,6 +259,7 @@ public class TutorHomePage extends AppCompatActivity {
                         } else {
                             Log.d("TAG1", "Error getting documents: ", task.getException());
                         }
+                        refreshList();
                     }
                 });
         db.collection("Tutees")

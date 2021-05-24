@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -74,21 +75,6 @@ public class ReqFragment extends Fragment {
         Log.d("Tuteeslist", "onCreateView: curr "+currentTutees+" req "+reqTutees);
     }
 
-    public void refreshFragment(ReqTutorsAdapter adapter){
-        updateFragment();
-        CountDownTimer count = new CountDownTimer(1500, 500) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-
-            }
-
-            @Override
-            public void onFinish() {
-                adapter.notifyDataSetChanged();
-            }
-        };
-        count.start();
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,7 +92,7 @@ public class ReqFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_req, container, false);
         updateFragment();
-
+        Log.d("tuteeslist12",reqTutees.toString());
         CountDownTimer count = new CountDownTimer(1000, 500) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -119,10 +105,11 @@ public class ReqFragment extends Fragment {
                 adapter = new ReqTutorsAdapter(reqTutees);
                 rv_req.setAdapter(adapter);
                 rv_req.setLayoutManager(new LinearLayoutManager(c));
+                Log.d("tuteeslist123",reqTutees.toString());
             }
         };
         count.start();
-
+        Log.d("tuteeslist1234",reqTutees.toString());
         Log.d("RREQ1", "onCreateView: ENTERED");
 
         return view;
@@ -131,7 +118,6 @@ public class ReqFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        refreshFragment(adapter);
     }
 
     public class ReqTutorsAdapter extends RecyclerView.Adapter<ReqTutorsAdapter.ViewHolder> {
@@ -190,10 +176,12 @@ public class ReqFragment extends Fragment {
             holder.button_accept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     TutorHomePage activity = (TutorHomePage) getActivity();
                     activity.addToCurrent(currentUser.getEmail());
-                    activity.refreshList();
-                    refreshFragment(adapter);
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.detach(ReqFragment.this).attach(ReqFragment.this).commit();
+
                 }
             });
             holder.button_decline.setOnClickListener(new View.OnClickListener() {

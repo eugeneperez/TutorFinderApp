@@ -105,21 +105,11 @@ public class CurrFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_curr, container, false);
         updateFragment();
 
-        CountDownTimer count = new CountDownTimer(1500, 500) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-
-            }
-
-            @Override
-            public void onFinish() {
                 rv_curr = (RecyclerView) view.findViewById(R.id.recycler_current);
                 adapter = new CurrentTutorsAdapter(currentTutees);
                 rv_curr.setAdapter(adapter);
                 rv_curr.setLayoutManager(new LinearLayoutManager(c));
-            }
-        };
-        count.start();
+
 
         return view;
     }
