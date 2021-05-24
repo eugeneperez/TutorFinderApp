@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8F8FF"
+    tools:context=".FeedbackPage">
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="358dp"
+        android:layout_height="171dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/shadowborder"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView24">
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="How was your Tutor?"
+            android:textSize="19dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingTop="30dp">
+
+            <ImageView
+                android:id="@+id/star1Iv"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/ic_baseline_star_outline_24" />
+
+            <ImageView
+                android:id="@+id/star2Iv"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/ic_baseline_star_outline_24" />
+
+            <ImageView
+                android:id="@+id/star3Iv"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/ic_baseline_star_outline_24" />
+
+            <ImageView
+                android:id="@+id/star4Iv"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/ic_baseline_star_outline_24" />
+
+            <ImageView
+                android:id="@+id/star5Iv"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/ic_baseline_star_outline_24" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/commentEt"
+        android:layout_width="358dp"
+        android:layout_height="127dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/customerborder2"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="Comments (Optional)"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
+    <Button
+        android:id="@+id/submitFeedbackBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="68dp"
+        android:backgroundTint="#1C2C5C"
+        android:text="Submit"
+        android:textColor="#F8F8FF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/commentEt"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/textView24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="84dp"
+        android:text="Feedback"
+        android:textColor="#5C5C5C"
+        android:textSize="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
