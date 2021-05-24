@@ -2,11 +2,26 @@ package com.mobdeve.tutorfinderapp;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +38,12 @@ public class ReqFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private ArrayList<TuteeList> currentTutees = new ArrayList<>();
+    private ArrayList<TuteeList> reqTutees = new ArrayList<>();
+
+    private RecyclerView rv_req;
+    private ReqTutorsAdapter adapter;
 
     public ReqFragment() {
         // Required empty public constructor
@@ -46,6 +67,29 @@ public class ReqFragment extends Fragment {
         return fragment;
     }
 
+    public void updateFragment(){
+        TutorHomePage activity = (TutorHomePage) getActivity();
+        currentTutees = activity.getCurTuteesList();
+        reqTutees = activity.getReqTuteesList();
+        Log.d("Tuteeslist", "onCreateView: curr "+currentTutees+" req "+reqTutees);
+    }
+
+    public void refreshFragment(ReqTutorsAdapter adapter){
+        updateFragment();
+        CountDownTimer count = new CountDownTimer(1500, 500) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                adapter.notifyDataSetChanged();
+            }
+        };
+        count.start();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +102,112 @@ public class ReqFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        final FragmentActivity c = getActivity();
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_req, container, false);
+        View view = inflater.inflate(R.layout.fragment_req, container, false);
+        updateFragment();
+
+        CountDownTimer count = new CountDownTimer(1000, 500) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                rv_req = (RecyclerView) view.findViewById(R.id.recycler_req);
+                adapter = new ReqTutorsAdapter(reqTutees);
+                rv_req.setAdapter(adapter);
+                rv_req.setLayoutManager(new LinearLayoutManager(c));
+            }
+        };
+        count.start();
+
+        Log.d("RREQ1", "onCreateView: ENTERED");
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshFragment(adapter);
+    }
+
+    public class ReqTutorsAdapter extends RecyclerView.Adapter<ReqTutorsAdapter.ViewHolder> {
+        private ArrayList<TuteeList> tuteeList = new ArrayList<>();
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            private TextView text_name_rv;
+            private TextView text_contact_rv;
+            private ImageView image_profile_rv;
+            private Button button_accept;
+            private Button button_decline;
+            private LinearLayout lil_sta;
+            private LinearLayout tutors;
+            private LinearLayout tutees;
+
+            public ViewHolder(View view) {
+                super(view);
+                text_name_rv = view.findViewById(R.id.current_tutee_name);
+                text_contact_rv = view.findViewById(R.id.current_tutee_contact);
+                image_profile_rv = view.findViewById(R.id.current_tutee_image);
+                button_accept = view.findViewById(R.id.tutee_accept_btn);
+                button_decline = view.findViewById(R.id.tutee_decline_btn);
+                lil_sta = view.findViewById(R.id.tutor_lil_sta);
+                tutors = view.findViewById(R.id.tutors);
+                tutees = view.findViewById(R.id.tutees);
+            }
+        }
+
+        public ReqTutorsAdapter(ArrayList<TuteeList> tuteeList) {
+            this.tuteeList = tuteeList;
+        }
+
+        @NonNull
+        @Override
+        public ReqTutorsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            View resultView = inflater.inflate(R.layout.rv_tutor_fragment, parent, false);
+
+            ReqTutorsAdapter.ViewHolder viewHolder = new ReqTutorsAdapter.ViewHolder(resultView);
+            return viewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ReqTutorsAdapter.ViewHolder holder, int position) {
+            TuteeList currentUser = tuteeList.get(position);
+
+            holder.lil_sta.setVisibility(View.GONE);
+            holder.tutees.setVisibility(View.VISIBLE);
+            holder.tutors.setVisibility(View.GONE);
+
+            holder.text_name_rv.setText(currentUser.getName());
+            holder.text_contact_rv.setText(currentUser.getContact());
+            String imgUri = currentUser.getImage_uri();
+            Picasso.get().load(imgUri).fit().centerInside().into(holder.image_profile_rv);
+
+            holder.button_accept.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TutorHomePage activity = (TutorHomePage) getActivity();
+                    activity.addToCurrent(currentUser.getEmail());
+                    activity.refreshList();
+                    refreshFragment(adapter);
+                }
+            });
+            holder.button_decline.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            Log.d("REQ7", "getItemCount: tuteelist "+tuteeList.size());
+            return tuteeList.size();
+        }
     }
 }

@@ -15,6 +15,10 @@ public class TuteeList {
         this.status = status;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public String getName() {
         return name;
     }
