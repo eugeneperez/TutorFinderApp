@@ -20,6 +20,7 @@
             android:text="Your current tutees:" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_current"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>

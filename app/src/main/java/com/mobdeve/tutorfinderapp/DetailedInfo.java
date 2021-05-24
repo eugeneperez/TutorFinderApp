@@ -98,40 +98,39 @@ public class DetailedInfo extends AppCompatActivity {
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
-                                        Log.d("TAG1", document.getId() + " => " + document.getData());
-                                        Map<String, Object> result = new HashMap<>();
+                                        Log.d("TAG12", document.getId() + " => " + document.getData());
                                         tutor = document.getData();
-                                        Gson gson = new Gson();
-                                        Session session = new Session(tutor.get("Email").toString(), currentUser.getEmail(), "Request");
-                                        ArrayList<Session> sessions = new ArrayList<>();
+                                        ArrayList<Map> tuteeList = new ArrayList<>();
 
-                                        ArrayList<String> json = new ArrayList<>();
+                                        Map<String, Object> tutee = new HashMap<>();
 
-                                        if(tutor.get("Tutee List") != null) {
-                                            json = (ArrayList<String>) tutor.get("Tutee List");
+                                        tutee.put("Partner", currentUser.getEmail());
+                                        tutee.put("Status", "Request");
 
-                                            for (String s : json) {
-                                                sessions.add(gson.fromJson(s, Session.class));
+                                        if(tutor.get("Tutee List") != null){
+                                            tuteeList = (ArrayList<Map>) tutor.get("Tutee List");
+                                            int index = -1;
+                                            for(Map t: tuteeList){
+                                                if(t.get("Partner").toString().equals(currentUser.getEmail())){
+                                                    index = tuteeList.indexOf(t);
+                                                }
                                             }
+                                            if(index != -1)
+                                                tuteeList.remove(index);
                                         }
 
-                                        sessions.add(session);
-                                        json.clear();
+                                        tuteeList.add(tutee);
 
-                                        for (Session sesh : sessions) {
-                                            json.add(gson.toJson(sesh));
-                                        }
-
-                                        tutor.put("Tutee List", json);
+                                        tutor.put("Tutee List", tuteeList);
                                         tutorUid = document.getId();
 
                                         db.collection("Tutors")
-                                                .document(tutorUid)
+                                                .document(document.getId())
                                                 .set(tutor)
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
-                                                        Log.d("SETTING", "DocumentSnapshot successfully written!");
+                                                        Log.d("SETTING1", "DocumentSnapshot successfully written!");
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {
@@ -156,39 +155,41 @@ public class DetailedInfo extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         Log.d("TAG1", document.getId() + " => " + document.getData());
-                                        Map<String, Object> result = new HashMap<>();
+                                        Map<String, Object> result = document.getData();
                                         tutee = document.getData();
-                                        Gson gson = new Gson();
-                                        Session session = new Session(tutee.get("Email").toString(), tutor.get("Email").toString(), "Request");
+                                        ArrayList<Map> tutorList = new ArrayList<>();
 
-                                        ArrayList<Session> sessions = new ArrayList<>();
+                                        Map<String, Object> tutor2 = new HashMap<>();
 
-                                        ArrayList<String> json = new ArrayList<>();
+                                        tutor2.put("Partner", user.getEmail());
+                                        tutor2.put("Status", "Request");
 
-                                        if(tutee.get("Tutor List") != null) {
-                                            json = (ArrayList<String>) tutee.get("Tutor List");
-
-                                            for (String s : json) {
-                                                sessions.add(gson.fromJson(s, Session.class));
+                                        if(tutee.get("Tutor List") != null){
+                                            tutorList = (ArrayList<Map>) tutee.get("Tutor List");
+                                            int index = -1;
+                                            for(Map t: tutorList){
+                                                if(t.get("Partner").toString().equals(user.getEmail())){
+                                                    index = tutorList.indexOf(t);
+                                                    Log.d("SETTINGINDEX", "onComplete: INDEX "+index);
+                                                }
+                                            }
+                                            if(index != -1){
+                                                tutorList.remove(index);
                                             }
                                         }
 
-                                        sessions.add(session);
-                                        json.clear();
+                                        tutorList.add(tutor2);
+                                        Log.d("ADDINGREQUEST", "onComplete: tutor2 "+tutor2);
+                                        Log.d("ADDINGREQUEST", "onComplete: tuteeUid "+tuteeUid+" UID"+document.getId());
 
-                                        for (Session sesh : sessions) {
-                                            json.add(gson.toJson(sesh));
-                                        }
-
-                                        tutee.put("Tutor List", json);
-
+                                        tutee.put("Tutor List", tutorList);
                                         db.collection("Tutees")
-                                                .document(tuteeUid)
+                                                .document(document.getId())
                                                 .set(tutee)
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
-                                                        Log.d("SETTING", "DocumentSnapshot successfully written!");
+                                                        Log.d("SETTING2", "DocumentSnapshot successfully written!");
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {

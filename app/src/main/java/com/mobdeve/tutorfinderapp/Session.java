@@ -4,8 +4,8 @@ public class Session {
     private String partner;
     private String status;
 
-    public Session(String partner, String tutee, String status) {
-        this.partner = tutee;
+    public Session(String partner, String status) {
+        this.partner = partner;
         this.status = status;
     }
 
