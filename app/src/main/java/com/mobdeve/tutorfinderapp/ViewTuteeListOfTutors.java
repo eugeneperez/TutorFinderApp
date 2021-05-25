@@ -75,7 +75,6 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
                         }
                     }
                 });
-
     }
 
     private void findTutorInformation(){
@@ -115,7 +114,6 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
         }
     }
 
-
     public class TuteeTutorListAdapter extends RecyclerView.Adapter<TuteeTutorListAdapter.ViewHolder> {
         private ArrayList<TutorList> tutorList = new ArrayList<>();
 
@@ -127,6 +125,7 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
             private ImageView image_profile_rv;
             private Button lil_butt;
             private LinearLayout tutees;
+            private LinearLayout lil_status;
 
             public ViewHolder(View view) {
                 super(view);
@@ -136,6 +135,7 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
                 text_contact_rv = view.findViewById(R.id.current_tutor_contact);
                 image_profile_rv = view.findViewById(R.id.current_tutor_image);
                 lil_butt = view.findViewById(R.id.tutee_end_session_btn);
+                lil_status = view.findViewById(R.id.tutor_lil_sta);
                 tutees = view.findViewById(R.id.tutees);
             }
         }
@@ -159,6 +159,13 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
             TutorList currentUser = tutorList.get(position);
 
             holder.tutees.setVisibility(View.GONE);
+            if(currentUser.getStatus().equals("Request")){
+                holder.lil_butt.setVisibility(View.GONE);
+                holder.lil_status.setVisibility(View.VISIBLE);
+            }else{
+                holder.lil_status.setVisibility(View.GONE);
+                holder.lil_butt.setVisibility(View.VISIBLE);
+            }
 
             ArrayList<String> categories = currentUser.getCategories();
             String strCategories = new String();
@@ -221,6 +228,7 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
         startActivity(i);
         finish();
     }
+
     public void ClickLogout(View view){
         AlertDialog.Builder builder= new AlertDialog.Builder(ViewTuteeListOfTutors.this);
         builder.setTitle("Logout");
@@ -242,7 +250,8 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
         });
         builder.show();
     }
-    public void ClickTutors(View view){
+
+    public void ClickCurrentTutors(View view){
         if (drawerLayout.isDrawerOpen(GravityCompat.END)){
             drawerLayout.closeDrawer(GravityCompat.END);
         }
