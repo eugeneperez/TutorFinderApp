@@ -133,6 +133,11 @@ public class ViewTutorProfile extends AppCompatActivity {
             drawerLayout.closeDrawer(GravityCompat.END);
         }
     }
+    public void ClickReview(View view){
+        Intent i = new Intent(ViewTutorProfile.this, CommentsPage.class);
+        startActivity(i);
+        finish();
+    }
     public void ClickLogout(View view){
         AlertDialog.Builder builder= new AlertDialog.Builder(ViewTutorProfile.this);
         builder.setTitle("Logout");

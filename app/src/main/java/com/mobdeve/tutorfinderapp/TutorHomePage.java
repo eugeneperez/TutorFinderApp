@@ -352,6 +352,11 @@ public class TutorHomePage extends AppCompatActivity {
         startActivity(i);
         finish();
     }
+    public void ClickReview(View view){
+        Intent i = new Intent(TutorHomePage.this, CommentsPage.class);
+        startActivity(i);
+        finish();
+    }
     public void ClickLogout(View view){
         AlertDialog.Builder builder= new AlertDialog.Builder(TutorHomePage.this);
         builder.setTitle("Logout");
