@@ -321,6 +321,11 @@ public class Homepage extends AppCompatActivity {
         startActivity(i);
         finish();
     }
+    public void ClickCurrentTutors(View view){
+        Intent i = new Intent(Homepage.this, ViewTuteeListOfTutors.class);
+        startActivity(i);
+        finish();
+    }
     public void ClickLogout(View view){
         AlertDialog.Builder builder= new AlertDialog.Builder(Homepage.this);
         builder.setTitle("Logout");
@@ -342,11 +347,7 @@ public class Homepage extends AppCompatActivity {
         });
         builder.show();
     }
-    public void ClickCurrentTutors(View view){
-        Intent i = new Intent(Homepage.this, ViewTuteeListOfTutors.class);
-        startActivity(i);
-        finish();
-    }
+
 
     @Override
     protected void onPause() {
