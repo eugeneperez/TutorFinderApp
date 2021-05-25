@@ -13,6 +13,7 @@ public class User {
     private String fee;
     private String profpic;
     private ArrayList<TutorList> tutorList = new ArrayList<>();
+    private ArrayList<TuteeList> tuteeList = new ArrayList<>();
 
     public User(String email, String firstname, String lastname, String contact) {
         this.email = email;
@@ -83,5 +84,13 @@ public class User {
 
     public void setTutorList(ArrayList<TutorList> tutorList) {
         this.tutorList = tutorList;
+    }
+
+    public ArrayList<TuteeList> getTuteeList() {
+        return tuteeList;
+    }
+
+    public void setTuteeList(ArrayList<TuteeList> tuteeList) {
+        this.tuteeList = tuteeList;
     }
 }

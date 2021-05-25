@@ -57,10 +57,7 @@ public class Homepage extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-    private User userProfile;
     private ArrayList<User> users = new ArrayList<>();
-    private ArrayList<TutorList> tutorList = new ArrayList<>();
-    private ArrayList<Session> sessions = new ArrayList<>();
     private DrawerLayout drawerLayout;
 
     public void searchFirstName2(String searchterms){
@@ -196,11 +193,7 @@ public class Homepage extends AppCompatActivity {
         drawerLayout= findViewById(R.id.drawer_layout);
         mAuth = FirebaseAuth.getInstance();
 
-
-
         //placeholder button
-
-
         search.setVisibility(View.GONE);
 
         ArrayList<String> spinnerList = new ArrayList<>();
@@ -324,85 +317,9 @@ public class Homepage extends AppCompatActivity {
     }
 
     public void ClickProfile(View view){
-        tutorList.clear();
-        Gson gson = new Gson();
-        Query query = db.collection("Tutees").whereEqualTo("Email", currentUser.getEmail());
-
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                for(QueryDocumentSnapshot document: task.getResult()){
-                    Map<String, Object> result = document.getData();
-
-
-                    ArrayList<String> json = new ArrayList<>();
-
-                    userProfile = new User(result.get("Email").toString(), result.get("First name").toString(),
-                            result.get("Last name").toString(), result.get("Contact details").toString());
-                    userProfile.setProfpic(result.get("Profile Picture").toString());
-
-                    if(result.get("Tutor List") != null) {
-                        json = (ArrayList<String>) result.get("Tutor List");
-
-                        for (String s : json) {
-                            sessions.add(gson.fromJson(s, Session.class));
-                        }
-                    }
-
-                    json.clear();
-                    //now, I have the sessions
-                }
-                for(Session s: sessions) {
-                    db.collection("Tutors")
-                            .whereEqualTo("Email", s.getPartner())
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (QueryDocumentSnapshot document : task.getResult()) {
-                                            Log.d("TAG1", document.getId() + " => " + document.getData());
-                                            Map<String, Object> result = new HashMap<>();
-                                            result = document.getData();
-                                            String firstname = result.get("First name").toString();
-                                            String lastname = result.get("Last name").toString();
-
-                                            String fullname = firstname.substring(0, 1).toUpperCase() + firstname.substring(1)
-                                                    + " " + lastname.substring(0, 1).toUpperCase() + lastname.substring(1);
-
-                                            TutorList currentTutor = new TutorList(fullname, (ArrayList<String>) result.get("Categories"),
-                                                    result.get("Fee").toString(), result.get("Contact details").toString(), s.getStatus(),
-                                                    result.get("Profile Picture").toString());
-
-                                            tutorList.add(currentTutor);
-                                            Log.d("TUTORLISTIN", "onComplete: TUTOR LIST"+tutorList);
-                                        }
-                                    } else {
-                                        Log.d("TAG1", "Error getting documents: ", task.getException());
-                                    }
-                                }
-                            });
-                }
-                Log.d("TUTORLISTOUT", "onComplete: TUTOR LIST"+tutorList);
-
-                CountDownTimer count = new CountDownTimer(1000, 500) {
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        userProfile.setTutorList(tutorList);
-                        Intent i = new Intent(Homepage.this, ViewTuteeProfile.class);
-                        String json = gson.toJson(userProfile);
-                        i.putExtra("User Profile", json);
-                        startActivity(i);
-                    }
-                };
-                count.start();
-            }
-        });
+        Intent i = new Intent(Homepage.this, ViewTuteeProfile.class);
+        startActivity(i);
+        finish();
     }
     public void ClickLogout(View view){
         AlertDialog.Builder builder= new AlertDialog.Builder(Homepage.this);
@@ -424,6 +341,9 @@ public class Homepage extends AppCompatActivity {
             }
         });
         builder.show();
+    }
+    public void ClickTutors(View view){
+        //Intent i = new Intent(Homepage.this, )
     }
 
     @Override
