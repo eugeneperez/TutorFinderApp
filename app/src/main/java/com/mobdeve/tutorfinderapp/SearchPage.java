@@ -402,7 +402,15 @@ public class SearchPage extends AppCompatActivity {
     }
 
     public void ClickProfile(View view){
+        Intent i = new Intent(SearchPage.this, ViewTuteeProfile.class);
+        startActivity(i);
+        finish();
 
+    }
+    public void ClickCurrentTutors(View view){
+        Intent i = new Intent(SearchPage.this, ViewTuteeListOfTutors.class);
+        startActivity(i);
+        finish();
     }
     public void ClickLogout(View view){
         AlertDialog.Builder builder= new AlertDialog.Builder(SearchPage.this);

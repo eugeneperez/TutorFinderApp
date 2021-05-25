@@ -175,6 +175,11 @@ public class ViewTuteeProfile extends AppCompatActivity {
             drawerLayout.closeDrawer(GravityCompat.END);
         }
     }
+    public void ClickCurrentTutors(View view){
+        Intent i = new Intent(ViewTuteeProfile.this, ViewTuteeListOfTutors.class);
+        startActivity(i);
+        finish();
+    }
     public void ClickLogout(View view){
         AlertDialog.Builder builder= new AlertDialog.Builder(ViewTuteeProfile.this);
         builder.setTitle("Logout");

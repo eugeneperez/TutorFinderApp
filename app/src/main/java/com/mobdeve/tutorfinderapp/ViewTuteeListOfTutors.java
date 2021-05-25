@@ -242,7 +242,7 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
         });
         builder.show();
     }
-    public void ClickTutors(View view){
+    public void ClickCurrentTutors(View view){
         if (drawerLayout.isDrawerOpen(GravityCompat.END)){
             drawerLayout.closeDrawer(GravityCompat.END);
         }
