@@ -342,8 +342,10 @@ public class Homepage extends AppCompatActivity {
         });
         builder.show();
     }
-    public void ClickTutors(View view){
-        //Intent i = new Intent(Homepage.this, )
+    public void ClickCurrentTutors(View view){
+        Intent i = new Intent(Homepage.this, ViewTuteeListOfTutors.class);
+        startActivity(i);
+        finish();
     }
 
     @Override

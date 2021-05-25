@@ -104,12 +104,10 @@ public class CurrFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_curr, container, false);
         updateFragment();
-
-                rv_curr = (RecyclerView) view.findViewById(R.id.recycler_current);
-                adapter = new CurrentTutorsAdapter(currentTutees);
-                rv_curr.setAdapter(adapter);
-                rv_curr.setLayoutManager(new LinearLayoutManager(c));
-
+        rv_curr = (RecyclerView) view.findViewById(R.id.recycler_current);
+        adapter = new CurrentTutorsAdapter(currentTutees);
+        rv_curr.setAdapter(adapter);
+        rv_curr.setLayoutManager(new LinearLayoutManager(c));
 
         return view;
     }

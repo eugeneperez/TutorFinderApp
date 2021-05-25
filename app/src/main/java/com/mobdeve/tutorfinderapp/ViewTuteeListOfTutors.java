@@ -5,15 +5,18 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,13 +39,21 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    private ArrayList<TutorList> tutors;
+    private ArrayList<TutorList> tutors = new ArrayList<>();
+    private ArrayList<Map> list;
+    private RecyclerView rv_tutorList;
+    private TuteeTutorListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_tutee_list_of_tutors);
         drawerLayout= findViewById(R.id.drawer_layout);
+
+        rv_tutorList = (RecyclerView) findViewById(R.id.tutee_profile_tutor_list_rv);
+        adapter = new TuteeTutorListAdapter(tutors);
+        rv_tutorList.setAdapter(adapter);
+        rv_tutorList.setLayoutManager(new LinearLayoutManager(ViewTuteeListOfTutors.this));
 
         db.collection("Tutees")
                 .whereEqualTo("Email", user.getEmail())
@@ -55,15 +66,9 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
                                 Log.d("TAG12", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = document.getData();
 
-                                ArrayList<Map> list = (ArrayList<Map>) result.get("Tutor List");
-                                Map<String, Object> item = new HashMap<>();
+                                list = (ArrayList<Map>) result.get("Tutor List");
 
-                                String firstname = result.get("First name").toString().substring(0, 1).toUpperCase()+
-                                        result.get("First name").toString().substring(1);
-                                String lastname = result.get("Last name").toString().substring(0, 1).toUpperCase()+
-                                        result.get("Last name").toString().substring(1);
-                                String fullname = firstname+" "+lastname;
-
+                                findTutorInformation();
                             }
                         } else {
                             Log.d("TAG1", "Error getting documents: ", task.getException());
@@ -73,7 +78,45 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
 
     }
 
-    public class TutorListAdapter extends RecyclerView.Adapter<TutorListAdapter.ViewHolder> {
+    private void findTutorInformation(){
+        for(Map item: list) {
+            String email = item.get("Partner").toString();
+            String stasuses = item.get("Status").toString();
+
+            db.collection("Tutors")
+                    .whereEqualTo("Email", email)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d("ARRAYCONTAINSTAG", document.getId() + " => " + document.getData());
+                                    Map<String, Object> result = document.getData();
+
+                                    String firstname = result.get("First name").toString().substring(0, 1).toUpperCase()+
+                                            result.get("First name").toString().substring(1);
+                                    String lastname = result.get("Last name").toString().substring(0, 1).toUpperCase()+
+                                            result.get("Last name").toString().substring(1);
+                                    String fullname = firstname+" "+lastname;
+
+                                    TutorList tutor = new TutorList(fullname, (ArrayList<String>) result.get("Categories"),
+                                            result.get("Fee").toString(), result.get("Contact details").toString(),
+                                            stasuses, result.get("Profile Picture").toString());
+
+                                    tutors.add(tutor);
+                                    adapter.notifyDataSetChanged();
+                                }
+                            } else {
+                                Log.d("TAG1", "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
+        }
+    }
+
+
+    public class TuteeTutorListAdapter extends RecyclerView.Adapter<TuteeTutorListAdapter.ViewHolder> {
         private ArrayList<TutorList> tutorList = new ArrayList<>();
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -82,7 +125,7 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
             private TextView text_fee_rv;
             private TextView text_contact_rv;
             private ImageView image_profile_rv;
-            private LinearLayout lil_butt;
+            private Button lil_butt;
             private LinearLayout tutees;
 
             public ViewHolder(View view) {
@@ -97,22 +140,22 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
             }
         }
 
-        public TutorListAdapter(ArrayList<TutorList> tutorList) {
+        public TuteeTutorListAdapter(ArrayList<TutorList> tutorList) {
             this.tutorList = tutorList;
         }
 
         @NonNull
         @Override
-        public TutorListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public TuteeTutorListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             View resultView = inflater.inflate(R.layout.rv_tutor_fragment, parent, false);
 
-            TutorListAdapter.ViewHolder viewHolder = new TutorListAdapter.ViewHolder(resultView);
+            TuteeTutorListAdapter.ViewHolder viewHolder = new TuteeTutorListAdapter.ViewHolder(resultView);
             return viewHolder;
         }
 
         @Override
-        public void onBindViewHolder(@NonNull TutorListAdapter.ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull TuteeTutorListAdapter.ViewHolder holder, int position) {
             TutorList currentUser = tutorList.get(position);
 
             holder.tutees.setVisibility(View.GONE);
