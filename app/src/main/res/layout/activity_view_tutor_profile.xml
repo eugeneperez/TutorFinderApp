@@ -105,7 +105,7 @@
                             android:textSize="18dp" />
 
                         <ImageView
-                            android:id="@+id/imageView6"
+                            android:id="@+id/edit_contact"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:paddingLeft="30dp"
@@ -128,7 +128,7 @@
                             android:textSize="18dp" />
 
                         <ImageView
-                            android:id="@+id/imageView7"
+                            android:id="@+id/edit_categories"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:paddingLeft="30dp"
@@ -151,7 +151,7 @@
                             android:textSize="18dp" />
 
                         <ImageView
-                            android:id="@+id/imageView8"
+                            android:id="@+id/edit_fee"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:paddingLeft="30dp"

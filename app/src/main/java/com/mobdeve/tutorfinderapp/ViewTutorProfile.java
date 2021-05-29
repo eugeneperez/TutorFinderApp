@@ -49,6 +49,7 @@ public class ViewTutorProfile extends AppCompatActivity {
     private TextView text_fee;
     private ImageView image_profile;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +62,8 @@ public class ViewTutorProfile extends AppCompatActivity {
         text_categories = findViewById(R.id.tutor_profile_category);
         text_fee = findViewById(R.id.tutor_profile_fee);
         image_profile = findViewById(R.id.tutor_profile_image);
+
+
 
         db.collection("Tutors")
                 .whereEqualTo("Email", user.getEmail())
@@ -101,6 +104,7 @@ public class ViewTutorProfile extends AppCompatActivity {
                         }
                     }
                 });
+
 
     }
 
