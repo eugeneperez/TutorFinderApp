@@ -69,7 +69,6 @@ public class ViewTuteeProfile extends AppCompatActivity {
         image_tutee_profile = findViewById(R.id.tutee_profile_image);
         btn_edit_profile = findViewById(R.id.edit_tutee_profile_btn);
         btn_changepass = findViewById(R.id.tutee_change_pass_btn);
-        btn_edit_profile = findViewById(R.id.edit_tutee_profile_btn);
         drawerLayout= findViewById(R.id.drawer_layout);
 
         db.collection("Tutees")
@@ -106,6 +105,10 @@ public class ViewTuteeProfile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(ViewTuteeProfile.this, EditTuteeProfile.class);
+                i.putExtra("First name", firstname);
+                i.putExtra("Last name", lastname);
+                i.putExtra("Contact details", contact);
+                i.putExtra("Profile Picture", image);
                 startActivity(i);
                 finish();
             }
