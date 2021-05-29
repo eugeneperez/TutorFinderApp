@@ -196,10 +196,6 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
             holder.lil_butt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast toast = Toast.makeText(ViewTuteeListOfTutors.this, "removing... not really", Toast.LENGTH_SHORT);
-                    toast.show();
-                    Log.d("lilbutt", "onClick: HELLOOOOO");
-
                     AlertDialog.Builder builder= new AlertDialog.Builder(ViewTuteeListOfTutors.this);
                     builder.setTitle("Session");
                     builder.setMessage("Are you sure you want end the session?");
