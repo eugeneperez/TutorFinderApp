@@ -9,8 +9,51 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#219EBC"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="12dp">
+
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="wrap_content"
+            android:layout_height="57dp"
+            app:srcCompat="@drawable/tutor_icon" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/colordividerlayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/edit_tutor_profile_pic"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:layout_marginRight="7dp"
+                android:layout_weight="1"
+                android:paddingTop="10dp"
+                app:civ_border_color="#F8F8FF"
+                app:civ_border_width="10dp"
+                app:civ_circle_background_color="#B5B1B1" />
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="(Click Photo to Edit)" />
+
+        </LinearLayout>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -20,49 +63,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@drawable/colordividerlayout">
+                android:paddingTop="5dp"
+                android:paddingBottom="20dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#219EBC"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="12dp">
 
-                    <ImageView
-                        android:id="@+id/imageView6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="57dp"
-                        app:srcCompat="@drawable/tutor_icon" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="50dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/edit_tutor_profile_pic"
-                        android:layout_width="180dp"
-                        android:layout_height="180dp"
-                        android:layout_marginRight="7dp"
-                        android:layout_weight="1"
-                        android:paddingTop="10dp"
-                        app:civ_border_color="#F8F8FF"
-                        app:civ_border_width="10dp"
-                        app:civ_circle_background_color="#B5B1B1" />
-
-                    <TextView
-                        android:id="@+id/textView10"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="(Click Photo to Edit)" />
-
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -209,8 +213,6 @@
                                 android:inputType="textPersonName"
                                 android:text="Contact details" />
                         </LinearLayout>
-
-
                     </LinearLayout>
 
                     <LinearLayout
