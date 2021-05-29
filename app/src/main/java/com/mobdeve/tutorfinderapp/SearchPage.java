@@ -55,9 +55,18 @@ public class SearchPage extends AppCompatActivity {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ArrayList<User> users = new ArrayList<>();
     private RecyclerView results_rv;
+    private ResultsAdapter adapter;
     private DrawerLayout drawerLayout;
 
-    public void searchFirstName2(String searchterms){
+    private String strSearchFirstname = new String();
+    private String strSearchLastname = new String();
+    private String strSearchCategory = new String();
+    private User user;
+    private float averageRating = 0;
+    private float totalRating = 0;
+    private int count = 0;
+
+    public void searchFirstName(String searchterms){
         db.collection("Tutors")
                 .orderBy("First name")
                 .startAt(searchterms)
@@ -71,7 +80,7 @@ public class SearchPage extends AppCompatActivity {
                                 Log.d("TAG1", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = new HashMap<>();
                                 result = document.getData();
-                                boolean isFound = true;
+                                boolean isNotFound = true;
                                 Log.d("hello2", result.toString());
 
                                 User user = new User(result.get("Email").toString(),
@@ -84,26 +93,24 @@ public class SearchPage extends AppCompatActivity {
 
                                 for(User u: users){
                                     if(u.getEmail().equals(user.getEmail())){
-                                        isFound = false;
+                                        isNotFound = false;
                                     }
                                 }
 
-                                if(isFound){
+                                if(isNotFound){
                                     Log.d("ENTERED IF", "onComplete: entered users"+users);
                                     Log.d("Entered email", "onComplete: result email "+ result.get("Email").toString());
                                     users.add(user);
                                 }
-
-                                Log.d("Result1", "onComplete: results1"+users);
                             }
                         } else {
                             Log.d("TAG1", "Error getting documents: ", task.getException());
                         }
+                        adapter.notifyDataSetChanged();
                     }
                 });
     }
-
-    public void searchLastName2(String searchterms){
+    public void searchLastName(String searchterms){
         db.collection("Tutors")
                 .orderBy("Last name")
                 .startAt(searchterms)
@@ -120,7 +127,7 @@ public class SearchPage extends AppCompatActivity {
                                 boolean isFound = true;
                                 Log.d("hello2", result.toString());
 
-                                User user = new User(result.get("Email").toString(),
+                                user = new User(result.get("Email").toString(),
                                         result.get("First name").toString(),
                                         result.get("Last name").toString(),
                                         result.get("Contact details").toString());
@@ -145,9 +152,11 @@ public class SearchPage extends AppCompatActivity {
                         } else {
                             Log.d("TAG1", "Error getting documents: ", task.getException());
                         }
+                        adapter.notifyDataSetChanged();
                     }
                 });
     }
+
     public void searchCategory(String searchterms){
         db.collection("Tutors")
                 .whereArrayContains("Categories", searchterms)
@@ -178,10 +187,54 @@ public class SearchPage extends AppCompatActivity {
                         } else {
                             Log.d("TAG1", "Error getting documents: ", task.getException());
                         }
-                        Intent i = new Intent(SearchPage.this, SearchPage.class);
-
+                        adapter.notifyDataSetChanged();
                     }
                 });
+    }
+
+    public void searchRatings(User user){
+        averageRating = 0;
+        totalRating = 0;
+        count = 0;
+
+        db.collection("Reviews")
+                .whereEqualTo("Tutor", user.getEmail())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("TAG1", document.getId() + " => " + document.getData());
+                                Map<String, Object> result = new HashMap<>();
+                                result = document.getData();
+
+                                totalRating += Float.parseFloat(result.get("Rating").toString());
+                                count++;
+                            }
+                        } else {
+                            Log.d("TAG1", "Error getting documents: ", task.getException());
+                        }
+                        averageRating = totalRating / count;
+                        user.setAveRating(averageRating);
+                    }
+                });
+    }
+
+    public void searchTerms(Map searchTermsList){
+
+        if(!searchTermsList.get("First name").toString().isEmpty()){
+            strSearchFirstname = searchTermsList.get("First name").toString();
+            searchFirstName(strSearchFirstname);
+        }
+        if(!searchTermsList.get("Last name").toString().isEmpty()){
+            strSearchLastname = searchTermsList.get("Last name").toString();
+            searchLastName(strSearchLastname);
+        }
+        if(!searchTermsList.get("Category").toString().isEmpty()){
+            strSearchCategory = searchTermsList.get("Category").toString();
+            searchCategory(strSearchCategory);
+        }
     }
 
     @Override
@@ -229,15 +282,12 @@ public class SearchPage extends AppCompatActivity {
         });
 
         Intent i= getIntent();
-        ArrayList<String> results = i.getStringArrayListExtra("Results");
-        Log.d("TAG2", "onCreate: emails"+results);
+        Map<String, Object> searchTerms = gson.fromJson(i.getStringExtra("Search Terms"), Map.class);
 
-        for(String user: results){
-            users.add(gson.fromJson(user, User.class));
-        }
+        searchTerms(searchTerms);
 
         results_rv = findViewById(R.id.search_page_rv);
-        ResultsAdapter adapter = new ResultsAdapter(users);
+        adapter = new ResultsAdapter(users);
         results_rv.setAdapter(adapter);
         results_rv.setLayoutManager(new LinearLayoutManager(this));
         // get offerings data
@@ -253,55 +303,20 @@ public class SearchPage extends AppCompatActivity {
         searchbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String spin = spinnerAdapter.getSelectedItem().toString();
-                String searchterms = search.getText().toString();
-                String searchtermf = searchfirstname.getText().toString().toLowerCase();
-                String searchterml = searchlastname.getText().toString().toLowerCase();
-                //ArrayList<User> results = new ArrayList<>();
-                //search in database
-                Log.d("TAG1", "onClick: searchterms"+searchterms);
 
-                CountDownTimer count = new CountDownTimer(1000, 500) {
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        Log.d("TICK", "onTick: users"+users);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        Intent intent = new Intent(SearchPage.this, SearchPage.class);
-                        ArrayList<String> userString = new ArrayList<>();
-
-                        Gson gson = new Gson();
-
-                        for (User user: users){
-                            userString.add(gson.toJson(user));
-                        }
-                        intent.putStringArrayListExtra("Results",userString);
-                        Log.d("USERS", "onFinish: RESULTS" + intent.getStringArrayListExtra("Results"));
-                        startActivity(intent);
-                        finish();
-                    }
-                };
-
-                Log.d("USERSLIST", "onClick: USERS "+users);
                 users.clear();
-                if(spinnerAdapter.getSelectedItem().toString().equals("People")){
-                    if(!searchtermf.isEmpty()){
-                        searchFirstName2(searchtermf);
-                    }
-                    if(!searchterml.isEmpty()){
-                        searchLastName2(searchterml);
-                    }
-                    if(!searchtermf.isEmpty() || !searchterml.isEmpty()){
-                        count.start();
-                    }
-                }
-                else if(spinnerAdapter.getSelectedItem().toString().equals("Category")){
-                    users.clear();
-                    searchCategory(searchterms);
-                    count.start();
-                }
+                adapter.notifyDataSetChanged();
+
+                strSearchCategory = search.getText().toString();
+                strSearchFirstname = searchfirstname.getText().toString().toLowerCase();
+                strSearchLastname = searchlastname.getText().toString().toLowerCase();
+
+                Map<String, Object> searchTermsList = new HashMap<>();
+                searchTermsList.put("First name", strSearchFirstname);
+                searchTermsList.put("Last name", strSearchLastname);
+                searchTermsList.put("Category", strSearchCategory);
+
+                searchTerms(searchTermsList);
             }
         });
     }
@@ -313,7 +328,6 @@ public class SearchPage extends AppCompatActivity {
             private TextView text_name;
             private TextView text_fee;
             private TextView text_categories;
-            private TextView text_rating;
             private ImageView image_arrow;
             private ImageView image_profile;
 
@@ -322,7 +336,6 @@ public class SearchPage extends AppCompatActivity {
                 text_name = view.findViewById(R.id.result_name);
                 text_categories = view.findViewById(R.id.result_categories);
                 text_fee = view.findViewById(R.id.result_fee);
-                text_rating = view.findViewById(R.id.result_rating);
                 image_arrow = view.findViewById(R.id.result_arrow);
                 image_profile = view.findViewById(R.id.result_profilepic);
             }
@@ -356,10 +369,8 @@ public class SearchPage extends AppCompatActivity {
             }
 
             holder.text_name.setText(name);
-
             holder.text_fee.setText("₱"+user.getFee()+".00/hour");
             holder.text_categories.setText(categories);
-            //holder.text_rating.setText(rating)
             String imgUri=user.getProfpic();
             Picasso.get().load(imgUri).fit().centerInside().into(holder.image_profile);
             holder.image_arrow.setImageResource(R.drawable.arrow_icon);

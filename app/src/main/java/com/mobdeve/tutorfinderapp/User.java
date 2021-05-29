@@ -12,6 +12,7 @@ public class User {
     private ArrayList<String> categories;
     private String fee;
     private String profpic;
+    private float aveRating;
     private ArrayList<TutorList> tutorList = new ArrayList<>();
     private ArrayList<TuteeList> tuteeList = new ArrayList<>();
 
@@ -76,6 +77,14 @@ public class User {
 
     public void setContact(String contact) {
         this.contact = contact;
+    }
+
+    public float getAveRating() {
+        return aveRating;
+    }
+
+    public void setAveRating(float aveRating) {
+        this.aveRating = aveRating;
     }
 
     public ArrayList<TutorList> getTutorList() {

@@ -249,48 +249,16 @@ public class Homepage extends AppCompatActivity {
                 //search in database
                 Log.d("TAG1", "onClick: searchterms"+searchterms);
 
-                CountDownTimer count = new CountDownTimer(2000, 1000) {
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        Log.d("TICK", "onTick: users"+users);
-                    }
+                Intent i = new Intent(Homepage.this, SearchPage.class);
+                Map<String, Object> searchTermsList = new HashMap<>();
+                searchTermsList.put("First name", searchtermf);
+                searchTermsList.put("Last name", searchterml);
+                searchTermsList.put("Category", searchterms);
 
-                    @Override
-                    public void onFinish() {
-                        Intent intent = new Intent(Homepage.this, SearchPage.class);
-                        ArrayList<String> userString = new ArrayList<>();
-
-                        Gson gson = new Gson();
-
-                        for (User user: users){
-                            userString.add(gson.toJson(user));
-                        }
-                        users.clear();
-                        intent.putStringArrayListExtra("Results",userString);
-                        startActivity(intent);
-                    }
-                };
-
-                if(spinnerAdapter.getSelectedItem().toString().equals("People")){
-                    if(!searchtermf.isEmpty()){
-                        Intent i = new Intent(Homepage.this, SearchPage.class);
-                        Map<String, Object> searchTermsList = new HashMap<>();
-                        searchTermsList.put("First name", searchtermf);
-                        searchTermsList.put("Last name", searchterml);
-                        searchTermsList.put("Category", searchterms);
-                    }
-                    if(!searchterml.isEmpty()){
-                        //searchLastName2(searchterml);
-                    }
-                    if(!searchtermf.isEmpty() || !searchterml.isEmpty()){
-                        count.start();
-                    }
-
-                }
-                else if(spinnerAdapter.getSelectedItem().toString().equals("Category")){
-                    //searchCategory(searchterms);
-                    count.start();
-                }
+                Gson gson = new Gson();
+                String json = gson.toJson(searchTermsList);
+                i.putExtra("Search Terms", json);
+                startActivity(i);
             }
         });
 
