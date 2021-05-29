@@ -25,7 +25,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/colordividerlayout"
         android:orientation="vertical">
 
         <ScrollView
@@ -35,14 +34,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@drawable/colordividerlayout"
+                >
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="50dp"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    >
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/edit_tutor_profile_pic"
@@ -163,7 +165,7 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/placeholder3"
+                                android:id="@+id/edit_tutor_email"
                                 android:layout_width="285dp"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
@@ -265,7 +267,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="Categories:"
+                            android:text="Fee:"
                             android:textSize="18sp" />
 
 
@@ -284,13 +286,13 @@
                                 android:ems="10"
                                 android:gravity="center"
                                 android:inputType="textPersonName"
-                                android:text="Categories" />
+                                android:text="Fee" />
                         </LinearLayout>
 
                     </LinearLayout>
 
                     <Button
-                        android:id="@+id/edit_tutee_profile_save_btn"
+                        android:id="@+id/edit_tutor_profile_save_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"

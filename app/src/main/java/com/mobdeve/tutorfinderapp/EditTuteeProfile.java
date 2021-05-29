@@ -99,8 +99,7 @@ public class EditTuteeProfile extends AppCompatActivity {
                 lastname = text_lastname.getText().toString();
                 contact = text_contact.getText().toString();
 
-                if(text_firstname.getText().toString().isEmpty() || text_lastname.getText().toString().isEmpty()
-                || text_contact.getText().toString().isEmpty()){
+                if(firstname.isEmpty() || lastname.isEmpty() || contact.isEmpty()){
                     Toast.makeText(EditTuteeProfile.this, "Please fill all paramaters", Toast.LENGTH_SHORT).show();
                 }else if(changedProfilePicture){
                     StorageReference fileRef= storageReference.child(user.getEmail()+"profilepic.jpg");

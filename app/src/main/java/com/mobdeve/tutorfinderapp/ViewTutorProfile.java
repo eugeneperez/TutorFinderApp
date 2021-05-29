@@ -99,7 +99,7 @@ public class ViewTutorProfile extends AppCompatActivity {
                                 strCategories = new String();
 
                                 for(String category: categories){
-                                    if(!category.equals(categories.size()-1))
+                                    if(!category.equals(categories.size()))
                                         strCategories += category.substring(0, 1).toUpperCase()+category.substring(1)+", ";
                                     else
                                         strCategories += category.substring(0, 1).toUpperCase()+category.substring(1);
@@ -109,6 +109,7 @@ public class ViewTutorProfile extends AppCompatActivity {
                                 text_name.setText(fullname);
                                 text_email.setText(result.get("Email").toString());
                                 text_contact.setText(contact);
+                                strCategories= strCategories.substring(0, strCategories.length()-2);
                                 text_categories.setText(strCategories);
                                 text_fee.setText(fee);
                                 imgUri = result.get("Profile Picture").toString();
