@@ -91,7 +91,8 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:text="Name"
-                                android:textSize="18dp" />
+                                android:textSize="18dp"
+                                android:textStyle="bold" />
 
                         </LinearLayout>
                     </LinearLayout>
@@ -125,7 +126,8 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:text="Email"
-                                android:textSize="18dp" />
+                                android:textSize="18dp"
+                                android:textStyle="bold" />
 
                         </LinearLayout>
                     </LinearLayout>
@@ -159,7 +161,8 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:text="Contact details"
-                                android:textSize="18dp" />
+                                android:textSize="18dp"
+                                android:textStyle="bold" />
 
                         </LinearLayout>
                     </LinearLayout>
