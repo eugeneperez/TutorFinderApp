@@ -8,7 +8,7 @@
     <LinearLayout
         android:id="@+id/tutors"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="150dp"
         android:layout_margin="15dp"
         android:gravity="center"
         android:orientation="horizontal">
@@ -121,7 +121,7 @@
     <LinearLayout
         android:id="@+id/tutees"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="150dp"
         android:layout_margin="15dp"
         android:gravity="center"
         android:orientation="horizontal">

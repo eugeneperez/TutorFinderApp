@@ -104,12 +104,7 @@
                             android:text="Contact details"
                             android:textSize="18dp" />
 
-                        <ImageView
-                            android:id="@+id/edit_contact"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:paddingLeft="30dp"
-                            app:srcCompat="@drawable/ic_baseline_edit_24" />
+
 
                     </LinearLayout>
 

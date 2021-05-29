@@ -5,7 +5,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
@@ -15,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,8 +37,12 @@ public class ViewTuteeProfile extends AppCompatActivity {
     private TextView text_email;
     private TextView text_contact;
     private ImageView image_tutee_profile;
+    private ImageView btn_contact;
+    private Button btn_changepass;
+
     private RecyclerView tutor_list_rv;
     private DrawerLayout drawerLayout;
+
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser user = mAuth.getCurrentUser();
@@ -52,6 +56,8 @@ public class ViewTuteeProfile extends AppCompatActivity {
         text_email = findViewById(R.id.tutee_profile_email);
         text_contact = findViewById(R.id.tutee_profile_contact);
         image_tutee_profile = findViewById(R.id.tutee_profile_image);
+        btn_contact = findViewById(R.id.change_contact);
+        btn_changepass = findViewById(R.id.tutee_change_pass_btn);
         drawerLayout= findViewById(R.id.drawer_layout);
 
         db.collection("Tutees")
