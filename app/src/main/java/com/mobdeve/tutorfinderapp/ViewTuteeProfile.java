@@ -7,6 +7,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,11 +16,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -30,6 +36,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class ViewTuteeProfile extends AppCompatActivity {
 
@@ -37,11 +44,10 @@ public class ViewTuteeProfile extends AppCompatActivity {
     private TextView text_email;
     private TextView text_contact;
     private ImageView image_tutee_profile;
-    private ImageView btn_contact;
+    private Button btn_edit_profile;
     private Button btn_changepass;
     private Button btn_edit_profile;
 
-    private RecyclerView tutor_list_rv;
     private DrawerLayout drawerLayout;
 
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -62,6 +68,7 @@ public class ViewTuteeProfile extends AppCompatActivity {
         text_email = findViewById(R.id.tutee_profile_email);
         text_contact = findViewById(R.id.tutee_profile_contact);
         image_tutee_profile = findViewById(R.id.tutee_profile_image);
+        btn_edit_profile = findViewById(R.id.edit_tutee_profile_btn);
         btn_changepass = findViewById(R.id.tutee_change_pass_btn);
         btn_edit_profile = findViewById(R.id.edit_tutee_profile_btn);
         drawerLayout= findViewById(R.id.drawer_layout);
@@ -96,81 +103,69 @@ public class ViewTuteeProfile extends AppCompatActivity {
                     }
                 });
 
-        btn_edit_profile.setOnClickListener(new View.OnClickListener() {
+        btn_changepass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(ViewTuteeProfile.this, EditTuteeProfile.class);
-                i.putExtra("First name", firstname);
-                i.putExtra("Last name", lastname);
-                i.putExtra("Contact details", contact);
-                i.putExtra("Profile Picture", image);
-                startActivity(i);
+                AlertDialog.Builder alert = new AlertDialog.Builder(ViewTuteeProfile.this);
+                LinearLayout layout = new LinearLayout(ViewTuteeProfile.this);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                layout.setOrientation(LinearLayout.VERTICAL);
+                final EditText currPass = new EditText(ViewTuteeProfile.this);
+                final EditText newPass = new EditText(ViewTuteeProfile.this);
+                final EditText confirmNewPass = new EditText(ViewTuteeProfile.this);
+                currPass.setHint("Current Password");
+                newPass.setHint("New Password");
+                confirmNewPass.setHint("Confirm New Password");
+                alert.setTitle("Change Password");
+
+                layout.addView(currPass);
+                layout.addView(newPass);
+                layout.addView(confirmNewPass);
+                alert.setView(layout);
+
+                alert.setPositiveButton("Change", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        if (newPass.getText().toString().equals(confirmNewPass.getText().toString())) {
+                            AuthCredential credentials = EmailAuthProvider.getCredential(user.getEmail(), currPass.getText().toString());
+                            user.reauthenticate(credentials).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        user.updatePassword(newPass.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(ViewTuteeProfile.this, "Password Updated", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(ViewTuteeProfile.this, "Error Password Not Updated", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        Log.d("hello", "Error auth failed");
+                                    }
+                                }
+                            });
+                        }
+                        else {
+                            Toast.makeText(ViewTuteeProfile.this, "Password do not match", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                });
+
+                alert.show();
             }
         });
     }
 
-    public class TutorListAdapter extends RecyclerView.Adapter<TutorListAdapter.ViewHolder> {
-        private ArrayList<TutorList> tutorList= new ArrayList<>();
 
-        public class ViewHolder extends RecyclerView.ViewHolder{
-            private TextView text_name_rv;
-            private TextView text_fee_rv;
-            private TextView text_categories_rv;
-            private TextView text_status_rv;
-            private TextView text_contact_rv;
-            private ImageView image_profile_rv;
-
-            public ViewHolder(View view){
-                super(view);
-                text_name_rv = view.findViewById(R.id.tutee_profile_tutor_name);
-                text_categories_rv = view.findViewById(R.id.tutee_profile_tutor_category);
-                text_fee_rv = view.findViewById(R.id.tutee_profile_tutor_fee);
-                text_status_rv = view.findViewById(R.id.tutee_profile_tutor_status);
-                text_contact_rv = view.findViewById(R.id.tutee_profile_tutor_contact);
-                image_profile_rv = view.findViewById(R.id.tutee_profile_tutor_image);
-            }
-        }
-
-        public TutorListAdapter(ArrayList<TutorList> tutorList){ this.tutorList=tutorList;}
-
-        @NonNull
-        @Override
-        public TutorListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LayoutInflater inflater= LayoutInflater.from(parent.getContext());
-            View resultView= inflater.inflate(R.layout.tutor_list, parent, false);
-
-            TutorListAdapter.ViewHolder viewHolder= new TutorListAdapter.ViewHolder(resultView);
-            return viewHolder;
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull TutorListAdapter.ViewHolder holder, int position){
-            TutorList currentUser = tutorList.get(position);
-            Gson gson = new Gson();
-            ArrayList<String> categoriesArray = currentUser.getCategories();
-            String categories = new String();
-
-            for(String category: categoriesArray){
-                if(!category.equals(categoriesArray.size()-1))
-                    categories += category.substring(0, 1).toUpperCase()+category.substring(1)+", ";
-                else
-                    categories += category.substring(0, 1).toUpperCase()+category.substring(1);
-            }
-
-            holder.text_name_rv.setText(currentUser.getFullname());
-            holder.text_categories_rv.setText(categories);
-            holder.text_fee_rv.setText(currentUser.getFee());
-            holder.text_status_rv.setText(currentUser.getStatus());
-            holder.text_contact_rv.setText(currentUser.getContact());
-            String imgUri=currentUser.getImage_uri();
-            Picasso.get().load(imgUri).fit().centerInside().into(holder.image_profile_rv);
-        }
-
-        @Override
-        public int getItemCount() {
-            return tutorList.size();
-        }
-    }
 
     public void ClickMenu(View view){
         openDrawer(drawerLayout);
