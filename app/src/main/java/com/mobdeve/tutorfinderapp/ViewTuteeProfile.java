@@ -106,6 +106,11 @@ public class ViewTuteeProfile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(ViewTuteeProfile.this, EditTuteeProfile.class);
+
+                i.putExtra("First name", firstname);
+                i.putExtra("Last name", lastname);
+                i.putExtra("Contact details", contact);
+                i.putExtra("Profile Picture", image);
                 startActivity(i);
                 finish();
             }
