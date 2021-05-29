@@ -47,6 +47,7 @@ public class EditTuteeProfile extends AppCompatActivity {
     private TextView text_firstname;
     private TextView text_lastname;
     private TextView text_contact;
+    private TextView text_email;
     private Button btn_save;
 
     private Uri upload_picture;
@@ -69,8 +70,10 @@ public class EditTuteeProfile extends AppCompatActivity {
         text_firstname = findViewById(R.id.edit_tutee_profile_firstname);
         text_lastname = findViewById(R.id.edit_tutee_profile_lastname);
         text_contact = findViewById(R.id.edit_tutee_profile_contactdetails);
+        text_email = findViewById(R.id.edit_tutee_email);
         btn_save = findViewById(R.id.edit_tutee_profile_save_btn);
 
+        text_email.setText(user.getEmail());
         firstname = i.getStringExtra("First name");
         text_firstname.setText(firstname);
         lastname = i.getStringExtra("Last name");

@@ -60,127 +60,6 @@ public class Homepage extends AppCompatActivity {
     private ArrayList<User> users = new ArrayList<>();
     private DrawerLayout drawerLayout;
 
-//    public void searchFirstName2(String searchterms){
-//        ArrayList<String> resulting = new ArrayList<>();
-//        db.collection("Tutors")
-//                .orderBy("First name")
-//                .startAt(searchterms)
-//                .endAt(searchterms+"\uf8ff")
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                Log.d("TAG1", document.getId() + " => " + document.getData());
-//                                Map<String, Object> result = new HashMap<>();
-//                                result = document.getData();
-//                                boolean duplicate = false;
-//                                Log.d("hello2", result.toString());
-//                                User user = new User(result.get("Email").toString(),
-//                                        result.get("First name").toString(),
-//                                        result.get("Last name").toString(),
-//                                        result.get("Contact details").toString());
-//                                user.setCategories((ArrayList<String>) result.get("Categories"));
-//                                user.setFee(result.get("Fee").toString());
-//                                user.setProfpic(result.get("Profile Picture").toString());
-//
-//                                for(User userTemp: users){
-//                                    if(userTemp.getEmail().equals(user.getEmail())){
-//                                        duplicate = true;
-//                                    }
-//                                }
-//
-//                                if(!duplicate){
-//                                    users.add(user);
-//                                    Log.d("Result1", "onComplete: USER"+user.getEmail());
-//                                }
-//                                Log.d("Result1", "onComplete: results1"+users);
-//                            }
-//                        } else {
-//                            Log.d("TAG1", "Error getting documents: ", task.getException());
-//                        }
-//                    }
-//                });
-//    }
-//
-//    public void searchLastName2(String searchterms){
-//        db.collection("Tutors")
-//                .orderBy("Last name")
-//                .startAt(searchterms)
-//                .endAt(searchterms+"\uf8ff")
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                Log.d("TAG1", document.getId() + " => " + document.getData());
-//                                Map<String, Object> result = new HashMap<>();
-//                                result = document.getData();
-//                                boolean duplicate = false;
-//                                Log.d("hello2", result.toString());
-//                                User user = new User(result.get("Email").toString(),
-//                                        result.get("First name").toString(),
-//                                        result.get("Last name").toString(),
-//                                        result.get("Contact details").toString());
-//                                user.setCategories((ArrayList<String>) result.get("Categories"));
-//                                user.setFee(result.get("Fee").toString());
-//                                user.setProfpic(result.get("Profile Picture").toString());
-//
-//                                for(User userTemp: users){
-//                                    if(userTemp.getEmail().equals(user.getEmail())){
-//                                        duplicate = true;
-//                                    }
-//                                }
-//
-//                                if(!duplicate){
-//                                    users.add(user);
-//                                    Log.d("Result2", "onComplete: USER"+user.getEmail());
-//                                    Log.d("Result2", "onComplete: ENTERED");
-//                                }
-//                                Log.d("Result2", "onComplete: results2"+users);
-//                            }
-//                        } else {
-//                            Log.d("TAG1", "Error getting documents: ", task.getException());
-//                        }
-//                    }
-//                });
-//    }
-//
-//    public void searchCategory(String searchterms){
-//        Log.d("searchdb", "searchCategory: searchterms "+searchterms);
-//        db.collection("Tutors")
-//                .whereArrayContains("Categories", searchterms)
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                Log.d("TAG1", document.getId() + " => " + document.getData());
-//                                Map<String, Object> result = new HashMap<>();
-//                                result = document.getData();
-//                                Log.d("hello2", result.toString());
-//                                if(!(users.contains(result.get("Email").toString()))){
-//                                    User user = new User(result.get("Email").toString(),
-//                                            result.get("First name").toString(),
-//                                            result.get("Last name").toString(),
-//                                            result.get("Contact details").toString());
-//                                    user.setCategories((ArrayList<String>) result.get("Categories"));
-//                                    user.setFee(result.get("Fee").toString());
-//                                    user.setProfpic(result.get("Profile Picture").toString());
-//                                    users.add(user);
-//                                }
-//                                Log.d("Result2", "onComplete: results2"+users);
-//                            }
-//                        } else {
-//                            Log.d("TAG1", "Error getting documents: ", task.getException());
-//                        }
-//                    }
-//                });
-//    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -249,48 +128,16 @@ public class Homepage extends AppCompatActivity {
                 //search in database
                 Log.d("TAG1", "onClick: searchterms"+searchterms);
 
-                CountDownTimer count = new CountDownTimer(2000, 1000) {
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        Log.d("TICK", "onTick: users"+users);
-                    }
+                Intent i = new Intent(Homepage.this, SearchPage.class);
+                Map<String, Object> searchTermsList = new HashMap<>();
+                searchTermsList.put("First name", searchtermf);
+                searchTermsList.put("Last name", searchterml);
+                searchTermsList.put("Category", searchterms);
 
-                    @Override
-                    public void onFinish() {
-                        Intent intent = new Intent(Homepage.this, SearchPage.class);
-                        ArrayList<String> userString = new ArrayList<>();
-
-                        Gson gson = new Gson();
-
-                        for (User user: users){
-                            userString.add(gson.toJson(user));
-                        }
-                        users.clear();
-                        intent.putStringArrayListExtra("Results",userString);
-                        startActivity(intent);
-                    }
-                };
-
-                if(spinnerAdapter.getSelectedItem().toString().equals("People")){
-                    if(!searchtermf.isEmpty()){
-                        Intent i = new Intent(Homepage.this, SearchPage.class);
-                        Map<String, Object> searchTermsList = new HashMap<>();
-                        searchTermsList.put("First name", searchtermf);
-                        searchTermsList.put("Last name", searchterml);
-                        searchTermsList.put("Category", searchterms);
-                    }
-                    if(!searchterml.isEmpty()){
-                        //searchLastName2(searchterml);
-                    }
-                    if(!searchtermf.isEmpty() || !searchterml.isEmpty()){
-                        count.start();
-                    }
-
-                }
-                else if(spinnerAdapter.getSelectedItem().toString().equals("Category")){
-                    //searchCategory(searchterms);
-                    count.start();
-                }
+                Gson gson = new Gson();
+                String json = gson.toJson(searchTermsList);
+                i.putExtra("Search Terms", json);
+                startActivity(i);
             }
         });
 

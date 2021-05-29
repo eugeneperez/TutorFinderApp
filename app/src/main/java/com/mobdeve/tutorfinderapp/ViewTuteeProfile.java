@@ -110,7 +110,6 @@ public class ViewTuteeProfile extends AppCompatActivity {
                 i.putExtra("Contact details", contact);
                 i.putExtra("Profile Picture", image);
                 startActivity(i);
-                finish();
             }
         });
 
