@@ -35,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class DetailedInfo extends AppCompatActivity {
@@ -237,8 +238,6 @@ public class DetailedInfo extends AppCompatActivity {
                                 Log.d("REVIEWS", "onComplete: currentUser "+currentUser.getEmail());
 
                                 Timestamp timestamp = (Timestamp) result.get("Date");
-                                Date newDate = timestamp.toDate();
-                                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MMMM/yyyy");
                                 result.put("Date", timestamp.toDate());
 
                                 db.collection("Tutees")
@@ -304,8 +303,8 @@ public class DetailedInfo extends AppCompatActivity {
 
             public ViewHolder(View view){
                 super(view);
-                review_text_name = view.findViewById(R.id.review_name);
-                review_text_rating = view.findViewById(R.id.review_rating);
+                review_text_name = view.findViewById(R.id.result_name);
+                review_text_rating = view.findViewById(R.id.starFeedback);
                 review_text_date = view.findViewById(R.id.review_date);
                 review_text_review = view.findViewById(R.id.review_review);
                 review_image_profile = view.findViewById(R.id.review_image);
@@ -320,7 +319,7 @@ public class DetailedInfo extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater= LayoutInflater.from(parent.getContext());
-            View reviewView= inflater.inflate(R.layout.review_row,parent, false);
+            View reviewView= inflater.inflate(R.layout.feedback_row,parent, false);
 
             ViewHolder viewHolder = new ViewHolder(reviewView);
             return viewHolder;
@@ -330,10 +329,16 @@ public class DetailedInfo extends AppCompatActivity {
         public void onBindViewHolder(@NonNull ReviewAdapter.ViewHolder holder, int position){
             Map<String, Object> review = reviewList.get(position);
 
+            Date date = (Date) review.get("Date");
+            Locale philippineLocale = new Locale.Builder().setLanguage("en").setRegion("PH").build();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MMMM/yyyy", philippineLocale);
+
+            String strDate = dateFormat.format(date);
+
             holder.review_text_name.setText(review.get("Tutee Name").toString());
             holder.review_text_rating.setText(review.get("Rating").toString());
             holder.review_text_review.setText(review.get("Review").toString());
-            holder.review_text_date.setText(review.get("Date").toString());
+            holder.review_text_date.setText(strDate);
             String imgUri = review.get("Tutee Profile Picture").toString();
             Picasso.get().load(imgUri).fit().centerInside().into(holder.review_image_profile);
         }
