@@ -46,7 +46,6 @@ public class ViewTuteeProfile extends AppCompatActivity {
     private ImageView image_tutee_profile;
     private Button btn_edit_profile;
     private Button btn_changepass;
-    private Button btn_edit_profile;
 
     private DrawerLayout drawerLayout;
 
@@ -102,6 +101,15 @@ public class ViewTuteeProfile extends AppCompatActivity {
                         }
                     }
                 });
+
+        btn_edit_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ViewTuteeProfile.this, EditTuteeProfile.class);
+                startActivity(i);
+                finish();
+            }
+        });
 
         btn_changepass.setOnClickListener(new View.OnClickListener() {
             @Override

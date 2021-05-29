@@ -169,6 +169,7 @@ public class EditTuteeProfile extends AppCompatActivity {
 
                         Intent i = new Intent(EditTuteeProfile.this, ViewTuteeProfile.class);
                         startActivity(i);
+                        finish();
                     }
                 });
     }
