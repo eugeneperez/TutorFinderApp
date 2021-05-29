@@ -305,9 +305,9 @@ public class DetailedInfo extends AppCompatActivity {
                 super(view);
                 review_text_name = view.findViewById(R.id.result_name);
                 review_text_rating = view.findViewById(R.id.starFeedback);
-                review_text_date = view.findViewById(R.id.review_date);
-                review_text_review = view.findViewById(R.id.review_review);
-                review_image_profile = view.findViewById(R.id.review_image);
+                review_text_date = view.findViewById(R.id.result_date);
+                review_text_review = view.findViewById(R.id.commentTv);
+                review_image_profile = view.findViewById(R.id.result_profilepic);
             }
         }
 
