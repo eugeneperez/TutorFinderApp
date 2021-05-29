@@ -39,6 +39,7 @@ public class ViewTuteeProfile extends AppCompatActivity {
     private ImageView image_tutee_profile;
     private ImageView btn_contact;
     private Button btn_changepass;
+    private Button btn_edit_profile;
 
     private RecyclerView tutor_list_rv;
     private DrawerLayout drawerLayout;
@@ -46,6 +47,11 @@ public class ViewTuteeProfile extends AppCompatActivity {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser user = mAuth.getCurrentUser();
+
+    private String firstname;
+    private String lastname;
+    private String contact;
+    private String image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +62,8 @@ public class ViewTuteeProfile extends AppCompatActivity {
         text_email = findViewById(R.id.tutee_profile_email);
         text_contact = findViewById(R.id.tutee_profile_contact);
         image_tutee_profile = findViewById(R.id.tutee_profile_image);
-        btn_contact = findViewById(R.id.change_contact);
         btn_changepass = findViewById(R.id.tutee_change_pass_btn);
+        btn_edit_profile = findViewById(R.id.edit_tutee_profile_btn);
         drawerLayout= findViewById(R.id.drawer_layout);
 
         db.collection("Tutees")
@@ -70,23 +76,37 @@ public class ViewTuteeProfile extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d("TAG12", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = document.getData();
-                                String firstname = result.get("First name").toString().substring(0, 1).toUpperCase()+
+                                firstname = result.get("First name").toString().substring(0, 1).toUpperCase()+
                                         result.get("First name").toString().substring(1);
-                                String lastname = result.get("Last name").toString().substring(0, 1).toUpperCase()+
+                                lastname = result.get("Last name").toString().substring(0, 1).toUpperCase()+
                                         result.get("Last name").toString().substring(1);
                                 String fullname = firstname+" "+lastname;
 
+                                contact = result.get("Contact details").toString();
+
                                 text_name.setText(fullname);
-                                text_email.setText(result.get("Email").toString());
-                                text_contact.setText(result.get("Contact details").toString());
-                                String imgUri = result.get("Profile Picture").toString();
-                                Picasso.get().load(imgUri).fit().centerInside().into(image_tutee_profile);
+                                text_email.setText(user.getEmail());
+                                text_contact.setText(contact);
+                                image = result.get("Profile Picture").toString();
+                                Picasso.get().load(image).fit().centerInside().into(image_tutee_profile);
                             }
                         } else {
                             Log.d("TAG1", "Error getting documents: ", task.getException());
                         }
                     }
                 });
+
+        btn_edit_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ViewTuteeProfile.this, EditTuteeProfile.class);
+                i.putExtra("First name", firstname);
+                i.putExtra("Last name", lastname);
+                i.putExtra("Contact details", contact);
+                i.putExtra("Profile Picture", image);
+                startActivity(i);
+            }
+        });
     }
 
     public class TutorListAdapter extends RecyclerView.Adapter<TutorListAdapter.ViewHolder> {

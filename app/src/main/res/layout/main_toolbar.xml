@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center"
     android:orientation="horizontal"
     android:padding="12dp">
 
@@ -10,6 +11,7 @@
         android:id="@+id/imageView5"
         android:layout_width="wrap_content"
         android:layout_height="57dp"
+        android:layout_marginStart="30dp"
         android:layout_weight="1"
         app:srcCompat="@drawable/tutor_icon" />
 

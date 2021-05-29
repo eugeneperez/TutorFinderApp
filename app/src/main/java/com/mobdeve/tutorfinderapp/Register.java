@@ -58,7 +58,7 @@ public class Register extends AppCompatActivity {
     private Button registerbtn;
     private ImageView uploadDpIv;
     private Uri ImageFile;
-     String finalUri;
+    private String finalUri;
     Map<String, Object> user = new HashMap<>();;
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -176,9 +176,7 @@ public class Register extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Uri> task) {
                         finalUri = task.getResult().toString();
-                        Log.d("boo2",  finalUri);
                         user.put("Profile Picture", finalUri);
-                        Log.d("eug2", user.toString());
                         user.put("Contact details", contact);
                         user.put("Email", username);
                         user.put("First name", firstname);
@@ -188,8 +186,6 @@ public class Register extends AppCompatActivity {
                             user.put("Fee", fee);
                         }
 
-                        Log.d("eug", user.toString());
-
                         if(type.equals("tutor")){
                             db.collection("Tutors").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                 @Override
@@ -197,7 +193,6 @@ public class Register extends AppCompatActivity {
                                     Intent intent = new Intent(Register.this, TutorHomePage.class);
                                     startActivity(intent);
                                     finish();
-                                    Log.d("eug3", "entered");
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -212,7 +207,6 @@ public class Register extends AppCompatActivity {
                                     Intent intent = new Intent(Register.this, Homepage.class);
                                     startActivity(intent);
                                     finish();
-                                    Log.d("eug3tutee", "entered");
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override

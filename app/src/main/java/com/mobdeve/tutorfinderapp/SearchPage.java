@@ -178,6 +178,8 @@ public class SearchPage extends AppCompatActivity {
                         } else {
                             Log.d("TAG1", "Error getting documents: ", task.getException());
                         }
+                        Intent i = new Intent(SearchPage.this, SearchPage.class);
+
                     }
                 });
     }
