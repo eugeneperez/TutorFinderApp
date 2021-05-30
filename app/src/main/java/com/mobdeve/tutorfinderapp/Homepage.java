@@ -153,15 +153,6 @@ public class Homepage extends AppCompatActivity {
                 Homepage.this, LinearLayoutManager.HORIZONTAL, false);
         rv_popular.setLayoutManager(popularLayoutManager);
 
-        search.setOnEditorActionListener(new TextView.OnEditorActionListener(){
-            @Override
-            public boolean onEditorAction(TextView v, int actionID, KeyEvent event){
-                if(actionID == EditorInfo.IME_ACTION_DONE){
-                    searchbtn.performClick();
-                }
-                return false;
-            }
-        });
 
         searchbtn.setOnClickListener(new View.OnClickListener() {
             @Override

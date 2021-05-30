@@ -71,11 +71,14 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
 
                                 list = (ArrayList<Map>) result.get("Tutor List");
 
-
-                                if(list.isEmpty()){
+                                if(result.get("Tutor List")!=null) {
+                                    if (list.isEmpty()) {
+                                        message.setVisibility(View.VISIBLE);
+                                    }
+                                    findTutorInformation();
+                                }else{
                                     message.setVisibility(View.VISIBLE);
                                 }
-                                findTutorInformation();
                             }
                         } else {
                             Log.d("TAG1", "Error getting documents: ", task.getException());

@@ -91,7 +91,6 @@
                             android:layout_weight="1"
                             android:ems="11"
                             android:hint="What are you looking for?"
-                            android:imeOptions="actionDone"
                             android:inputType="textPersonName" />
 
                         <Spinner

@@ -17,8 +17,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/result_profilepic"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginRight="7dp"
             android:paddingTop="15dp"
             android:src="@drawable/logo"
@@ -43,7 +43,7 @@
                         android:id="@+id/result_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="7dp"
                         android:layout_marginTop="15dp"
                         android:text="name"
                         android:textColor="#000000"
@@ -69,25 +69,25 @@
                             android:text="rating"
                             android:textSize="16sp" />
 
-                        <TextView
-                            android:id="@+id/result_date"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="25dp"
-                            android:text="Date" />
-
                     </LinearLayout>
 
                     <TextView
                         android:id="@+id/commentTv"
                         android:layout_width="360dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="7dp"
                         android:layout_weight="1"
                         android:contextClickable="false"
                         android:text="Comment"
                         android:textColor="#000000"
                         android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/result_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="7dp"
+                        android:text="Date" />
 
                 </LinearLayout>
 

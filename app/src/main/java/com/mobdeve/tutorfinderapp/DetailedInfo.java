@@ -241,8 +241,9 @@ public class DetailedInfo extends AppCompatActivity {
                                 Log.d("TAG12", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = document.getData();
                                 Log.d("REVIEWS", "onComplete: currentUser "+currentUser.getEmail());
-
-                                text_average_rating.setText(result.get("Average Rating").toString());
+                                if(result.get("Average Rating")!=null) {
+                                    text_average_rating.setText(result.get("Average Rating").toString());
+                                }
                             }
                         } else {
                             Log.d("TAG1", "Error getting documents: ", task.getException());

@@ -280,15 +280,7 @@ public class SearchPage extends AppCompatActivity {
         results_rv.setAdapter(adapter);
         results_rv.setLayoutManager(new LinearLayoutManager(this));
         // get offerings data
-        search.setOnEditorActionListener(new TextView.OnEditorActionListener(){
-            @Override
-            public boolean onEditorAction(TextView v, int actionID, KeyEvent event){
-                if(actionID == EditorInfo.IME_ACTION_DONE){
-                    searchbtn.performClick();
-                }
-                return false;
-            }
-        });
+
         searchbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
