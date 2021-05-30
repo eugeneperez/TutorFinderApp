@@ -295,7 +295,7 @@ public class Homepage extends AppCompatActivity {
             holder.text_categories_rv.setText(categories);
             holder.text_rating_rv.setText(Float.toString(currentTutor.getAveRating()));
             holder.text_fee_rv.setText(currentTutor.getFee());
-            Picasso.get().load(currentTutor.getProfpic()).fit().centerInside().into(holder.image_profile_rv);
+            Picasso.get().load(currentTutor.getProfpic()).fit().centerCrop().into(holder.image_profile_rv);
         }
 
         @Override
