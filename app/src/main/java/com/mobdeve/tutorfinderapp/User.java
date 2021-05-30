@@ -13,6 +13,7 @@ public class User {
     private String fee;
     private String profpic;
     private float aveRating;
+    private int totalTutees;
     private ArrayList<TutorList> tutorList = new ArrayList<>();
     private ArrayList<TuteeList> tuteeList = new ArrayList<>();
 
@@ -85,6 +86,14 @@ public class User {
 
     public void setAveRating(float aveRating) {
         this.aveRating = aveRating;
+    }
+
+    public int getTotalTutees() {
+        return totalTutees;
+    }
+
+    public void setTotalTutees(int totalTutees) {
+        this.totalTutees = totalTutees;
     }
 
     public ArrayList<TutorList> getTutorList() {
