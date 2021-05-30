@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,6 +81,91 @@ public class ViewTutorProfile extends AppCompatActivity {
 
 
 
+
+        btn_edit_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ViewTutorProfile.this, EditTutorProfile.class);
+                i.putExtra("First name", firstname);
+                i.putExtra("Last name", lastname);
+                i.putExtra("Contact details", contact);
+                i.putExtra("Profile Picture", imgUri);
+                i.putExtra("Categories", strCategories);
+                i.putExtra("Fee",fee);
+                startActivity(i);
+
+            }
+        });
+
+        btn_changepass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(ViewTutorProfile.this);
+                LinearLayout layout = new LinearLayout(ViewTutorProfile.this);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                layout.setOrientation(LinearLayout.VERTICAL);
+                final EditText currPass = new EditText(ViewTutorProfile.this);
+                final EditText newPass = new EditText(ViewTutorProfile.this);
+                final EditText confirmNewPass = new EditText(ViewTutorProfile.this);
+                currPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                newPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                confirmNewPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                currPass.setHint("Current Password");
+                newPass.setHint("New Password");
+                confirmNewPass.setHint("Confirm New Password");
+                alert.setTitle("Change Password");
+
+                layout.addView(currPass);
+                layout.addView(newPass);
+                layout.addView(confirmNewPass);
+                alert.setView(layout);
+
+                alert.setPositiveButton("Change", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        if (newPass.getText().toString().equals(confirmNewPass.getText().toString()) && (currPass.length()>=8 || newPass.length()>=8 || confirmNewPass.length()>=8)) {
+                            AuthCredential credentials = EmailAuthProvider.getCredential(user.getEmail(), currPass.getText().toString());
+                            user.reauthenticate(credentials).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        user.updatePassword(newPass.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(ViewTutorProfile.this, "Password Updated", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(ViewTutorProfile.this, "Error Password Not Updated", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        Log.d("hello", "Error auth failed");
+                                    }
+                                }
+                            });
+                        }
+                        else {
+                            Toast.makeText(ViewTutorProfile.this, "Incorrect Input. Try Again.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                });
+
+                alert.show();
+            }
+        });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         db.collection("Tutors")
                 .whereEqualTo("Email", user.getEmail())
                 .get()
@@ -121,85 +207,7 @@ public class ViewTutorProfile extends AppCompatActivity {
                         }
                     }
                 });
-
-        btn_edit_profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(ViewTutorProfile.this, EditTutorProfile.class);
-                i.putExtra("First name", firstname);
-                i.putExtra("Last name", lastname);
-                i.putExtra("Contact details", contact);
-                i.putExtra("Profile Picture", imgUri);
-                i.putExtra("Categories", strCategories);
-                i.putExtra("Fee",fee);
-                startActivity(i);
-                finish();
-            }
-        });
-
-        btn_changepass.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(ViewTutorProfile.this);
-                LinearLayout layout = new LinearLayout(ViewTutorProfile.this);
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-                layout.setOrientation(LinearLayout.VERTICAL);
-                final EditText currPass = new EditText(ViewTutorProfile.this);
-                final EditText newPass = new EditText(ViewTutorProfile.this);
-                final EditText confirmNewPass = new EditText(ViewTutorProfile.this);
-                currPass.setHint("Current Password");
-                newPass.setHint("New Password");
-                confirmNewPass.setHint("Confirm New Password");
-                alert.setTitle("Change Password");
-
-                layout.addView(currPass);
-                layout.addView(newPass);
-                layout.addView(confirmNewPass);
-                alert.setView(layout);
-
-                alert.setPositiveButton("Change", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        if (newPass.getText().toString().equals(confirmNewPass.getText().toString())) {
-                            AuthCredential credentials = EmailAuthProvider.getCredential(user.getEmail(), currPass.getText().toString());
-                            user.reauthenticate(credentials).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        user.updatePassword(newPass.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    Toast.makeText(ViewTutorProfile.this, "Password Updated", Toast.LENGTH_SHORT).show();
-                                                } else {
-                                                    Toast.makeText(ViewTutorProfile.this, "Error Password Not Updated", Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
-                                        });
-                                    } else {
-                                        Log.d("hello", "Error auth failed");
-                                    }
-                                }
-                            });
-                        }
-                        else {
-                            Toast.makeText(ViewTutorProfile.this, "Password do not match", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.dismiss();
-                    }
-                });
-
-                alert.show();
-            }
-        });
-
     }
-
 
     public void ClickMenu(View view){
         openDrawer(drawerLayout);
@@ -221,6 +229,7 @@ public class ViewTutorProfile extends AppCompatActivity {
 
     public void ClickHome(View view){
         Intent i = new Intent(ViewTutorProfile.this, TutorHomePage.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
         finish();
     }

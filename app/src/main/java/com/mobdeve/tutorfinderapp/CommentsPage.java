@@ -204,6 +204,7 @@ public class CommentsPage extends AppCompatActivity {
 
     public void ClickHome(View view){
         Intent i = new Intent(CommentsPage.this, TutorHomePage.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
         finish();
     }

@@ -68,6 +68,10 @@ public class FeedbackPage extends AppCompatActivity {
             public void onClick(View v) {
                 countStars = 1;
                 star1Iv.setImageResource(R.drawable.ic_baseline_star_24);
+                star2Iv.setImageResource(R.drawable.ic_baseline_star_outline_24);
+                star3Iv.setImageResource(R.drawable.ic_baseline_star_outline_24);
+                star4Iv.setImageResource(R.drawable.ic_baseline_star_outline_24);
+                star5Iv.setImageResource(R.drawable.ic_baseline_star_outline_24);
             }
         });
         star2Iv.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +80,9 @@ public class FeedbackPage extends AppCompatActivity {
                 countStars = 2;
                 star1Iv.setImageResource(R.drawable.ic_baseline_star_24);
                 star2Iv.setImageResource(R.drawable.ic_baseline_star_24);
+                star3Iv.setImageResource(R.drawable.ic_baseline_star_outline_24);
+                star4Iv.setImageResource(R.drawable.ic_baseline_star_outline_24);
+                star5Iv.setImageResource(R.drawable.ic_baseline_star_outline_24);
             }
         });
         star3Iv.setOnClickListener(new View.OnClickListener() {
@@ -85,6 +92,8 @@ public class FeedbackPage extends AppCompatActivity {
                 star1Iv.setImageResource(R.drawable.ic_baseline_star_24);
                 star2Iv.setImageResource(R.drawable.ic_baseline_star_24);
                 star3Iv.setImageResource(R.drawable.ic_baseline_star_24);
+                star4Iv.setImageResource(R.drawable.ic_baseline_star_outline_24);
+                star5Iv.setImageResource(R.drawable.ic_baseline_star_outline_24);
             }
         });
         star4Iv.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +104,7 @@ public class FeedbackPage extends AppCompatActivity {
                 star2Iv.setImageResource(R.drawable.ic_baseline_star_24);
                 star3Iv.setImageResource(R.drawable.ic_baseline_star_24);
                 star4Iv.setImageResource(R.drawable.ic_baseline_star_24);
+                star5Iv.setImageResource(R.drawable.ic_baseline_star_outline_24);
             }
         });
         star5Iv.setOnClickListener(new View.OnClickListener() {

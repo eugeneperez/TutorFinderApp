@@ -2,9 +2,11 @@ package com.mobdeve.tutorfinderapp;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -84,7 +87,6 @@ public class EditTutorProfile extends AppCompatActivity {
         contact = i.getStringExtra("Contact details");
         text_contact.setText(contact);
         String strCategories= i.getStringExtra("Categories");
-        strCategories= strCategories.substring(0, strCategories.length()-2);
         text_categories.setText(strCategories);
         fee= i.getStringExtra("Fee");
         text_fee.setText(fee);
@@ -104,12 +106,13 @@ public class EditTutorProfile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                firstname = text_firstname.getText().toString();
-                lastname = text_lastname.getText().toString();
+                firstname = text_firstname.getText().toString().toLowerCase();
+                lastname = text_lastname.getText().toString().toLowerCase();
                 contact = text_contact.getText().toString();
                 fee= text_fee.getText().toString();
 
                 String[] strings = text_categories.getText().toString().split(",");
+                categories.clear();
                 for(String s:strings){
                     String a = s.trim();
                     Log.d("trimming", "onClick: string a"+a);
@@ -129,8 +132,6 @@ public class EditTutorProfile extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Uri> task) {
                                     image = task.getResult().toString();
-                                    firstname.toLowerCase();
-                                    lastname.toLowerCase();
                                     saveEditProfile();
                                 }
                             });
@@ -165,7 +166,6 @@ public class EditTutorProfile extends AppCompatActivity {
                                 if(changedProfilePicture){
                                     result.put("Profile Picture", image);
                                 }
-
                                 result.put("First name", firstname);
                                 result.put("Last name", lastname);
                                 result.put("Contact details", contact);
@@ -179,6 +179,16 @@ public class EditTutorProfile extends AppCompatActivity {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 Log.d("SETTING", "DocumentSnapshot successfully written!");
+                                                AlertDialog.Builder alert = new AlertDialog.Builder(EditTutorProfile.this);
+                                                alert.setTitle("Updated Profile");
+                                                alert.setMessage("Your Profile has been updated.");
+                                                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                    }
+                                                });
+                                                alert.show();
                                             }
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
@@ -187,14 +197,11 @@ public class EditTutorProfile extends AppCompatActivity {
                                                 Log.w("SETTING", "Error writing document", e);
                                             }
                                         });
+
                             }
                         } else {
                             Log.d("TAG1", "Error getting documents: ", task.getException());
                         }
-
-                        Intent i = new Intent(EditTutorProfile.this, ViewTutorProfile.class);
-                        startActivity(i);
-                        finish();
                     }
                 });
     }

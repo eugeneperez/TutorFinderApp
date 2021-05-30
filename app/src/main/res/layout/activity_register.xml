@@ -121,7 +121,6 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout4"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="210dp"
                 android:layout_height="wrap_content"
@@ -136,8 +135,7 @@
                     android:id="@+id/regPasswordEt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    />
+                    android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -169,45 +167,53 @@
                 android:textColor="#000000"
                 android:textSize="20sp" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout6"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="210dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:hint="Subjects(e.g. Math,Biology,...)"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView2">
+            <LinearLayout
+                android:id="@+id/tutorLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/regCategoriesEt"
-                    android:layout_width="match_parent"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tiLayoutCategories"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="210dp"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginTop="25dp"
+                    android:hint="Subjects(e.g. Math,Biology,...)"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView2">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout7"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="210dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:hint="Fee(Php)"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView2">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/regCategoriesEt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/regFeeEt"
-                    android:layout_width="match_parent"
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tiLayoutFee"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="210dp"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginTop="25dp"
+                    android:hint="Fee(Php)"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView2">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/regFeeEt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/regPageBtn"
@@ -217,6 +223,7 @@
                 android:backgroundTint="#FFB703"
                 android:text="Register"
                 android:textColor="#000000" />
+
         </LinearLayout>
     </ScrollView>
 

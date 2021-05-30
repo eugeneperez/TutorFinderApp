@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -124,6 +125,9 @@ public class ViewTuteeProfile extends AppCompatActivity {
                 final EditText currPass = new EditText(ViewTuteeProfile.this);
                 final EditText newPass = new EditText(ViewTuteeProfile.this);
                 final EditText confirmNewPass = new EditText(ViewTuteeProfile.this);
+                currPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                newPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                confirmNewPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 currPass.setHint("Current Password");
                 newPass.setHint("New Password");
                 confirmNewPass.setHint("Confirm New Password");
@@ -197,6 +201,7 @@ public class ViewTuteeProfile extends AppCompatActivity {
 
     public void ClickHome(View view){
         Intent i = new Intent(ViewTuteeProfile.this, Homepage.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
         finish();
     }

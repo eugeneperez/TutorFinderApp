@@ -8,15 +8,30 @@
     android:id="@+id/drawer_layout"
     tools:context=".Homepage">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ViewTuteeListOfTutors">
 
     <include layout="@layout/main_toolbar" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Your Tutors:"
+        android:textColor="#1C2C5C"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/noTutorMessageTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="100dp"
+        android:text="You have no current tutors."
+        android:textSize="17sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tutee_profile_tutor_list_rv"

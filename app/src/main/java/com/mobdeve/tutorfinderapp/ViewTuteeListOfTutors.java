@@ -45,18 +45,19 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
     private ArrayList<Map> list = new ArrayList<>();
     private RecyclerView rv_tutorList;
     private TuteeTutorListAdapter adapter;
+    private TextView message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_tutee_list_of_tutors);
         drawerLayout= findViewById(R.id.drawer_layout);
-
+        message= findViewById(R.id.noTutorMessageTv);
         rv_tutorList = (RecyclerView) findViewById(R.id.tutee_profile_tutor_list_rv);
         adapter = new TuteeTutorListAdapter(tutors);
         rv_tutorList.setAdapter(adapter);
         rv_tutorList.setLayoutManager(new LinearLayoutManager(ViewTuteeListOfTutors.this));
-
+        message.setVisibility(View.GONE);
         db.collection("Tutees")
                 .whereEqualTo("Email", user.getEmail())
                 .get()
@@ -72,11 +73,8 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
 
 
                                 if(list.isEmpty()){
-                                    Log.d("TUTORSLISTS", "onComplete: list "+list);
-                                    Toast toast = new Toast(ViewTuteeListOfTutors.this);
-                                    toast.makeText(ViewTuteeListOfTutors.this, "You have no tutors", Toast.LENGTH_LONG).show();
+                                    message.setVisibility(View.VISIBLE);
                                 }
-
                                 findTutorInformation();
                             }
                         } else {
@@ -345,6 +343,7 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
 
     public void ClickHome(View view){
         Intent i = new Intent(ViewTuteeListOfTutors.this, Homepage.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
         finish();
     }

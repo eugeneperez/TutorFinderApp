@@ -99,7 +99,7 @@ public class Homepage extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d("TAG12", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = document.getData();
-                                firstname.setText(result.get("First name").toString().substring(0, 1) + result.get("First name").toString().substring(1));
+                                firstname.setText(result.get("First name").toString().substring(0, 1).toUpperCase() + result.get("First name").toString().substring(1)+".");
                             }
                         } else {
                             Log.d("TAG1", "Error getting documents: ", task.getException());
@@ -123,6 +123,7 @@ public class Homepage extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(id == 0){
                     search.setVisibility(View.GONE);
+                    search.setText("");
                     searchfirstname.setVisibility(View.VISIBLE);
                     searchlastname.setVisibility(View.VISIBLE);
                 }
@@ -130,6 +131,8 @@ public class Homepage extends AppCompatActivity {
                     search.setVisibility(View.VISIBLE);
                     searchfirstname.setVisibility(View.GONE);
                     searchlastname.setVisibility(View.GONE);
+                    searchfirstname.setText("");
+                    searchlastname.setText("");
                 }
             }
 
@@ -166,7 +169,6 @@ public class Homepage extends AppCompatActivity {
         searchbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String spin = spinnerAdapter.getSelectedItem().toString();
                 String searchterms = search.getText().toString().toLowerCase();
                 String searchtermf = searchfirstname.getText().toString().toLowerCase();
                 String searchterml = searchlastname.getText().toString().toLowerCase();
@@ -344,12 +346,12 @@ public class Homepage extends AppCompatActivity {
     public void ClickProfile(View view){
         Intent i = new Intent(Homepage.this, ViewTuteeProfile.class);
         startActivity(i);
-        finish();
+
     }
     public void ClickCurrentTutors(View view){
         Intent i = new Intent(Homepage.this, ViewTuteeListOfTutors.class);
         startActivity(i);
-        finish();
+
     }
     public void ClickLogout(View view){
         AlertDialog.Builder builder= new AlertDialog.Builder(Homepage.this);

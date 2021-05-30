@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,6 +67,7 @@ public class Register extends AppCompatActivity {
     private ArrayList<String> categories = new ArrayList<>();
     private String type;
     private String fee;
+    private LinearLayout tutorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +86,10 @@ public class Register extends AppCompatActivity {
         text_contact = findViewById(R.id.regContactNumEt);
         text_categories = findViewById(R.id.regCategoriesEt);
         text_fee = findViewById(R.id.regFeeEt);
+        tutorLayout = findViewById(R.id.tutorLayout);
         registerbtn = findViewById(R.id.regPageBtn);
         uploadDpIv= findViewById(R.id.uploadDpIv);
+        tutorLayout.setVisibility(View.GONE);
         text_categories_tv.setVisibility(View.GONE);
         text_categories.setVisibility(View.GONE);
         text_fee.setVisibility(View.GONE);
@@ -94,6 +98,7 @@ public class Register extends AppCompatActivity {
         type = i.getStringExtra("Type");
 
         if (type.equals("tutor")){
+            tutorLayout.setVisibility(View.VISIBLE);
             text_categories_tv.setVisibility(View.VISIBLE);
             text_categories.setVisibility(View.VISIBLE);
             text_fee.setVisibility(View.VISIBLE);

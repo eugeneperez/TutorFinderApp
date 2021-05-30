@@ -238,6 +238,7 @@ public class SearchPage extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(id == 0){
                     search.setVisibility(View.GONE);
+                    search.setText("");
                     searchfirstname.setVisibility(View.VISIBLE);
                     searchlastname.setVisibility(View.VISIBLE);
                 }
@@ -245,6 +246,8 @@ public class SearchPage extends AppCompatActivity {
                     search.setVisibility(View.VISIBLE);
                     searchfirstname.setVisibility(View.GONE);
                     searchlastname.setVisibility(View.GONE);
+                    searchfirstname.setText("");
+                    searchlastname.setText("");
                 }
             }
 
@@ -282,7 +285,7 @@ public class SearchPage extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
                 Log.d("SEARCHUSERS", "onClick: users "+users);
 
-                strSearchCategory = search.getText().toString();
+                strSearchCategory = search.getText().toString().toLowerCase();
                 strSearchFirstname = searchfirstname.getText().toString().toLowerCase();
                 strSearchLastname = searchlastname.getText().toString().toLowerCase();
 
