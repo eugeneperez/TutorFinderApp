@@ -16,8 +16,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -39,7 +41,10 @@ public class FeedbackPage extends AppCompatActivity {
     private ImageView star5Iv;
     private EditText commentEt;
     private Button submitFeedbackBtn;
-    private int count=0;
+    private int countStars=0;
+    private float ratings = 0;
+    private int total = 0;
+    private float aveRating=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,14 +66,14 @@ public class FeedbackPage extends AppCompatActivity {
         star1Iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                count = 1;
+                countStars = 1;
                 star1Iv.setImageResource(R.drawable.ic_baseline_star_24);
             }
         });
         star2Iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                count = 2;
+                countStars = 2;
                 star1Iv.setImageResource(R.drawable.ic_baseline_star_24);
                 star2Iv.setImageResource(R.drawable.ic_baseline_star_24);
             }
@@ -76,7 +81,7 @@ public class FeedbackPage extends AppCompatActivity {
         star3Iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                count = 3;
+                countStars = 3;
                 star1Iv.setImageResource(R.drawable.ic_baseline_star_24);
                 star2Iv.setImageResource(R.drawable.ic_baseline_star_24);
                 star3Iv.setImageResource(R.drawable.ic_baseline_star_24);
@@ -85,7 +90,7 @@ public class FeedbackPage extends AppCompatActivity {
         star4Iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                count = 4;
+                countStars = 4;
                 star1Iv.setImageResource(R.drawable.ic_baseline_star_24);
                 star2Iv.setImageResource(R.drawable.ic_baseline_star_24);
                 star3Iv.setImageResource(R.drawable.ic_baseline_star_24);
@@ -95,7 +100,7 @@ public class FeedbackPage extends AppCompatActivity {
         star5Iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                count = 5;
+                countStars = 5;
                 star1Iv.setImageResource(R.drawable.ic_baseline_star_24);
                 star2Iv.setImageResource(R.drawable.ic_baseline_star_24);
                 star3Iv.setImageResource(R.drawable.ic_baseline_star_24);
@@ -107,7 +112,7 @@ public class FeedbackPage extends AppCompatActivity {
         submitFeedbackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(count == 0){
+                if(countStars == 0){
                     Toast.makeText(FeedbackPage.this, "Please enter a rating", Toast.LENGTH_SHORT).show();
                 }else{
                     String comment = commentEt.getText().toString();
@@ -116,7 +121,7 @@ public class FeedbackPage extends AppCompatActivity {
                     Map<String, Object> review = new HashMap<>();
 
                     review.put("Date", date);
-                    review.put("Rating", count);
+                    review.put("Rating", countStars);
                     review.put("Review", comment);
                     review.put("Tutee", user.getEmail());
                     review.put("Tutor", tutorEmail);
@@ -140,6 +145,44 @@ public class FeedbackPage extends AppCompatActivity {
                                     Log.w("TAG", "Error writing document", e);
                                 }
                             });
+
+                    db.collection("Reviews")
+                            .whereEqualTo("Tutor", user.getEmail())
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            Map<String, Object> result = document.getData();
+                                                total++;
+                                                ratings += Float.parseFloat(result.get("Rating").toString());
+                                        }
+                                        aveRating = ratings / total;
+                                    } else {
+                                        Log.d("TAG1", "Error getting documents: ", task.getException());
+                                    }
+                                    db.collection("Tutors")
+                                            .whereEqualTo("Email", user.getEmail())
+                                            .get()
+                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    if(task.isSuccessful()){
+                                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                                            Map<String, Object> result = document.getData();
+                                                            result.put("Average Rating", aveRating);
+                                                            db.collection("Tutors").document(document.getId()).set(result);
+                                                        }
+                                                    }
+                                                    else{
+                                                        Log.d("TAG1", "Error ", task.getException());
+                                                    }
+                                                }
+                                            });
+                                }
+                            });
+
                 }
             }
         });
