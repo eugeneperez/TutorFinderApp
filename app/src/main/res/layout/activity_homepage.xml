@@ -71,7 +71,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:ems="10"
+                            android:ems="6"
                             android:hint="First name"
                             android:inputType="textPersonName" />
 
@@ -80,7 +80,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:ems="10"
+                            android:ems="6"
                             android:hint="Last name"
                             android:inputType="textPersonName" />
 
@@ -89,7 +89,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:ems="10"
+                            android:ems="11"
                             android:hint="What are you looking for?"
                             android:imeOptions="actionDone"
                             android:inputType="textPersonName" />
@@ -99,16 +99,15 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
 
-                    </LinearLayout>
+                        <ImageView
+                            android:id="@+id/searchbtn_homepage"
+                            android:layout_width="72dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:paddingEnd="5dp"
+                            app:srcCompat="@drawable/search_icon" />
 
-                    <Button
-                        android:id="@+id/searchbtn_homepage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="#ffb700"
-                        android:text="Search"
-                        android:textColor="#000000"
-                        app:cornerRadius="24dp" />
+                    </LinearLayout>
 
                 </LinearLayout>
 

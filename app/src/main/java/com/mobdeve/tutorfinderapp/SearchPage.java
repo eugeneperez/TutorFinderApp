@@ -8,12 +8,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -25,7 +22,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -33,13 +29,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,13 +44,13 @@ public class SearchPage extends AppCompatActivity {
     private EditText search;
     private EditText searchfirstname;
     private EditText searchlastname;
-    private Button searchbtn;
+    private ImageView searchbtn;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ArrayList<User> users = new ArrayList<>();
     private RecyclerView results_rv;
     private ResultsAdapter adapter;
     private DrawerLayout drawerLayout;
-
+    private TextView message;
     private String strSearchFirstname = new String();
     private String strSearchLastname = new String();
     private String strSearchCategory = new String();
@@ -81,7 +74,6 @@ public class SearchPage extends AppCompatActivity {
                                 Map<String, Object> result = new HashMap<>();
                                 result = document.getData();
                                 boolean isNotFound = true;
-                                Log.d("hello2", result.toString());
 
                                 User user = new User(result.get("Email").toString(),
                                         result.get("First name").toString(),
@@ -90,12 +82,10 @@ public class SearchPage extends AppCompatActivity {
                                 user.setCategories((ArrayList<String>) result.get("Categories"));
                                 user.setFee(result.get("Fee").toString());
                                 user.setProfpic(result.get("Profile Picture").toString());
-                                Log.d("SEARCHUSERR", "onComplete: user "+user);
 
                                 for(User u: users){
                                     if(u.getEmail().equals(user.getEmail())){
-                                        Log.d("SEARCHFOUND", "onComplete: isFound");
-                                        Log.d("SEARCHFOUNDEmail", "onComplete: u.getEmail "+u.getEmail());
+
                                         isNotFound = false;
                                     }
                                 }
@@ -110,6 +100,11 @@ public class SearchPage extends AppCompatActivity {
                             Log.d("TAG1", "Error getting documents: ", task.getException());
                         }
                         adapter.notifyDataSetChanged();
+                        if(users.isEmpty()){
+                            message.setVisibility(View.VISIBLE);
+                        }else{
+                            message.setVisibility(View.GONE);
+                        }
                     }
                 });
     }
@@ -156,6 +151,11 @@ public class SearchPage extends AppCompatActivity {
                             Log.d("TAG1", "Error getting documents: ", task.getException());
                         }
                         adapter.notifyDataSetChanged();
+                        if(users.isEmpty()){
+                            message.setVisibility(View.VISIBLE);
+                        }else{
+                            message.setVisibility(View.GONE);
+                        }
                     }
                 });
     }
@@ -191,6 +191,11 @@ public class SearchPage extends AppCompatActivity {
                             Log.d("TAG1", "Error getting documents: ", task.getException());
                         }
                         adapter.notifyDataSetChanged();
+                        if(users.isEmpty()){
+                            message.setVisibility(View.VISIBLE);
+                        }else{
+                            message.setVisibility(View.GONE);
+                        }
                     }
                 });
     }
@@ -199,14 +204,20 @@ public class SearchPage extends AppCompatActivity {
         if(!searchTermsList.get("First name").toString().isEmpty()){
             strSearchFirstname = searchTermsList.get("First name").toString();
             searchFirstName(strSearchFirstname);
+        }else{
+            message.setVisibility(View.VISIBLE);
         }
         if(!searchTermsList.get("Last name").toString().isEmpty()){
             strSearchLastname = searchTermsList.get("Last name").toString();
             searchLastName(strSearchLastname);
+        }else{
+            message.setVisibility(View.VISIBLE);
         }
         if(!searchTermsList.get("Category").toString().isEmpty()){
             strSearchCategory = searchTermsList.get("Category").toString();
             searchCategory(strSearchCategory);
+        }else{
+            message.setVisibility(View.VISIBLE);
         }
     }
 
@@ -222,6 +233,8 @@ public class SearchPage extends AppCompatActivity {
         searchbtn = findViewById(R.id.searchbtn_searchpage);
         spinnerAdapter = findViewById(R.id.spinner_searchpage);
         drawerLayout= findViewById(R.id.drawer_layout);
+        message= findViewById(R.id.noResultMessageTv);
+
 
         ArrayList<String> arrayList = new ArrayList<>();
 
@@ -289,12 +302,14 @@ public class SearchPage extends AppCompatActivity {
                 strSearchFirstname = searchfirstname.getText().toString().toLowerCase();
                 strSearchLastname = searchlastname.getText().toString().toLowerCase();
 
-                Map<String, Object> searchTermsList = new HashMap<>();
-                searchTermsList.put("First name", strSearchFirstname);
-                searchTermsList.put("Last name", strSearchLastname);
-                searchTermsList.put("Category", strSearchCategory);
+                    Map<String, Object> searchTermsList = new HashMap<>();
+                    searchTermsList.put("First name", strSearchFirstname);
+                    searchTermsList.put("Last name", strSearchLastname);
+                    searchTermsList.put("Category", strSearchCategory);
 
-                searchTerms(searchTermsList);
+
+                    searchTerms(searchTermsList);
+
             }
         });
     }
