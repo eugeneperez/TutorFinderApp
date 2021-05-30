@@ -90,9 +90,12 @@ public class SearchPage extends AppCompatActivity {
                                 user.setCategories((ArrayList<String>) result.get("Categories"));
                                 user.setFee(result.get("Fee").toString());
                                 user.setProfpic(result.get("Profile Picture").toString());
+                                Log.d("SEARCHUSERR", "onComplete: user "+user);
 
                                 for(User u: users){
                                     if(u.getEmail().equals(user.getEmail())){
+                                        Log.d("SEARCHFOUND", "onComplete: isFound");
+                                        Log.d("SEARCHFOUNDEmail", "onComplete: u.getEmail "+u.getEmail());
                                         isNotFound = false;
                                     }
                                 }
@@ -192,37 +195,7 @@ public class SearchPage extends AppCompatActivity {
                 });
     }
 
-    public void searchRatings(User user){
-        averageRating = 0;
-        totalRating = 0;
-        count = 0;
-
-        db.collection("Reviews")
-                .whereEqualTo("Tutor", user.getEmail())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG1", document.getId() + " => " + document.getData());
-                                Map<String, Object> result = new HashMap<>();
-                                result = document.getData();
-
-                                totalRating += Float.parseFloat(result.get("Rating").toString());
-                                count++;
-                            }
-                        } else {
-                            Log.d("TAG1", "Error getting documents: ", task.getException());
-                        }
-                        averageRating = totalRating / count;
-                        user.setAveRating(averageRating);
-                    }
-                });
-    }
-
     public void searchTerms(Map searchTermsList){
-
         if(!searchTermsList.get("First name").toString().isEmpty()){
             strSearchFirstname = searchTermsList.get("First name").toString();
             searchFirstName(strSearchFirstname);
@@ -283,7 +256,7 @@ public class SearchPage extends AppCompatActivity {
 
         Intent i= getIntent();
         Map<String, Object> searchTerms = gson.fromJson(i.getStringExtra("Search Terms"), Map.class);
-
+        Log.d("SEARCHINTENT", "onCreate: searchterms "+searchTerms);
         searchTerms(searchTerms);
 
         results_rv = findViewById(R.id.search_page_rv);
@@ -304,8 +277,10 @@ public class SearchPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                Log.d("SEARCHUSERS", "onClick: users "+users);
                 users.clear();
                 adapter.notifyDataSetChanged();
+                Log.d("SEARCHUSERS", "onClick: users "+users);
 
                 strSearchCategory = search.getText().toString();
                 strSearchFirstname = searchfirstname.getText().toString().toLowerCase();

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -19,6 +21,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -33,6 +37,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -107,6 +112,8 @@ public class Homepage extends AppCompatActivity {
             }
         });
 
+        RecyclerView rv_highrated = findViewById(R.id.highly_rated_rv);
+
         search.setOnEditorActionListener(new TextView.OnEditorActionListener(){
             @Override
             public boolean onEditorAction(TextView v, int actionID, KeyEvent event){
@@ -141,6 +148,69 @@ public class Homepage extends AppCompatActivity {
             }
         });
 
+    }
+
+    public class HomepageAdapter extends RecyclerView.Adapter<HomepageAdapter.ViewHolder> {
+        private ArrayList<User> tutors = new ArrayList<>();
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            private TextView text_name_rv;
+            private TextView text_categories_rv;
+            private TextView text_fee_rv;
+            private TextView text_rating_rv;
+            private ImageView image_profile_rv;
+
+            public ViewHolder(View view) {
+                super(view);
+                text_name_rv = view.findViewById(R.id.homepage_row_name);
+                text_categories_rv = view.findViewById(R.id.homepage_row_categories);
+                text_fee_rv = view.findViewById(R.id.homepage_row_fee);
+                text_rating_rv = view.findViewById(R.id.homepage_row_star);
+                image_profile_rv = view.findViewById(R.id.homepage_row_image);
+            }
+        }
+
+        public HomepageAdapter(ArrayList<User> tutors) {
+            this.tutors = tutors;
+        }
+
+        @NonNull
+        @Override
+        public HomepageAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            View resultView = inflater.inflate(R.layout.rv_tutor_fragment, parent, false);
+
+            HomepageAdapter.ViewHolder viewHolder = new HomepageAdapter.ViewHolder(resultView);
+            return viewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull HomepageAdapter.ViewHolder holder, int position) {
+            User currentTutor = tutors.get(position);
+
+            String fullname = currentTutor.getFirstname().substring(0, 1).toUpperCase() + currentTutor.getFirstname().substring(1) + " " +
+                    currentTutor.getLastname().substring(0, 1).toUpperCase() + currentTutor.getLastname().substring(1);
+
+            String categories = new String();
+
+            for(String category:currentTutor.getCategories()){
+                if(!category.equals(currentTutor.getCategories().get(currentTutor.getCategories().size()-1)))
+                    categories += category.substring(0, 1).toUpperCase()+category.substring(1)+", ";
+                else
+                    categories += category.substring(0, 1).toUpperCase()+category.substring(1);
+            }
+
+            holder.text_name_rv.setText(fullname);
+            holder.text_categories_rv.setText(categories);
+            holder.text_rating_rv.setText(Float.toString(currentTutor.getAveRating()));
+            holder.text_fee_rv.setText(currentTutor.getFee());
+            Picasso.get().load(currentTutor.getProfpic()).fit().centerInside().into(holder.image_profile_rv);
+        }
+
+        @Override
+        public int getItemCount() {
+            return tutors.size();
+        }
     }
 
     public void ClickMenu(View view){

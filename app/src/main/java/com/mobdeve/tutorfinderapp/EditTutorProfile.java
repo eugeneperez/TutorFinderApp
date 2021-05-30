@@ -129,6 +129,8 @@ public class EditTutorProfile extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Uri> task) {
                                     image = task.getResult().toString();
+                                    firstname.toLowerCase();
+                                    lastname.toLowerCase();
                                     saveEditProfile();
                                 }
                             });
