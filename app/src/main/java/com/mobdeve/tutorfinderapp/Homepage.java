@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -28,8 +27,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -57,7 +54,7 @@ public class Homepage extends AppCompatActivity {
     private EditText search;
     private EditText searchfirstname;
     private EditText searchlastname;
-    private Button searchbtn;
+    private ImageView searchbtn;
 
     private TextView firstname;
     private FirebaseAuth mAuth;

@@ -20,7 +20,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center|left"
         android:orientation="horizontal">
 
         <EditText
@@ -28,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
+            android:ems="6"
             android:hint="First name"
             android:inputType="textPersonName" />
 
@@ -37,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
+            android:ems="6"
             android:hint="Last name"
             android:inputType="textPersonName" />
 
@@ -45,7 +44,8 @@
             android:id="@+id/searchbar_searchpage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="12"
+            android:layout_weight="1"
+            android:ems="11"
             android:hint="What are you looking for?"
             android:imeOptions="actionDone"
             android:inputType="textPersonName" />
@@ -55,23 +55,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
+        <ImageView
+            android:id="@+id/searchbtn_searchpage"
+            android:layout_width="72dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingEnd="5dp"
+            app:srcCompat="@drawable/search_icon" />
+
     </LinearLayout>
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/noResultMessageTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/searchbtn_searchpage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#ffb700"
-            android:gravity="center"
-            android:text="Search"
-            android:textColor="#000000" />
-    </LinearLayout>
+        android:paddingTop="50dp"
+        android:text="No results found."
+        android:textSize="17sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_page_rv"
