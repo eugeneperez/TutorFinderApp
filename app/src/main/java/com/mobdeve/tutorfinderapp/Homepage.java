@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
@@ -58,17 +59,23 @@ public class Homepage extends AppCompatActivity {
     private EditText searchlastname;
     private Button searchbtn;
 
-    private TextView username;
+    private TextView firstname;
     private FirebaseAuth mAuth;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     private ArrayList<User> users = new ArrayList<>();
+    private ArrayList<User> ratedUsers = new ArrayList<>();
+    private ArrayList<User> popularUsers = new ArrayList<>();
     private DrawerLayout drawerLayout;
+    private HomepageAdapter ratingsAdapter;
+    private HomepageAdapter popularAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
+
+        firstname = findViewById(R.id.homepage_firstname);
         spinnerAdapter = findViewById(R.id.spinner_homepage);
         search = findViewById(R.id.searchbar_homepage);
         searchfirstname = findViewById(R.id.searchfirstname_homepage);
@@ -81,6 +88,9 @@ public class Homepage extends AppCompatActivity {
         search.setVisibility(View.GONE);
 
         ArrayList<String> spinnerList = new ArrayList<>();
+
+        Intent i = getIntent();
+        firstname.setText(i.getStringExtra("First name"));
 
         spinnerList.add("People");
         spinnerList.add("Category");
@@ -113,6 +123,9 @@ public class Homepage extends AppCompatActivity {
         });
 
         RecyclerView rv_highrated = findViewById(R.id.highly_rated_rv);
+        ratingsAdapter = new HomepageAdapter(ratedUsers);
+        rv_highrated.setAdapter(ratingsAdapter);
+        rv_highrated.setLayoutManager(new LinearLayoutManager(this));
 
         search.setOnEditorActionListener(new TextView.OnEditorActionListener(){
             @Override

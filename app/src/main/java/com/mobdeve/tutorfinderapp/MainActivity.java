@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                                     result = document.getData();
                                     if (user.getEmail().equals(result.get("Email"))) {
                                         Intent i = new Intent(MainActivity.this, Homepage.class);
-                                        //current tutor put in intent extra
+                                        i.putExtra("First name", result.get("First name").toString());
                                         startActivity(i);
                                         finish();
                                     }

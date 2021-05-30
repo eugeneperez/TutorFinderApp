@@ -205,6 +205,7 @@ public class Register extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(DocumentReference documentReference) {
                                     Intent intent = new Intent(Register.this, Homepage.class);
+                                    intent.putExtra("First name", firstname);
                                     startActivity(intent);
                                     finish();
                                 }
