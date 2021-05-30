@@ -50,7 +50,6 @@ public class DetailedInfo extends AppCompatActivity {
     private User user;
     private float aveRating = 0;
 
-    private ReviewAdapter adapter;
     private TextView text_name;
     private TextView text_email;
     private TextView text_categories;
@@ -59,6 +58,7 @@ public class DetailedInfo extends AppCompatActivity {
     private TextView text_average_rating;
     private ImageView image_profile;
     private Button request_btn;
+    private Button see_more_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +76,7 @@ public class DetailedInfo extends AppCompatActivity {
         text_average_rating = findViewById(R.id.review_averating);
         image_profile = findViewById(R.id.detailed_image);
         request_btn = findViewById(R.id.detailed_requestbtn);
+        see_more_btn = findViewById(R.id.detailed_info_see_more_reviews_btn);
 
         Gson gson = new Gson();
         Intent i = getIntent();
@@ -220,13 +221,17 @@ public class DetailedInfo extends AppCompatActivity {
             }
         });
 
-        RecyclerView rv_review = findViewById(R.id.reviews_rv);
-        adapter = new ReviewAdapter(reviews);
-        rv_review.setAdapter(adapter);
-        rv_review.setLayoutManager(new LinearLayoutManager(DetailedInfo.this));
+        see_more_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DetailedInfo.this, SeeMoreReviews.class);
+                intent.putExtra("User", json);
+                startActivity(intent);
+            }
+        });
 
-        db.collection("Reviews")
-                .whereEqualTo("Tutor", user.getEmail())
+        db.collection("Tutors")
+                .whereEqualTo("Email", user.getEmail())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -237,116 +242,13 @@ public class DetailedInfo extends AppCompatActivity {
                                 Map<String, Object> result = document.getData();
                                 Log.d("REVIEWS", "onComplete: currentUser "+currentUser.getEmail());
 
-                                Timestamp timestamp = (Timestamp) result.get("Date");
-                                result.put("Date", timestamp.toDate());
-
-                                db.collection("Tutees")
-                                        .whereEqualTo("Email", result.get("Tutee").toString())
-                                        .get()
-                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                if (task.isSuccessful()) {
-                                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                                        Log.d("TAG12", document.getId() + " => " + document.getData());
-                                                        Map<String, Object> tutee = document.getData();
-                                                        Log.d("REVIEWS", "onComplete: currentUser "+currentUser.getEmail());
-
-                                                        String firstname = tutee.get("First name").toString();
-                                                        String lastname = tutee.get("Last name").toString();
-                                                        String fullname = firstname.substring(0, 1).toUpperCase()+firstname.substring(1) + " " +
-                                                                lastname.substring(0, 1).toUpperCase() + lastname.substring(1);
-
-
-                                                        result.put("Tutee Name", fullname);
-                                                        result.put("Tutee Profile Picture", tutee.get("Profile Picture").toString());
-
-                                                        reviews.add(result);
-
-                                                    }
-                                                } else {
-                                                    Log.d("TAG1", "Error getting documents: ", task.getException());
-                                                }
-
-                                                float ratings = 0;
-                                                int total = 0;
-
-                                                for(Map review:reviews){
-                                                    total++;
-                                                    ratings += Float.parseFloat(review.get("Rating").toString());
-                                                }
-
-                                                aveRating = ratings / total;
-
-                                                text_average_rating.setText(Float.toString(aveRating));
-
-                                                adapter.notifyDataSetChanged();
-                                            }
-                                        });
+                                text_average_rating.setText(result.get("Average Rating").toString());
                             }
                         } else {
                             Log.d("TAG1", "Error getting documents: ", task.getException());
                         }
                     }
                 });
-    }
-
-    public class ReviewAdapter extends RecyclerView.Adapter<DetailedInfo.ReviewAdapter.ViewHolder> {
-        private ArrayList<Map> reviewList= new ArrayList<>();
-
-        public class ViewHolder extends RecyclerView.ViewHolder{
-            private TextView review_text_name;
-            private TextView review_text_rating;
-            private TextView review_text_date;
-            private TextView review_text_review;
-            private ImageView review_image_profile;
-
-            public ViewHolder(View view){
-                super(view);
-                review_text_name = view.findViewById(R.id.result_name);
-                review_text_rating = view.findViewById(R.id.starFeedback);
-                review_text_date = view.findViewById(R.id.result_date);
-                review_text_review = view.findViewById(R.id.commentTv);
-                review_image_profile = view.findViewById(R.id.result_profilepic);
-            }
-        }
-
-        public ReviewAdapter(ArrayList<Map> reviewList){
-            this.reviewList=reviewList;
-        }
-
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LayoutInflater inflater= LayoutInflater.from(parent.getContext());
-            View reviewView= inflater.inflate(R.layout.feedback_row,parent, false);
-
-            ViewHolder viewHolder = new ViewHolder(reviewView);
-            return viewHolder;
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ReviewAdapter.ViewHolder holder, int position){
-            Map<String, Object> review = reviewList.get(position);
-
-            Date date = (Date) review.get("Date");
-            Locale philippineLocale = new Locale.Builder().setLanguage("en").setRegion("PH").build();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MMMM/yyyy", philippineLocale);
-
-            String strDate = dateFormat.format(date);
-
-            holder.review_text_name.setText(review.get("Tutee Name").toString());
-            holder.review_text_rating.setText(review.get("Rating").toString());
-            holder.review_text_review.setText(review.get("Review").toString());
-            holder.review_text_date.setText(strDate);
-            String imgUri = review.get("Tutee Profile Picture").toString();
-            Picasso.get().load(imgUri).fit().centerInside().into(holder.review_image_profile);
-        }
-
-        @Override
-        public int getItemCount() {
-            return reviewList.size();
-        }
     }
 
 }

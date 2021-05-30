@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TutorFinderApp">
-        <activity android:name=".EditTutorProfile"></activity>
+        <activity android:name=".SeeMoreReviews"></activity>
+        <activity android:name=".EditTutorProfile" />
         <activity android:name=".EditTuteeProfile" />
         <activity android:name=".CommentsPage" />
         <activity android:name=".ViewTuteeListOfTutors" />
