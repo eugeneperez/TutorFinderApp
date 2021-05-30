@@ -250,6 +250,7 @@ public class Homepage extends AppCompatActivity {
             private TextView text_fee_rv;
             private TextView text_rating_rv;
             private ImageView image_profile_rv;
+            private LinearLayout layout_row;
 
             public ViewHolder(View view) {
                 super(view);
@@ -258,6 +259,7 @@ public class Homepage extends AppCompatActivity {
                 text_fee_rv = view.findViewById(R.id.homepage_row_fee);
                 text_rating_rv = view.findViewById(R.id.homepage_row_star);
                 image_profile_rv = view.findViewById(R.id.homepage_row_image);
+                layout_row = view.findViewById(R.id.homepage_row_layout);
             }
         }
 
@@ -296,6 +298,17 @@ public class Homepage extends AppCompatActivity {
             holder.text_rating_rv.setText(Float.toString(currentTutor.getAveRating()));
             holder.text_fee_rv.setText(currentTutor.getFee());
             Picasso.get().load(currentTutor.getProfpic()).fit().centerCrop().into(holder.image_profile_rv);
+            holder.layout_row.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Gson gson = new Gson();
+                    Intent i = new Intent(Homepage.this, DetailedInfo.class);
+                    String json = gson.toJson(currentTutor);
+                    i.putExtra("User", json);
+                    startActivity(i);
+                }
+            });
+
         }
 
         @Override
