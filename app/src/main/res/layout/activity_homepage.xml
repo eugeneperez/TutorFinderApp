@@ -24,7 +24,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingBottom="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -115,16 +116,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     android:layout_marginBottom="30dp"
+                    android:gravity="center|start"
                     android:orientation="horizontal"
                     android:paddingStart="10dp">
-
-                    <TextView
-                        android:id="@+id/textView25"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Highly Rated"
-                        android:textColor="#000000"
-                        android:textSize="20sp" />
 
                     <ImageView
                         android:id="@+id/imageView7"
@@ -132,12 +126,20 @@
                         android:layout_height="wrap_content"
                         app:srcCompat="@drawable/ic_baseline_star_24" />
 
+                    <TextView
+                        android:id="@+id/textView25"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Highly Rated"
+                        android:textColor="#000000"
+                        android:textSize="24sp" />
+
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/highly_rated_rv"
                     android:layout_width="match_parent"
-                    android:layout_height="310dp"
+                    android:layout_height="320dp"
                     android:orientation="horizontal" />
 
                 <LinearLayout
@@ -145,8 +147,15 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="30dp"
                     android:layout_marginBottom="30dp"
+                    android:gravity="center|start"
                     android:orientation="horizontal"
                     android:paddingStart="10dp">
+
+                    <ImageView
+                        android:id="@+id/imageView8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_baseline_favorite_24" />
 
                     <TextView
                         android:id="@+id/textView4"
@@ -154,19 +163,14 @@
                         android:layout_height="wrap_content"
                         android:text="Popular Tutors"
                         android:textColor="#000000"
-                        android:textSize="20dp" />
+                        android:textSize="24sp" />
 
-                    <ImageView
-                        android:id="@+id/imageView8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_baseline_favorite_24" />
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/popular_tutors_rv"
                     android:layout_width="match_parent"
-                    android:layout_height="310dp"
+                    android:layout_height="320dp"
                     android:orientation="horizontal" />
 
             </LinearLayout>

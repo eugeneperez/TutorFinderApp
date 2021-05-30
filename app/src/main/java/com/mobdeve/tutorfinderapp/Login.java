@@ -93,7 +93,6 @@ public class Login extends AppCompatActivity {
                                                             result = document.getData();
                                                             if (user.getEmail().equals(result.get("Email"))) {
                                                                 Intent i = new Intent(Login.this, Homepage.class);
-                                                                i.putExtra("First name", result.get("First name").toString());
                                                                 startActivity(i);
                                                                 finish();
                                                             }

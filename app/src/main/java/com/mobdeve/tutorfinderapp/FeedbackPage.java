@@ -132,58 +132,61 @@ public class FeedbackPage extends AppCompatActivity {
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    Log.d("TAG", "DocumentSnapshot successfully written!");
                                     Toast.makeText(FeedbackPage.this, "Review has been posted!", Toast.LENGTH_SHORT).show();
-                                    db.collection("Tutors")
-                                            .whereEqualTo("Email", tutorEmail)
-                                            .get()
-                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                    if (task.isSuccessful()) {
-                                                        for (QueryDocumentSnapshot document : task.getResult()) {
-                                                            Map<String, Object> result = document.getData();
-                                                            total = Integer.parseInt(result.get("Total Tutees").toString());
-                                                            total++;
-                                                            ratings = Integer.parseInt(result.get("Total Ratings").toString());
-                                                            ratings += countStars;
-                                                            aveRating = ratings / total;
-
-                                                            result.put("Total Tutees", total);
-                                                            result.put("Total Ratings", ratings);
-                                                            result.put("Average Rating", aveRating);
-
-                                                            db.collection("Tutors")
-                                                                    .document(document.getId())
-                                                                    .set(result)
-                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                        @Override
-                                                                        public void onSuccess(Void aVoid) {
-                                                                            Log.d("TAG", "DocumentSnapshot successfully written!");
-                                                                            Toast.makeText(FeedbackPage.this, "Review has been posted!", Toast.LENGTH_SHORT).show();
-                                                                            Intent i = new Intent(FeedbackPage.this, ViewTuteeListOfTutors.class);
-                                                                            startActivity(i);
-                                                                            finish();
-                                                                        }
-                                                                    })
-                                                                    .addOnFailureListener(new OnFailureListener() {
-                                                                        @Override
-                                                                        public void onFailure(@NonNull Exception e) {
-                                                                            Log.w("TAG", "Error writing document", e);
-                                                                        }
-                                                                    });
-                                                        }
-                                                    } else {
-                                                        Log.d("TAG1", "Error getting documents: ", task.getException());
-                                                    }
-                                                }
-                                            });
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     Log.w("TAG", "Error writing document", e);
+                                }
+                            });
+                    db.collection("Tutors")
+                            .whereEqualTo("Email", tutorEmail)
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            Map<String, Object> result = document.getData();
+                                            if(result.get("Total Tutees") != null){
+                                                total = Integer.parseInt(result.get("Total Tutees").toString());
+                                            }
+                                            total++;
+                                            if(result.get("Total Ratings") != null){
+                                                ratings = Integer.parseInt(result.get("Total Ratings").toString());
+                                            }
+                                            ratings += countStars;
+                                            aveRating = ratings / total;
+
+                                            result.put("Total Tutees", total);
+                                            result.put("Total Ratings", ratings);
+                                            result.put("Average Rating", aveRating);
+
+                                            db.collection("Tutors")
+                                                    .document(document.getId())
+                                                    .set(result)
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            Log.d("TAG", "DocumentSnapshot successfully written!");
+                                                            Toast.makeText(FeedbackPage.this, "Review has been posted!", Toast.LENGTH_SHORT).show();
+                                                            Intent i = new Intent(FeedbackPage.this, ViewTuteeListOfTutors.class);
+                                                            startActivity(i);
+                                                            finish();
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Log.w("TAG", "Error writing document", e);
+                                                        }
+                                                    });
+                                        }
+                                    } else {
+                                        Log.d("TAG1", "Error getting documents: ", task.getException());
+                                    }
                                 }
                             });
                 }
