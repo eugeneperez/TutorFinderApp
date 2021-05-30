@@ -69,14 +69,24 @@
                             android:text="rating"
                             android:textSize="16sp" />
 
+                        <TextView
+                            android:id="@+id/result_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:text="Date" />
+
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/result_date"
-                        android:layout_width="match_parent"
+                        android:id="@+id/commentTv"
+                        android:layout_width="360dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
-                        android:text="Date" />
+                        android:layout_weight="1"
+                        android:contextClickable="false"
+                        android:text="Comment"
+                        android:textSize="15dp" />
 
                 </LinearLayout>
 
@@ -85,15 +95,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/commentTv"
-        android:layout_width="360dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_weight="1"
-        android:contextClickable="false"
-        android:text="Comment"
-        android:textSize="15dp" />
 
 </LinearLayout>
