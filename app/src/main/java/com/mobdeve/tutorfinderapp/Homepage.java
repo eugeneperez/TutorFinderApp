@@ -64,8 +64,8 @@ public class Homepage extends AppCompatActivity {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     private ArrayList<User> users = new ArrayList<>();
-    private ArrayList<User> ratedUsers = new ArrayList<>();
-    private ArrayList<User> popularUsers = new ArrayList<>();
+    private ArrayList<User> ratedTutors = new ArrayList<>();
+    private ArrayList<User> popularTutors = new ArrayList<>();
     private DrawerLayout drawerLayout;
     private HomepageAdapter ratingsAdapter;
     private HomepageAdapter popularAdapter;
@@ -90,7 +90,7 @@ public class Homepage extends AppCompatActivity {
         ArrayList<String> spinnerList = new ArrayList<>();
 
         Intent i = getIntent();
-        firstname.setText(i.getStringExtra("First name"));
+        firstname.setText(i.getStringExtra("First name").substring(0,1).toUpperCase()+i.getStringExtra("First name").substring(1));
 
         spinnerList.add("People");
         spinnerList.add("Category");
@@ -123,9 +123,18 @@ public class Homepage extends AppCompatActivity {
         });
 
         RecyclerView rv_highrated = findViewById(R.id.highly_rated_rv);
-        ratingsAdapter = new HomepageAdapter(ratedUsers);
+        ratingsAdapter = new HomepageAdapter(ratedTutors);
         rv_highrated.setAdapter(ratingsAdapter);
-        rv_highrated.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager ratedLayoutManager = new LinearLayoutManager(
+                Homepage.this, LinearLayoutManager.HORIZONTAL, false);
+        rv_highrated.setLayoutManager(ratedLayoutManager);
+
+        RecyclerView rv_popular = findViewById(R.id.popular_tutors_rv);
+        popularAdapter = new HomepageAdapter(popularTutors);
+        rv_popular.setAdapter(popularAdapter);
+        LinearLayoutManager popularLayoutManager = new LinearLayoutManager(
+                Homepage.this, LinearLayoutManager.HORIZONTAL, false);
+        rv_popular.setLayoutManager(popularLayoutManager);
 
         search.setOnEditorActionListener(new TextView.OnEditorActionListener(){
             @Override
@@ -161,6 +170,60 @@ public class Homepage extends AppCompatActivity {
             }
         });
 
+        db.collection("Tutors")
+                .orderBy("Average Rating", Query.Direction.DESCENDING)
+                .limit(10)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("TAG12", document.getId() + " => " + document.getData());
+                                Map<String, Object> result = document.getData();
+                                Log.d("AVERATING", "onComplete: user "+result.get("Email").toString()+ " averating "+result.get("Average Rating").toString());
+                                User user = new User(result.get("Email").toString(), result.get("First name").toString(),
+                                        result.get("Last name").toString(), result.get("Contact details").toString());
+                                user.setAveRating((Long) result.get("Average Rating"));
+                                user.setFee(result.get("Fee").toString());
+                                user.setProfpic(result.get("Profile Picture").toString());
+                                user.setCategories((ArrayList<String>) result.get("Categories"));
+                                ratedTutors.add(user);
+                            }
+                        } else {
+                            Log.d("TAG1", "Error getting documents: ", task.getException());
+                        }
+                        ratingsAdapter.notifyDataSetChanged();
+                    }
+                });
+        db.collection("Tutors")
+                .orderBy("Total Tutees", Query.Direction.DESCENDING)
+                .limit(10)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("TAG12", document.getId() + " => " + document.getData());
+                                Map<String, Object> result = document.getData();
+                                Log.d("TOTALTUTEES", "onComplete: user "+result.get("Email").toString()+ " total tutees "+result.get("Total Tutees").toString());
+                                User user = new User(result.get("Email").toString(), result.get("First name").toString(),
+                                        result.get("Last name").toString(), result.get("Contact details").toString());
+                                user.setAveRating((Long) result.get("Average Rating"));
+                                user.setFee(result.get("Fee").toString());
+                                user.setProfpic(result.get("Profile Picture").toString());
+                                user.setCategories((ArrayList<String>) result.get("Categories"));
+                                user.setTotalTutees(Integer.parseInt(result.get("Total Tutees").toString()));
+                                popularTutors.add(user);
+                            }
+                        } else {
+                            Log.d("TAG1", "Error getting documents: ", task.getException());
+                        }
+                        popularAdapter.notifyDataSetChanged();
+                    }
+                });
+
     }
 
     public class HomepageAdapter extends RecyclerView.Adapter<HomepageAdapter.ViewHolder> {
@@ -191,7 +254,7 @@ public class Homepage extends AppCompatActivity {
         @Override
         public HomepageAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            View resultView = inflater.inflate(R.layout.rv_tutor_fragment, parent, false);
+            View resultView = inflater.inflate(R.layout.homepage_row, parent, false);
 
             HomepageAdapter.ViewHolder viewHolder = new HomepageAdapter.ViewHolder(resultView);
             return viewHolder;
