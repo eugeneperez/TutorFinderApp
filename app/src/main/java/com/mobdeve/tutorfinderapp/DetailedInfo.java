@@ -98,8 +98,43 @@ public class DetailedInfo extends AppCompatActivity {
         text_fee.setText(user.getFee());
         Picasso.get().load(imgUri).fit().centerInside().into(image_profile);
 
-        request_btn.setOnClickListener(new View.OnClickListener() {
+        db.collection("Tutees")
+                .whereEqualTo("Email", currentUser.getEmail())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("TAG1", document.getId() + " => " + document.getData());
+                                Map<String, Object> result = document.getData();
+                                tutee = document.getData();
 
+                                ArrayList<Map> tutorList = new ArrayList<>();
+                                int index = -1;
+
+                                if(result.get("Tutor List") != null){
+                                    tutorList = (ArrayList<Map>) result.get("Tutor List");
+                                    for(Map tutor: tutorList){
+                                        if(tutor.get("Partner").toString().equals(user.getEmail())){
+                                            index = 1;
+                                        }
+                                    }
+                                }else{
+                                    request_btn.setVisibility(View.GONE);
+                                }
+
+                                if(index != -1){
+                                    request_btn.setVisibility(View.GONE);
+                                }
+                            }
+                        } else {
+                            Log.d("TAG1", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+        request_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 db.collection("Tutors")
