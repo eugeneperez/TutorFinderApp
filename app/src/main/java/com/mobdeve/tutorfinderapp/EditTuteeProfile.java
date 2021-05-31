@@ -170,10 +170,6 @@ public class EditTuteeProfile extends AppCompatActivity {
                         } else {
                             Log.d("TAG1", "Error getting documents: ", task.getException());
                         }
-
-                        Intent i = new Intent(EditTuteeProfile.this, ViewTuteeProfile.class);
-                        startActivity(i);
-                        finish();
                     }
                 });
     }

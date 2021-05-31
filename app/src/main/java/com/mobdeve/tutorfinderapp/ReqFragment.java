@@ -187,6 +187,10 @@ public class ReqFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
 
+                    TutorHomePage activity = (TutorHomePage) getActivity();
+                    activity.declineTutee(currentUser.getEmail());
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.detach(ReqFragment.this).attach(ReqFragment.this).commit();
                 }
             });
         }
