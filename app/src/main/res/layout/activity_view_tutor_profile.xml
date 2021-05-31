@@ -247,14 +247,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="Edit Profile" />
+                        android:backgroundTint="#1C2C5C"
+                        android:text="Edit Profile"
+                        app:cornerRadius="24dp"/>
 
                     <Button
                         android:id="@+id/tutor_change_pass_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="Change Password" />
+                        android:backgroundTint="#1C2C5C"
+                        android:text="Change Password"
+                        app:cornerRadius="24dp" />
 
                 </LinearLayout>
 

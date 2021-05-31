@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,8 +120,8 @@ public class ViewTuteeProfile extends AppCompatActivity {
             public void onClick(View v) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(ViewTuteeProfile.this);
                 LinearLayout layout = new LinearLayout(ViewTuteeProfile.this);
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                lp.gravity= Gravity.CENTER;
                 layout.setOrientation(LinearLayout.VERTICAL);
                 final EditText currPass = new EditText(ViewTuteeProfile.this);
                 final EditText newPass = new EditText(ViewTuteeProfile.this);
@@ -128,6 +129,9 @@ public class ViewTuteeProfile extends AppCompatActivity {
                 currPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 newPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 confirmNewPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                currPass.setLayoutParams(lp);
+                newPass.setLayoutParams(lp);
+                confirmNewPass.setLayoutParams(lp);
                 currPass.setHint("Current Password");
                 newPass.setHint("New Password");
                 confirmNewPass.setHint("Confirm New Password");
@@ -136,6 +140,7 @@ public class ViewTuteeProfile extends AppCompatActivity {
                 layout.addView(currPass);
                 layout.addView(newPass);
                 layout.addView(confirmNewPass);
+                layout.setPadding(60,30,60,30);
                 alert.setView(layout);
 
                 alert.setPositiveButton("Change", new DialogInterface.OnClickListener() {

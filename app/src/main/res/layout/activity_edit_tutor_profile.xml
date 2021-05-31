@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="#FFB703"
     android:orientation="vertical"
     tools:context=".EditTutorProfile">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#219EBC"
+        android:background="#F8F8FF"
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="12dp">
@@ -19,14 +20,16 @@
             android:id="@+id/imageView6"
             android:layout_width="wrap_content"
             android:layout_height="57dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
             app:srcCompat="@drawable/tutor_icon" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@drawable/colordividerlayout">
+        android:background="@drawable/colordividerlayout"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,7 +42,6 @@
                 android:id="@+id/edit_tutor_profile_pic"
                 android:layout_width="180dp"
                 android:layout_height="180dp"
-                android:layout_marginRight="7dp"
                 android:layout_weight="1"
                 android:paddingTop="10dp"
                 app:civ_border_color="#F8F8FF"
@@ -65,7 +67,6 @@
                 android:orientation="vertical"
                 android:paddingTop="5dp"
                 android:paddingBottom="20dp">
-
 
 
                 <LinearLayout
@@ -296,7 +297,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="Save" />
+                        android:backgroundTint="#FFB703"
+                        android:text="Save"
+                        android:textColor="#000000"
+                        app:cornerRadius="24dp" />
 
                 </LinearLayout>
 
