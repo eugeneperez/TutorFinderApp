@@ -133,7 +133,7 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
             private TextView text_fee_rv;
             private TextView text_contact_rv;
             private ImageView image_profile_rv;
-            private Button lil_butt;
+            private Button endBtn;
             private LinearLayout tutees;
             private LinearLayout lil_status;
 
@@ -144,7 +144,7 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
                 text_fee_rv = view.findViewById(R.id.current_tutor_fee);
                 text_contact_rv = view.findViewById(R.id.current_tutor_contact);
                 image_profile_rv = view.findViewById(R.id.current_tutor_image);
-                lil_butt = view.findViewById(R.id.tutee_end_session_btn);
+                endBtn = view.findViewById(R.id.tutee_end_session_btn);
                 lil_status = view.findViewById(R.id.tutor_lil_sta);
                 tutees = view.findViewById(R.id.tutees);
             }
@@ -170,11 +170,11 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
 
             holder.tutees.setVisibility(View.GONE);
             if(currentUser.getStatus().equals("Request")){
-                holder.lil_butt.setVisibility(View.GONE);
+                holder.endBtn.setVisibility(View.GONE);
                 holder.lil_status.setVisibility(View.VISIBLE);
             }else{
                 holder.lil_status.setVisibility(View.GONE);
-                holder.lil_butt.setVisibility(View.VISIBLE);
+                holder.endBtn.setVisibility(View.VISIBLE);
             }
 
             ArrayList<String> categories = currentUser.getCategories();
@@ -194,7 +194,7 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
             String imgUri = currentUser.getImage_uri();
             Picasso.get().load(imgUri).fit().centerInside().into(holder.image_profile_rv);
 
-            holder.lil_butt.setOnClickListener(new View.OnClickListener() {
+            holder.endBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder builder= new AlertDialog.Builder(ViewTuteeListOfTutors.this);

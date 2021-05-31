@@ -8,37 +8,38 @@
     android:id="@+id/drawer_layout"
     tools:context=".Homepage">
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ViewTuteeListOfTutors">
-
-    <include layout="@layout/main_toolbar" />
-
-    <TextView
-        android:id="@+id/textView6"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="Your Tutors:"
-        android:textColor="#1C2C5C"
-        android:textSize="24sp" />
 
-    <TextView
-        android:id="@+id/noTutorMessageTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingTop="100dp"
-        android:text="You have no current tutors."
-        android:textSize="17sp" />
+        android:layout_height="match_parent"
+        android:background="#F8F8FF"
+        android:orientation="vertical"
+        tools:context=".ViewTuteeListOfTutors">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/tutee_profile_tutor_list_rv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</LinearLayout>
+        <include layout="@layout/main_toolbar" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Your Tutors:"
+            android:textColor="#1C2C5C"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/noTutorMessageTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="100dp"
+            android:text="You have no current tutors."
+            android:textSize="17sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tutee_profile_tutor_list_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="300dp"

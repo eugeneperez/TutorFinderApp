@@ -2,9 +2,11 @@ package com.mobdeve.tutorfinderapp;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -158,6 +160,16 @@ public class EditTuteeProfile extends AppCompatActivity {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 Log.d("SETTING", "DocumentSnapshot successfully written!");
+                                                AlertDialog.Builder alert = new AlertDialog.Builder(EditTuteeProfile.this);
+                                                alert.setTitle("Updated Profile");
+                                                alert.setMessage("Your Profile has been updated.");
+                                                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                    }
+                                                });
+                                                alert.show();
                                             }
                                         })
                                         .addOnFailureListener(new OnFailureListener() {

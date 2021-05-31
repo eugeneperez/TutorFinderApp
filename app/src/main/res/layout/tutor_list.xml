@@ -96,7 +96,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Statchus" />
+                android:text="Statchus"
+                android:textColor="#219EBC" />
         </LinearLayout>
 
     </LinearLayout>
