@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -121,11 +122,15 @@ public class DetailedInfo extends AppCompatActivity {
                                         }
                                     }
                                 }else{
-                                    request_btn.setVisibility(View.GONE);
+                                    request_btn.setEnabled(false);
+                                    request_btn.setBackgroundColor(Color.parseColor("#d8d8d8"));
+                                    request_btn.setTextColor(Color.parseColor("#8b8b8b"));
                                 }
 
                                 if(index != -1){
-                                    request_btn.setVisibility(View.GONE);
+                                    request_btn.setEnabled(false);
+                                    request_btn.setBackgroundColor(Color.parseColor("#d8d8d8"));
+                                    request_btn.setTextColor(Color.parseColor("#8b8b8b"));
                                 }
                             }
                         } else {
