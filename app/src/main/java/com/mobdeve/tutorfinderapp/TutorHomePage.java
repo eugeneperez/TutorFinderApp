@@ -49,7 +49,6 @@ public class TutorHomePage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tutor_home_page);
-        Gson gson = new Gson();
 
         drawerLayout= findViewById(R.id.drawer_layout);
         tabLayout= findViewById(R.id.tabLayout);
@@ -63,8 +62,6 @@ public class TutorHomePage extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.setMessage("Loading Tutee List...");
-
-
 
         PagerAdapter pagerAdapter= new PagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, tabLayout.getTabCount());
 
@@ -109,15 +106,11 @@ public class TutorHomePage extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG1", document.getId() + " => " + document.getData());
-                                Gson gson = new Gson();
                                 Map<String, Object> result = new HashMap<>();
                                 result = document.getData();
 
                                 if(result.get("Tutee List") != null){
-                                    Log.d("ABTESTING", "entered if Tutee List exists");
                                     for(Map m: (ArrayList<Map>) result.get("Tutee List")){
-                                        //Session session = gson.fromJson(s, Session.class);
                                         if(m.get("Status").toString().equals("Request")){
                                             db.collection("Tutees")
                                                     .whereEqualTo("Email", m.get("Partner").toString())
@@ -128,7 +121,6 @@ public class TutorHomePage extends AppCompatActivity {
                                                             if (task.isSuccessful()) {
                                                                 for(QueryDocumentSnapshot document : task.getResult()){
                                                                     Map<String, Object> result = document.getData();
-                                                                    Log.d("0TuteesList", "onComplete: partner "+m.get("Partner").toString());
 
                                                                     String firstname = result.get("First name").toString();
                                                                     String lastname = result.get("Last name").toString();
@@ -150,7 +142,6 @@ public class TutorHomePage extends AppCompatActivity {
                                                                     }
 
                                                                     reqTuteesList.add(tutee);
-                                                                    Log.d("0TuteesList", "onComplete: reqtutees "+reqTuteesList);
                                                                 }
 
                                                             } else {
@@ -168,7 +159,6 @@ public class TutorHomePage extends AppCompatActivity {
                                                             if (task.isSuccessful()) {
                                                                 for(QueryDocumentSnapshot document: task.getResult()){
                                                                     Map<String, Object> result = document.getData();
-                                                                    Log.d("0TuteesList", "onComplete: partner "+m.get("Partner").toString());
 
                                                                     String firstname = result.get("First name").toString();
                                                                     String lastname = result.get("Last name").toString();
@@ -178,7 +168,6 @@ public class TutorHomePage extends AppCompatActivity {
                                                                     TuteeList tutee = new TuteeList(result.get("Email").toString(), fullname, result.get("Contact details").toString(),
                                                                             result.get("Profile Picture").toString(), m.get("Status").toString());
                                                                     curTuteesList.add(tutee);
-                                                                    Log.d("0TuteesList", "onComplete: curtutees "+curTuteesList);
                                                                 }
 
                                                             } else {
@@ -206,7 +195,6 @@ public class TutorHomePage extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG1", document.getId() + " => " + document.getData());
                                 Gson gson = new Gson();
                                 Map<String, Object> result = new HashMap<>();
                                 result = document.getData();
@@ -238,8 +226,6 @@ public class TutorHomePage extends AppCompatActivity {
 
                                 result.put("Tutee List", tuteeList);
 
-                                String tutorUid = document.getId();
-
                                 db.collection("Tutors")
                                         .document(document.getId())
                                         .set(result)
@@ -270,8 +256,6 @@ public class TutorHomePage extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG1", document.getId() + " => " + document.getData());
-                                Gson gson = new Gson();
                                 Map<String, Object> result = new HashMap<>();
                                 result = document.getData();
 
@@ -297,8 +281,6 @@ public class TutorHomePage extends AppCompatActivity {
                                 tuteeList.add(tutee);
 
                                 result.put("Tutor List", tuteeList);
-
-                                String tuteeUid = document.getId();
 
                                 db.collection("Tutees")
                                         .document(document.getId())
@@ -332,8 +314,6 @@ public class TutorHomePage extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG1", document.getId() + " => " + document.getData());
-                                Gson gson = new Gson();
                                 Map<String, Object> result = new HashMap<>();
                                 result = document.getData();
 
@@ -388,8 +368,6 @@ public class TutorHomePage extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG1", document.getId() + " => " + document.getData());
-                                Gson gson = new Gson();
                                 Map<String, Object> result = new HashMap<>();
                                 result = document.getData();
 

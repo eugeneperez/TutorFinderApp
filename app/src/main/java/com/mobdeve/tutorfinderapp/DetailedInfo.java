@@ -2,17 +2,11 @@ package com.mobdeve.tutorfinderapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,22 +15,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class DetailedInfo extends AppCompatActivity {
@@ -45,11 +33,7 @@ public class DetailedInfo extends AppCompatActivity {
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private Map<String, Object> tutor = new HashMap<>();
     private Map<String, Object> tutee = new HashMap<>();
-    private ArrayList<Map> reviews = new ArrayList<>();
-    private String tutorUid;
-    private String tuteeUid;
     private User user;
-    private float aveRating = 0;
 
     private TextView text_name;
     private TextView text_email;
@@ -67,7 +51,6 @@ public class DetailedInfo extends AppCompatActivity {
         setContentView(R.layout.activity_detailed_info);
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        tuteeUid = currentUser.getUid();
 
         text_name = findViewById(R.id.detailed_name);
         text_email = findViewById(R.id.detailed_email);
@@ -79,6 +62,7 @@ public class DetailedInfo extends AppCompatActivity {
         request_btn = findViewById(R.id.detailed_requestbtn);
         see_more_btn = findViewById(R.id.detailed_info_see_more_reviews_btn);
 
+        //Gets the chosen tutor from the searchpage or homepage
         Gson gson = new Gson();
         Intent i = getIntent();
         String json = i.getStringExtra("User");
@@ -99,6 +83,7 @@ public class DetailedInfo extends AppCompatActivity {
         text_fee.setText(user.getFee());
         Picasso.get().load(imgUri).fit().centerInside().into(image_profile);
 
+        //checks if the tutee has already hired the tutor
         db.collection("Tutees")
                 .whereEqualTo("Email", currentUser.getEmail())
                 .get()
@@ -138,6 +123,7 @@ public class DetailedInfo extends AppCompatActivity {
         request_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //updates the tutee list of the tutor
                 db.collection("Tutors")
                         .whereEqualTo("Email", user.getEmail())
                         .get()
@@ -146,7 +132,6 @@ public class DetailedInfo extends AppCompatActivity {
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
-                                        Log.d("TAG12", document.getId() + " => " + document.getData());
                                         tutor = document.getData();
                                         ArrayList<Map> tuteeList = new ArrayList<>();
 
@@ -170,7 +155,6 @@ public class DetailedInfo extends AppCompatActivity {
                                         tuteeList.add(tutee);
 
                                         tutor.put("Tutee List", tuteeList);
-                                        tutorUid = document.getId();
 
                                         db.collection("Tutors")
                                                 .document(document.getId())
@@ -191,6 +175,7 @@ public class DetailedInfo extends AppCompatActivity {
                                 } else {
                                     Log.d("TAG1", "Error getting documents: ", task.getException());
                                 }
+                                //updates the tutor list of the user
                                 db.collection("Tutees")
                                         .whereEqualTo("Email", currentUser.getEmail())
                                         .get()
@@ -199,7 +184,6 @@ public class DetailedInfo extends AppCompatActivity {
                                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                 if (task.isSuccessful()) {
                                                     for (QueryDocumentSnapshot document : task.getResult()) {
-                                                        Log.d("TAG1", document.getId() + " => " + document.getData());
                                                         Map<String, Object> result = document.getData();
                                                         tutee = document.getData();
                                                         ArrayList<Map> tutorList = new ArrayList<>();
@@ -215,7 +199,6 @@ public class DetailedInfo extends AppCompatActivity {
                                                             for(Map t: tutorList){
                                                                 if(t.get("Partner").toString().equals(user.getEmail())){
                                                                     index = tutorList.indexOf(t);
-                                                                    Log.d("SETTINGINDEX", "onComplete: INDEX "+index);
                                                                 }
                                                             }
                                                             if(index != -1){
@@ -224,8 +207,6 @@ public class DetailedInfo extends AppCompatActivity {
                                                         }
 
                                                         tutorList.add(tutor2);
-                                                        Log.d("ADDINGREQUEST", "onComplete: tutor2 "+tutor2);
-                                                        Log.d("ADDINGREQUEST", "onComplete: tuteeUid "+tuteeUid+" UID"+document.getId());
 
                                                         tutee.put("Tutor List", tutorList);
                                                         db.collection("Tutees")
@@ -266,6 +247,7 @@ public class DetailedInfo extends AppCompatActivity {
             }
         });
 
+        //gets the average rating of the tutor
         db.collection("Tutors")
                 .whereEqualTo("Email", user.getEmail())
                 .get()
@@ -274,9 +256,7 @@ public class DetailedInfo extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG12", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = document.getData();
-                                Log.d("REVIEWS", "onComplete: currentUser "+currentUser.getEmail());
                                 if(result.get("Average Rating")!=null) {
                                     text_average_rating.setText(result.get("Average Rating").toString());
                                 }

@@ -5,8 +5,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,7 +12,6 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -25,8 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -38,7 +33,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 public class ViewTutorProfile extends AppCompatActivity {
@@ -46,7 +40,6 @@ public class ViewTutorProfile extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser user = mAuth.getCurrentUser();
-    private User currentUser;
 
     private TextView text_name;
     private TextView text_email;
@@ -79,9 +72,6 @@ public class ViewTutorProfile extends AppCompatActivity {
         image_profile = findViewById(R.id.tutor_profile_image);
         btn_edit_profile = findViewById(R.id.edit_tutor_profile_btn);
         btn_changepass = findViewById(R.id.tutor_change_pass_btn);
-
-
-
 
         btn_edit_profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,7 +119,6 @@ public class ViewTutorProfile extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         if (newPass.getText().toString().equals(confirmNewPass.getText().toString()) && (currPass.getText().toString().length()>=8 || newPass.getText().toString().length()>=8 || confirmNewPass.getText().toString().length()>=8)) {
                             AuthCredential credentials = EmailAuthProvider.getCredential(user.getEmail(), currPass.getText().toString());
-                            Log.d("password conditions", "onClick: ENTERED IF CONDITIONS");
                             user.reauthenticate(credentials).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -138,11 +127,9 @@ public class ViewTutorProfile extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
-                                                    Log.d("password", "onComplete: ENTERED TASK SUCCESSFUL");
                                                     Toast toast = Toast.makeText(ViewTutorProfile.this, "Password Updated", Toast.LENGTH_SHORT);
                                                     toast.show();
                                                 } else {
-                                                    Log.d("password", "onComplete: ENTERED TASK ELSE");
 //                                                    Toast.makeText(ViewTutorProfile.this, "Error Password Not Updated", Toast.LENGTH_SHORT).show();
                                                 }
                                             }
@@ -150,7 +137,6 @@ public class ViewTutorProfile extends AppCompatActivity {
                                     } else {
                                         Toast toast = Toast.makeText(ViewTutorProfile.this, "Error Password Not Updated", Toast.LENGTH_SHORT);
                                         toast.show();
-                                        Log.d("hello", "Error auth failed");
                                     }
                                 }
                             });
@@ -158,7 +144,6 @@ public class ViewTutorProfile extends AppCompatActivity {
                         else {
                             Toast toast = Toast.makeText(ViewTutorProfile.this, "Incorrect Input. Try Again.", Toast.LENGTH_SHORT);
                             toast.show();
-                            Log.d("password incorrect", "onClick: IT ENTERED HERE");
 //                            Toast.makeText(ViewTutorProfile.this, "Incorrect Input. Try Again.", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -187,8 +172,8 @@ public class ViewTutorProfile extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG12", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = document.getData();
+
                                 firstname = result.get("First name").toString().substring(0, 1).toUpperCase()+
                                         result.get("First name").toString().substring(1);
                                 lastname = result.get("Last name").toString().substring(0, 1).toUpperCase()+
@@ -212,7 +197,6 @@ public class ViewTutorProfile extends AppCompatActivity {
                                 text_categories.setText(strCategories);
                                 text_fee.setText(fee);
                                 imgUri = result.get("Profile Picture").toString();
-                                Log.d("IMAGEURI", "onComplete: profile pic "+imgUri);
                                 Picasso.get().load(imgUri).fit().centerInside().into(image_profile);
                             }
                         } else {

@@ -32,10 +32,7 @@ import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -85,6 +82,7 @@ public class EditTuteeProfile extends AppCompatActivity {
         image = i.getStringExtra("Profile Picture");
         Picasso.get().load(image).fit().centerInside().into(profile_picture);
 
+        //Opens gallery when the profile picture is clicked to upload a new photo
         profile_picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,8 +99,11 @@ public class EditTuteeProfile extends AppCompatActivity {
                 lastname = text_lastname.getText().toString();
                 contact = text_contact.getText().toString();
 
+                //Error checking. Ensures that all parameters are filled
                 if(firstname.isEmpty() || lastname.isEmpty() || contact.isEmpty()){
-                    Toast.makeText(EditTuteeProfile.this, "Please fill all paramaters", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(EditTuteeProfile.this, "Please fill all paramaters", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(EditTuteeProfile.this, "Please fill all paramaters", Toast.LENGTH_SHORT);
+                    toast.show();
                 }else if(changedProfilePicture){
                     StorageReference fileRef= storageReference.child(user.getEmail()+"profilepic.jpg");
                     fileRef.putFile(upload_picture).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -121,7 +122,9 @@ public class EditTuteeProfile extends AppCompatActivity {
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(EditTuteeProfile.this, "Image Failed to Upload", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(EditTuteeProfile.this, "Image Failed to Upload", Toast.LENGTH_SHORT).show();
+                            Toast toast = Toast.makeText(EditTuteeProfile.this, "Image Failed to Upload", Toast.LENGTH_SHORT);
+                            toast.show();
                         }
                     });
                 }else{
@@ -132,6 +135,7 @@ public class EditTuteeProfile extends AppCompatActivity {
     }
 
     private void saveEditProfile(){
+        //updates the database with the new information
         db.collection("Tutees")
                 .whereEqualTo("Email", user.getEmail())
                 .get()
@@ -140,7 +144,6 @@ public class EditTuteeProfile extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG1", document.getId() + " => " + document.getData());
                                 Gson gson = new Gson();
                                 Map<String, Object> result = new HashMap<>();
                                 result = document.getData();
@@ -186,6 +189,7 @@ public class EditTuteeProfile extends AppCompatActivity {
                 });
     }
 
+    //Waits for the user to select a new photo for their profile picture
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

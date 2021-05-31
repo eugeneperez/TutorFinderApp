@@ -30,12 +30,10 @@ import java.util.ArrayList;
  */
 public class ReqFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -57,7 +55,6 @@ public class ReqFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment ReqFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static ReqFragment newInstance(String param1, String param2) {
         ReqFragment fragment = new ReqFragment();
         Bundle args = new Bundle();
@@ -71,7 +68,6 @@ public class ReqFragment extends Fragment {
         TutorHomePage activity = (TutorHomePage) getActivity();
         currentTutees = activity.getCurTuteesList();
         reqTutees = activity.getReqTuteesList();
-        Log.d("Tuteeslist", "onCreateView: curr "+currentTutees+" req "+reqTutees);
     }
 
 
@@ -91,7 +87,6 @@ public class ReqFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_req, container, false);
         updateFragment();
-        Log.d("tuteeslist12",reqTutees.toString());
         CountDownTimer count = new CountDownTimer(1000, 500) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -104,12 +99,9 @@ public class ReqFragment extends Fragment {
                 adapter = new ReqTutorsAdapter(reqTutees);
                 rv_req.setAdapter(adapter);
                 rv_req.setLayoutManager(new LinearLayoutManager(c));
-                Log.d("tuteeslist123",reqTutees.toString());
             }
         };
         count.start();
-        Log.d("tuteeslist1234",reqTutees.toString());
-        Log.d("RREQ1", "onCreateView: ENTERED");
 
         return view;
     }
@@ -197,7 +189,6 @@ public class ReqFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            Log.d("REQ7", "getItemCount: tuteelist "+tuteeList.size());
             return tuteeList.size();
         }
     }

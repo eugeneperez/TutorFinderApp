@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +19,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -34,7 +32,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 public class ViewTuteeListOfTutors extends AppCompatActivity {
@@ -66,7 +63,6 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG12", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = document.getData();
 
                                 list = (ArrayList<Map>) result.get("Tutor List");
@@ -100,7 +96,6 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Log.d("ARRAYCONTAINSTAG", document.getId() + " => " + document.getData());
                                     Map<String, Object> result = document.getData();
 
                                     String firstname = result.get("First name").toString().substring(0, 1).toUpperCase()+
@@ -213,11 +208,8 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                             if (task.isSuccessful()) {
                                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                                    Log.d("TAG12", document.getId() + " => " + document.getData());
                                                     Map<String, Object> result = document.getData();
                                                     ArrayList<Map> list = new ArrayList<>();
-
-                                                    Log.d("REMOVEUSER", "onComplete: currentUser "+currentUser.getEmail());
 
                                                     list = (ArrayList<Map>) result.get("Tutor List");
                                                     int index = -1;
@@ -260,11 +252,8 @@ public class ViewTuteeListOfTutors extends AppCompatActivity {
                                                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                             if (task.isSuccessful()) {
                                                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                                                    Log.d("TAG12", document.getId() + " => " + document.getData());
                                                                     Map<String, Object> result = document.getData();
                                                                     ArrayList<Map> list = new ArrayList<>();
-
-                                                                    Log.d("REMOVEUSER", "onComplete: currentUser "+currentUser.getEmail());
 
                                                                     list = (ArrayList<Map>) result.get("Tutee List");
                                                                     int index = -1;

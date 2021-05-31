@@ -16,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -45,6 +44,7 @@ public class CommentsPage extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private CommentsAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,11 +53,13 @@ public class CommentsPage extends AppCompatActivity {
 
         TextView text_aveRating = findViewById(R.id.comments_aveRating);
 
+        //Initialize the recycler view
         RecyclerView rv_comments = findViewById(R.id.rv_comments);
         adapter = new CommentsAdapter(comments);
         rv_comments.setAdapter(adapter);
         rv_comments.setLayoutManager(new LinearLayoutManager(this));
 
+        //Gets the reviews of the tutor
         db.collection("Reviews")
                 .whereEqualTo("Tutor", user.getEmail())
                 .get()
@@ -66,13 +68,12 @@ public class CommentsPage extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG12", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = document.getData();
-                                Log.d("REVIEWS", "onComplete: currentUser "+user.getEmail());
 
                                 Timestamp timestamp = (Timestamp) result.get("Date");
                                 result.put("Date", timestamp.toDate());
 
+                                //Gets the additional information of the tutees
                                 db.collection("Tutees")
                                         .whereEqualTo("Email", result.get("Tutee").toString())
                                         .get()
@@ -81,9 +82,7 @@ public class CommentsPage extends AppCompatActivity {
                                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                 if (task.isSuccessful()) {
                                                     for (QueryDocumentSnapshot document : task.getResult()) {
-                                                        Log.d("TAG12", document.getId() + " => " + document.getData());
                                                         Map<String, Object> tutee = document.getData();
-                                                        Log.d("REVIEWS", "onComplete: currentUser "+user.getEmail());
 
                                                         String firstname = tutee.get("First name").toString();
                                                         String lastname = tutee.get("Last name").toString();
@@ -125,6 +124,7 @@ public class CommentsPage extends AppCompatActivity {
 
     }
 
+    //Recycler adapter for comments page
     public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHolder> {
         private ArrayList<Map> commentsList = new ArrayList<>();
 
@@ -162,7 +162,6 @@ public class CommentsPage extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull CommentsAdapter.ViewHolder holder, int position) {
             Map<String, Object> comment = commentsList.get(position);
-            Log.d("RREQ", "onBindViewHolder: ENTERED "+commentsList.toString());
 
             Date date = (Date) comment.get("Date");
             Locale philippineLocale = new Locale.Builder().setLanguage("en").setRegion("PH").build();

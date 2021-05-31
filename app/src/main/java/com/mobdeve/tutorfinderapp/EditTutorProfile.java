@@ -14,7 +14,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -93,7 +92,7 @@ public class EditTutorProfile extends AppCompatActivity {
         image = i.getStringExtra("Profile Picture");
         Picasso.get().load(image).fit().centerInside().into(profile_picture);
 
-
+        //Opens gallery when the profile picture is clicked to upload a new photo
         profile_picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,18 +110,20 @@ public class EditTutorProfile extends AppCompatActivity {
                 contact = text_contact.getText().toString();
                 fee= text_fee.getText().toString();
 
+                //Formats categories
                 String[] strings = text_categories.getText().toString().split(",");
                 categories.clear();
                 for(String s:strings){
                     String a = s.trim();
-                    Log.d("trimming", "onClick: string a"+a);
                     if(!isBlank(s)){
                         categories.add(a.toLowerCase());
                     }
                 }
 
+                //Error checking. Ensures that all parameters are filled
                 if(firstname.isEmpty() || lastname.isEmpty() || contact.isEmpty() || categories.isEmpty() || fee.isEmpty()){
-                    Toast.makeText(EditTutorProfile.this, "Please fill all paramaters", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(EditTutorProfile.this, "Please fill all paramaters", Toast.LENGTH_SHORT);
+                            toast.show();
                 }else if(changedProfilePicture){
                     StorageReference fileRef= storageReference.child(user.getEmail()+"profilepic.jpg");
                     fileRef.putFile(upload_picture).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -139,7 +140,9 @@ public class EditTutorProfile extends AppCompatActivity {
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(EditTutorProfile.this, "Image Failed to Upload", Toast.LENGTH_SHORT).show();
+                            Toast toast = Toast.makeText(EditTutorProfile.this, "Image Failed to Upload", Toast.LENGTH_SHORT);
+                            toast.show();
+                            //Toast.makeText(EditTutorProfile.this, "Image Failed to Upload", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }else{
@@ -150,6 +153,7 @@ public class EditTutorProfile extends AppCompatActivity {
     }
 
     private void saveEditProfile(){
+        //updates the database with the new information
         db.collection("Tutors")
                 .whereEqualTo("Email", user.getEmail())
                 .get()
@@ -158,14 +162,13 @@ public class EditTutorProfile extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG1", document.getId() + " => " + document.getData());
-                                Gson gson = new Gson();
                                 Map<String, Object> result = new HashMap<>();
                                 result = document.getData();
 
                                 if(changedProfilePicture){
                                     result.put("Profile Picture", image);
                                 }
+
                                 result.put("First name", firstname);
                                 result.put("Last name", lastname);
                                 result.put("Contact details", contact);
@@ -178,7 +181,6 @@ public class EditTutorProfile extends AppCompatActivity {
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-                                                Log.d("SETTING", "DocumentSnapshot successfully written!");
                                                 AlertDialog.Builder alert = new AlertDialog.Builder(EditTutorProfile.this);
                                                 alert.setTitle("Updated Profile");
                                                 alert.setMessage("Your Profile has been updated.");
@@ -206,6 +208,7 @@ public class EditTutorProfile extends AppCompatActivity {
                 });
     }
 
+    //Ensures that categories is correct and errors are corrected
     public static boolean isBlank(String text) {
         if (text.isEmpty())
             return true;
@@ -216,6 +219,7 @@ public class EditTutorProfile extends AppCompatActivity {
         return true;
     }
 
+    //Waits for the user to select a new photo for their profile picture
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

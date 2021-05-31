@@ -28,12 +28,10 @@ import java.util.ArrayList;
  */
 public class CurrFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -55,7 +53,7 @@ public class CurrFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment CurrFragment.
      */
-    // TODO: Rename and change types and number of parameters
+
     public static CurrFragment newInstance(String param1, String param2) {
         CurrFragment fragment = new CurrFragment();
         Bundle args = new Bundle();
@@ -72,6 +70,7 @@ public class CurrFragment extends Fragment {
         Log.d("Tuteeslist", "onCreateView: curr "+currentTutees+" req "+reqTutees);
     }
 
+    //refreshes data used for fragment
     public void refreshFragment(CurrentTutorsAdapter adapter){
         updateFragment();
         CountDownTimer count = new CountDownTimer(1500, 500) {
@@ -101,6 +100,7 @@ public class CurrFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final FragmentActivity c = getActivity();
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_curr, container, false);
         updateFragment();
@@ -115,10 +115,11 @@ public class CurrFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
+        //Refreshes the fragment on resume
         refreshFragment(adapter);
     }
 
+    //Recycler view adapter for tutees currently being taught by the tutor
     public class CurrentTutorsAdapter extends RecyclerView.Adapter<CurrentTutorsAdapter.ViewHolder> {
         private ArrayList<TuteeList> tuteeList = new ArrayList<>();
 

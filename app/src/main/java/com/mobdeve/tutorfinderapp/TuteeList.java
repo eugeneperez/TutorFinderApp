@@ -38,16 +38,4 @@ public class TuteeList {
     public String getImage_uri() {
         return image_uri;
     }
-
-    public void setImage_uri(String image_uri) {
-        this.image_uri = image_uri;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 }

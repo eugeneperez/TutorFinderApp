@@ -64,7 +64,6 @@ public class SeeMoreReviews extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG12", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = document.getData();
 
                                 Timestamp timestamp = (Timestamp) result.get("Date");
@@ -78,7 +77,6 @@ public class SeeMoreReviews extends AppCompatActivity {
                                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                 if (task.isSuccessful()) {
                                                     for (QueryDocumentSnapshot document : task.getResult()) {
-                                                        Log.d("TAG12", document.getId() + " => " + document.getData());
                                                         Map<String, Object> tutee = document.getData();
 
                                                         String firstname = tutee.get("First name").toString();
