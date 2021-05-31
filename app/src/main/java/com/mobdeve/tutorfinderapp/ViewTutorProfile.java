@@ -94,7 +94,6 @@ public class ViewTutorProfile extends AppCompatActivity {
                 i.putExtra("Categories", strCategories);
                 i.putExtra("Fee",fee);
                 startActivity(i);
-
             }
         });
 
@@ -128,8 +127,9 @@ public class ViewTutorProfile extends AppCompatActivity {
 
                 alert.setPositiveButton("Change", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        if (newPass.getText().toString().equals(confirmNewPass.getText().toString()) && (currPass.length()>=8 || newPass.length()>=8 || confirmNewPass.length()>=8)) {
+                        if (newPass.getText().toString().equals(confirmNewPass.getText().toString()) && (currPass.getText().toString().length()>=8 || newPass.getText().toString().length()>=8 || confirmNewPass.getText().toString().length()>=8)) {
                             AuthCredential credentials = EmailAuthProvider.getCredential(user.getEmail(), currPass.getText().toString());
+                            Log.d("password conditions", "onClick: ENTERED IF CONDITIONS");
                             user.reauthenticate(credentials).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -138,20 +138,28 @@ public class ViewTutorProfile extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
-                                                    Toast.makeText(ViewTutorProfile.this, "Password Updated", Toast.LENGTH_SHORT).show();
+                                                    Log.d("password", "onComplete: ENTERED TASK SUCCESSFUL");
+                                                    Toast toast = Toast.makeText(ViewTutorProfile.this, "Password Updated", Toast.LENGTH_SHORT);
+                                                    toast.show();
                                                 } else {
-                                                    Toast.makeText(ViewTutorProfile.this, "Error Password Not Updated", Toast.LENGTH_SHORT).show();
+                                                    Log.d("password", "onComplete: ENTERED TASK ELSE");
+//                                                    Toast.makeText(ViewTutorProfile.this, "Error Password Not Updated", Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         });
                                     } else {
+                                        Toast toast = Toast.makeText(ViewTutorProfile.this, "Error Password Not Updated", Toast.LENGTH_SHORT);
+                                        toast.show();
                                         Log.d("hello", "Error auth failed");
                                     }
                                 }
                             });
                         }
                         else {
-                            Toast.makeText(ViewTutorProfile.this, "Incorrect Input. Try Again.", Toast.LENGTH_SHORT).show();
+                            Toast toast = Toast.makeText(ViewTutorProfile.this, "Incorrect Input. Try Again.", Toast.LENGTH_SHORT);
+                            toast.show();
+                            Log.d("password incorrect", "onClick: IT ENTERED HERE");
+//                            Toast.makeText(ViewTutorProfile.this, "Incorrect Input. Try Again.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

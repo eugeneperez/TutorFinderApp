@@ -73,36 +73,6 @@ public class ViewTuteeProfile extends AppCompatActivity {
         btn_changepass = findViewById(R.id.tutee_change_pass_btn);
         drawerLayout= findViewById(R.id.drawer_layout);
 
-        db.collection("Tutees")
-                .whereEqualTo("Email", user.getEmail())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG12", document.getId() + " => " + document.getData());
-                                Map<String, Object> result = document.getData();
-                                firstname = result.get("First name").toString().substring(0, 1).toUpperCase()+
-                                        result.get("First name").toString().substring(1);
-                                lastname = result.get("Last name").toString().substring(0, 1).toUpperCase()+
-                                        result.get("Last name").toString().substring(1);
-                                String fullname = firstname+" "+lastname;
-
-                                contact = result.get("Contact details").toString();
-
-                                text_name.setText(fullname);
-                                text_email.setText(user.getEmail());
-                                text_contact.setText(contact);
-                                image = result.get("Profile Picture").toString();
-                                Picasso.get().load(image).fit().centerInside().into(image_tutee_profile);
-                            }
-                        } else {
-                            Log.d("TAG1", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-
         btn_edit_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,7 +115,7 @@ public class ViewTuteeProfile extends AppCompatActivity {
 
                 alert.setPositiveButton("Change", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        if (newPass.getText().toString().equals(confirmNewPass.getText().toString())) {
+                        if (newPass.getText().toString().equals(confirmNewPass.getText().toString()) && (currPass.getText().toString().length()>=8 || newPass.getText().toString().length()>=8 || confirmNewPass.getText().toString().length()>=8)) {
                             AuthCredential credentials = EmailAuthProvider.getCredential(user.getEmail(), currPass.getText().toString());
                             user.reauthenticate(credentials).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -155,20 +125,28 @@ public class ViewTuteeProfile extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
-                                                    Toast.makeText(ViewTuteeProfile.this, "Password Updated", Toast.LENGTH_SHORT).show();
+                                                    Log.d("password", "onComplete: ENTERED TASK SUCCESSFUL");
+                                                    Toast toast = Toast.makeText(ViewTuteeProfile.this, "Password Updated", Toast.LENGTH_SHORT);
+                                                    toast.show();
                                                 } else {
-                                                    Toast.makeText(ViewTuteeProfile.this, "Error Password Not Updated", Toast.LENGTH_SHORT).show();
+                                                    Log.d("password", "onComplete: ENTERED TASK ELSE");
+//                                                    Toast.makeText(ViewTutorProfile.this, "Error Password Not Updated", Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         });
                                     } else {
+                                        Toast toast = Toast.makeText(ViewTuteeProfile.this, "Error Password Not Updated", Toast.LENGTH_SHORT);
+                                        toast.show();
                                         Log.d("hello", "Error auth failed");
                                     }
                                 }
                             });
                         }
                         else {
-                            Toast.makeText(ViewTuteeProfile.this, "Password do not match", Toast.LENGTH_SHORT).show();
+                            Toast toast = Toast.makeText(ViewTuteeProfile.this, "Incorrect Input. Try Again.", Toast.LENGTH_SHORT);
+                            toast.show();
+                            Log.d("password incorrect", "onClick: IT ENTERED HERE");
+//                            Toast.makeText(ViewTutorProfile.this, "Incorrect Input. Try Again.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -184,7 +162,40 @@ public class ViewTuteeProfile extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        db.collection("Tutees")
+                .whereEqualTo("Email", user.getEmail())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("TAG12", document.getId() + " => " + document.getData());
+                                Map<String, Object> result = document.getData();
+                                firstname = result.get("First name").toString().substring(0, 1).toUpperCase()+
+                                        result.get("First name").toString().substring(1);
+                                lastname = result.get("Last name").toString().substring(0, 1).toUpperCase()+
+                                        result.get("Last name").toString().substring(1);
+                                String fullname = firstname+" "+lastname;
 
+                                contact = result.get("Contact details").toString();
+
+                                text_name.setText(fullname);
+                                text_email.setText(user.getEmail());
+                                text_contact.setText(contact);
+                                image = result.get("Profile Picture").toString();
+                                Picasso.get().load(image).fit().centerInside().into(image_tutee_profile);
+                            }
+                        } else {
+                            Log.d("TAG1", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+    }
 
     public void ClickMenu(View view){
         openDrawer(drawerLayout);
