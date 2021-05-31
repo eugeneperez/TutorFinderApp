@@ -1,7 +1,5 @@
 package com.mobdeve.tutorfinderapp;
 
-import android.net.Uri;
-
 import java.util.ArrayList;
 
 public class User {

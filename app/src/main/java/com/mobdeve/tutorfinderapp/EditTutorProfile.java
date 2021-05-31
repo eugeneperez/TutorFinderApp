@@ -14,7 +14,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -93,7 +92,7 @@ public class EditTutorProfile extends AppCompatActivity {
         image = i.getStringExtra("Profile Picture");
         Picasso.get().load(image).fit().centerInside().into(profile_picture);
 
-
+        //Opens gallery when the profile picture is clicked to upload a new photo
         profile_picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,6 +110,7 @@ public class EditTutorProfile extends AppCompatActivity {
                 contact = text_contact.getText().toString();
                 fee= text_fee.getText().toString();
 
+                //Formats categories
                 String[] strings = text_categories.getText().toString().split(",");
                 categories.clear();
                 for(String s:strings){
@@ -121,6 +121,7 @@ public class EditTutorProfile extends AppCompatActivity {
                     }
                 }
 
+                //Error checking. Ensures that all parameters are filled
                 if(firstname.isEmpty() || lastname.isEmpty() || contact.isEmpty() || categories.isEmpty() || fee.isEmpty()){
                     Toast.makeText(EditTutorProfile.this, "Please fill all paramaters", Toast.LENGTH_SHORT).show();
                 }else if(changedProfilePicture){
@@ -150,6 +151,7 @@ public class EditTutorProfile extends AppCompatActivity {
     }
 
     private void saveEditProfile(){
+        //updates the database with the new information
         db.collection("Tutors")
                 .whereEqualTo("Email", user.getEmail())
                 .get()
@@ -206,6 +208,7 @@ public class EditTutorProfile extends AppCompatActivity {
                 });
     }
 
+    //Ensures that categories is correct and errors are corrected
     public static boolean isBlank(String text) {
         if (text.isEmpty())
             return true;
@@ -216,6 +219,7 @@ public class EditTutorProfile extends AppCompatActivity {
         return true;
     }
 
+    //Waits for the user to select a new photo for their profile picture
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

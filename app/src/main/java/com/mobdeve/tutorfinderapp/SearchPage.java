@@ -12,14 +12,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -55,9 +52,6 @@ public class SearchPage extends AppCompatActivity {
     private String strSearchLastname = new String();
     private String strSearchCategory = new String();
     private User user;
-    private float averageRating = 0;
-    private float totalRating = 0;
-    private int count = 0;
 
     public void searchFirstName(String searchterms){
         db.collection("Tutors")
@@ -70,7 +64,6 @@ public class SearchPage extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG1", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = new HashMap<>();
                                 result = document.getData();
                                 boolean isNotFound = true;
@@ -91,8 +84,6 @@ public class SearchPage extends AppCompatActivity {
                                 }
 
                                 if(isNotFound){
-                                    Log.d("ENTERED IF", "onComplete: entered users"+users);
-                                    Log.d("Entered email", "onComplete: result email "+ result.get("Email").toString());
                                     users.add(user);
                                 }
                             }
@@ -119,11 +110,9 @@ public class SearchPage extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG1", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = new HashMap<>();
                                 result = document.getData();
                                 boolean isFound = true;
-                                Log.d("hello2", result.toString());
 
                                 user = new User(result.get("Email").toString(),
                                         result.get("First name").toString(),
@@ -140,12 +129,8 @@ public class SearchPage extends AppCompatActivity {
                                 }
 
                                 if(isFound){
-                                    Log.d("ENTERED IF", "onComplete: entered users"+users);
-                                    Log.d("Entered email", "onComplete: result email "+ result.get("Email").toString());
                                     users.add(user);
                                 }
-
-                                Log.d("Result2", "onComplete: results2"+users);
                             }
                         } else {
                             Log.d("TAG1", "Error getting documents: ", task.getException());
@@ -169,11 +154,9 @@ public class SearchPage extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG1", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = new HashMap<>();
                                 result = document.getData();
 
-                                Log.d("hello2", result.toString());
                                 if(!(users.contains(result.get("Email").toString()))){
                                     User user = new User(result.get("Email").toString(),
                                             result.get("First name").toString(),
@@ -184,8 +167,6 @@ public class SearchPage extends AppCompatActivity {
                                     user.setProfpic(result.get("Profile Picture").toString());
                                     users.add(user);
                                 }
-
-                                Log.d("Result2", "onComplete: results2"+users);
                             }
                         } else {
                             Log.d("TAG1", "Error getting documents: ", task.getException());
@@ -272,35 +253,30 @@ public class SearchPage extends AppCompatActivity {
 
         Intent i= getIntent();
         Map<String, Object> searchTerms = gson.fromJson(i.getStringExtra("Search Terms"), Map.class);
-        Log.d("SEARCHINTENT", "onCreate: searchterms "+searchTerms);
         searchTerms(searchTerms);
 
         results_rv = findViewById(R.id.search_page_rv);
         adapter = new ResultsAdapter(users);
         results_rv.setAdapter(adapter);
         results_rv.setLayoutManager(new LinearLayoutManager(this));
-        // get offerings data
 
         searchbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Log.d("SEARCHUSERS", "onClick: users "+users);
                 users.clear();
                 adapter.notifyDataSetChanged();
-                Log.d("SEARCHUSERS", "onClick: users "+users);
 
                 strSearchCategory = search.getText().toString().toLowerCase();
                 strSearchFirstname = searchfirstname.getText().toString().toLowerCase();
                 strSearchLastname = searchlastname.getText().toString().toLowerCase();
 
-                    Map<String, Object> searchTermsList = new HashMap<>();
-                    searchTermsList.put("First name", strSearchFirstname);
-                    searchTermsList.put("Last name", strSearchLastname);
-                    searchTermsList.put("Category", strSearchCategory);
+                Map<String, Object> searchTermsList = new HashMap<>();
+                searchTermsList.put("First name", strSearchFirstname);
+                searchTermsList.put("Last name", strSearchLastname);
+                searchTermsList.put("Category", strSearchCategory);
 
-
-                    searchTerms(searchTermsList);
+                searchTerms(searchTermsList);
 
             }
         });

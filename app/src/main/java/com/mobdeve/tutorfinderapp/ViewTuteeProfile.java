@@ -5,16 +5,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -33,12 +30,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 public class ViewTuteeProfile extends AppCompatActivity {
 
@@ -91,17 +85,22 @@ public class ViewTuteeProfile extends AppCompatActivity {
                 AlertDialog.Builder alert = new AlertDialog.Builder(ViewTuteeProfile.this);
                 LinearLayout layout = new LinearLayout(ViewTuteeProfile.this);
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
                 lp.gravity= Gravity.CENTER;
                 layout.setOrientation(LinearLayout.VERTICAL);
+
                 final EditText currPass = new EditText(ViewTuteeProfile.this);
                 final EditText newPass = new EditText(ViewTuteeProfile.this);
                 final EditText confirmNewPass = new EditText(ViewTuteeProfile.this);
+
                 currPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 newPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 confirmNewPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
                 currPass.setLayoutParams(lp);
                 newPass.setLayoutParams(lp);
                 confirmNewPass.setLayoutParams(lp);
+
                 currPass.setHint("Current Password");
                 newPass.setHint("New Password");
                 confirmNewPass.setHint("Confirm New Password");
@@ -125,11 +124,9 @@ public class ViewTuteeProfile extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
-                                                    Log.d("password", "onComplete: ENTERED TASK SUCCESSFUL");
                                                     Toast toast = Toast.makeText(ViewTuteeProfile.this, "Password Updated", Toast.LENGTH_SHORT);
                                                     toast.show();
                                                 } else {
-                                                    Log.d("password", "onComplete: ENTERED TASK ELSE");
 //                                                    Toast.makeText(ViewTutorProfile.this, "Error Password Not Updated", Toast.LENGTH_SHORT).show();
                                                 }
                                             }
@@ -137,7 +134,6 @@ public class ViewTuteeProfile extends AppCompatActivity {
                                     } else {
                                         Toast toast = Toast.makeText(ViewTuteeProfile.this, "Error Password Not Updated", Toast.LENGTH_SHORT);
                                         toast.show();
-                                        Log.d("hello", "Error auth failed");
                                     }
                                 }
                             });
@@ -145,7 +141,6 @@ public class ViewTuteeProfile extends AppCompatActivity {
                         else {
                             Toast toast = Toast.makeText(ViewTuteeProfile.this, "Incorrect Input. Try Again.", Toast.LENGTH_SHORT);
                             toast.show();
-                            Log.d("password incorrect", "onClick: IT ENTERED HERE");
 //                            Toast.makeText(ViewTutorProfile.this, "Incorrect Input. Try Again.", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -173,8 +168,8 @@ public class ViewTuteeProfile extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG12", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = document.getData();
+
                                 firstname = result.get("First name").toString().substring(0, 1).toUpperCase()+
                                         result.get("First name").toString().substring(1);
                                 lastname = result.get("Last name").toString().substring(0, 1).toUpperCase()+

@@ -12,14 +12,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,13 +38,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
-*  TODO
-*   search for category and specializations
-*
-* */
-
-
 public class Homepage extends AppCompatActivity {
 
     private Spinner spinnerAdapter;
@@ -57,7 +47,6 @@ public class Homepage extends AppCompatActivity {
     private ImageView searchbtn;
 
     private TextView firstname;
-    private FirebaseAuth mAuth;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     private ArrayList<User> users = new ArrayList<>();
@@ -79,7 +68,6 @@ public class Homepage extends AppCompatActivity {
         searchlastname = findViewById(R.id.searchlastname_homepage);
         searchbtn = findViewById(R.id.searchbtn_homepage);
         drawerLayout= findViewById(R.id.drawer_layout);
-        mAuth = FirebaseAuth.getInstance();
 
         //placeholder button
         search.setVisibility(View.GONE);
@@ -94,7 +82,6 @@ public class Homepage extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG12", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = document.getData();
                                 firstname.setText(result.get("First name").toString().substring(0, 1).toUpperCase() + result.get("First name").toString().substring(1)+".");
                             }
@@ -113,7 +100,6 @@ public class Homepage extends AppCompatActivity {
 
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerAdapter.setAdapter(arrayAdapter);
-        Log.d("TAG1", "onCreate: entered");
 
         spinnerAdapter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -160,10 +146,8 @@ public class Homepage extends AppCompatActivity {
                 String searchterms = search.getText().toString().toLowerCase();
                 String searchtermf = searchfirstname.getText().toString().toLowerCase();
                 String searchterml = searchlastname.getText().toString().toLowerCase();
-                //ArrayList<User> results = new ArrayList<>();
-                //search in database
-                Log.d("TAG1", "onClick: searchterms"+searchterms);
 
+                //search in database
                 Intent i = new Intent(Homepage.this, SearchPage.class);
                 Map<String, Object> searchTermsList = new HashMap<>();
                 searchTermsList.put("First name", searchtermf);
@@ -185,9 +169,8 @@ public class Homepage extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG124444", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = document.getData();
-                                Log.d("AVERATING", "onComplete: user "+result.get("Email").toString()+ " averating "+result.get("Average Rating").toString());
+
                                 User user = new User(result.get("Email").toString(), result.get("First name").toString(),
                                         result.get("Last name").toString(), result.get("Contact details").toString());
                                 user.setAveRating(Float.parseFloat(result.get("Average Rating").toString()));
@@ -210,9 +193,8 @@ public class Homepage extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG123333", document.getId() + " => " + document.getData());
                                 Map<String, Object> result = document.getData();
-                                Log.d("TOTALTUTEES", "onComplete: user "+result.get("Email").toString()+ " total tutees "+result.get("Total Tutees").toString());
+
                                 User user = new User(result.get("Email").toString(), result.get("First name").toString(),
                                         result.get("Last name").toString(), result.get("Contact details").toString());
                                 user.setAveRating(Float.parseFloat(result.get("Average Rating").toString()));

@@ -24,7 +24,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -32,18 +31,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
-* TODO:
-*  fix image uri retrieval
-* update db
-* update registration(dapat may 2nd page)
-* */
 
 public class Register extends AppCompatActivity {
 
@@ -234,8 +225,6 @@ public class Register extends AppCompatActivity {
     public void createAccount(String username, String password, String type,
                               String firstname, String lastname, String contact, ArrayList<String> categories,
                               String fee){
-
-        Log.d("TAG", "createAccount: username"+username+" password"+password);
         mAuth.createUserWithEmailAndPassword(username, password)
 
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
