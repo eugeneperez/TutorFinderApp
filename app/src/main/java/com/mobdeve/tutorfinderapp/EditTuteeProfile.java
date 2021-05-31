@@ -101,7 +101,9 @@ public class EditTuteeProfile extends AppCompatActivity {
 
                 //Error checking. Ensures that all parameters are filled
                 if(firstname.isEmpty() || lastname.isEmpty() || contact.isEmpty()){
-                    Toast.makeText(EditTuteeProfile.this, "Please fill all paramaters", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(EditTuteeProfile.this, "Please fill all paramaters", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(EditTuteeProfile.this, "Please fill all paramaters", Toast.LENGTH_SHORT);
+                    toast.show();
                 }else if(changedProfilePicture){
                     StorageReference fileRef= storageReference.child(user.getEmail()+"profilepic.jpg");
                     fileRef.putFile(upload_picture).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -120,7 +122,9 @@ public class EditTuteeProfile extends AppCompatActivity {
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(EditTuteeProfile.this, "Image Failed to Upload", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(EditTuteeProfile.this, "Image Failed to Upload", Toast.LENGTH_SHORT).show();
+                            Toast toast = Toast.makeText(EditTuteeProfile.this, "Image Failed to Upload", Toast.LENGTH_SHORT);
+                            toast.show();
                         }
                     });
                 }else{

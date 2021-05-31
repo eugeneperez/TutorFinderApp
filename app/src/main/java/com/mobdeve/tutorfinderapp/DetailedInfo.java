@@ -106,10 +106,6 @@ public class DetailedInfo extends AppCompatActivity {
                                             index = 1;
                                         }
                                     }
-                                }else{
-                                    request_btn.setEnabled(false);
-                                    request_btn.setBackgroundColor(Color.parseColor("#d8d8d8"));
-                                    request_btn.setTextColor(Color.parseColor("#8b8b8b"));
                                 }
 
                                 if(index != -1){
